@@ -20,7 +20,7 @@ permissions:
 env:
   S3_BUCKET_NAME: pirate99
   PROJECT_NAME: BE-pirate99
-  RESOURCE_PATH: /pirate99-FinalProject/BE-pirate99/blob/developer/src/main/resources
+  RESOURCE_PATH: ../src/main/resources
   
 jobs:
   build:
