@@ -40,7 +40,7 @@ jobs:
       shell: bash
 
     - name: Unzip application yml	# 설정파일 압축 해제
-      run: tar xvf ./src/main/resources/application.tar
+      run: tar xvf ./src/main/resources/application.tar -C ./src/main/resources/
       shell: bash
     
     - name: Grant execute permission for gradlew
