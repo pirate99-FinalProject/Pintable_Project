@@ -67,7 +67,7 @@ jobs:
          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
           aws deploy create-deployment \
-          --application-name pirate-webservice-group \
+          --application-name pirate-webservice \
           --deployment-group-name pirate99_EC2 \
           --file-exists-behavior OVERWRITE \
           --s3-location bucket=pirate99,bundleType=zip,key=springboot-intro-build.zip \
