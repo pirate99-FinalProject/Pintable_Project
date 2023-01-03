@@ -20,7 +20,6 @@ permissions:
 env:
   S3_BUCKET_NAME: pirate99
   PROJECT_NAME: BE-pirate99
-  RESOURCE_PATH: ./src/main/resources
   
 jobs:
   build:
@@ -30,11 +29,11 @@ jobs:
     # Task의 sequence를 명시한다.
     steps:  
     - name: Decrypt application aws properties	#암호화 했던 설정파일 복호화
-      run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.APPLICATION_PROPERTIES }} --output $RESOURCE_PATH/application.tar $RESOURCE_PATH/application.tar.gpg
+      run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.APPLICATION_PROPERTIES }} --output ./src/main/resources/application.tar ./src/main/resources/application.tar.gpg
       shell: bash
 
     - name: Unzip application yml	# 설정파일 압축 해제
-      run: tar xvf $RESOURCE_PATH/application.tar
+      run: tar xvf ./src/main/resources/application.tar
       shell: bash
     
     - uses: actions/checkout@v3
