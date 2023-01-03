@@ -70,5 +70,5 @@ jobs:
           --application-name pirate99-webservice \
           --deployment-group-name pirate-webservice-group \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=pirate99,bundleType=zip,key=springboot-intro-build.zip \
+          --s3-location bucket=pirate99,bundleType=zip,key=springboot-build.zip \
           --region ap-northeast-2
