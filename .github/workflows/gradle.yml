@@ -1,0 +1,74 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "developer" ]
+  pull_request:
+    branches: [ "developer" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # 실행 환경 지정
+    runs-on: ubuntu-latest
+    
+    # Task의 sequence를 명시한다.
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    # Build
+    - name: Build with Gradle
+      run: ./gradlew clean build
+
+    # 전송할 파일을 담을 디렉토리 생성
+    - name: Make Directory for deliver
+      run: mkdir deploy
+      
+    # Jar 파일 Copy
+    - name: Copy Jar
+      run: cp ./build/libs/*.jar ./deploy/
+      
+    # 압축파일 형태로 전달
+    - name: Make zip file
+      run: zip -r -qq -j ./springboot-build.zip ./deploy
+      
+    # S3 Bucket으로 copy
+    - name: Deliver to AWS S3
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+          aws s3 cp \
+          --region ap-northeast-2 \
+          ./springboot-build.zip s3://pirate99
+          
+          
+    # Deploy
+    - name: Deploy
+      env:
+         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+          aws deploy create-deployment \
+          --application-name pirate99-webservice \
+          --deployment-group-name pirate-webservice-group \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=pirate99,bundleType=zip,key=springboot-intro-build.zip \
+          --region ap-northeast-2
