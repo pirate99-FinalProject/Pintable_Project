@@ -29,8 +29,8 @@ jobs:
     
     # Task의 sequence를 명시한다.
     steps:  
-    - name: Decrypt application yml	# (4번 참고) 암호화 했던 설정파일 복호화
-      run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.APPLICATION_YML }} --output $RESOURCE_PATH/application.tar $RESOURCE_PATH/application.tar.gpg
+    - name: Decrypt application aws properties	#암호화 했던 설정파일 복호화
+      run: gpg --quiet --batch --yes --always-trust --decrypt --passphrase=${{ secrets.APPLICATION_PROPERTIES }} --output $RESOURCE_PATH/application.tar $RESOURCE_PATH/application.tar.gpg
       shell: bash
 
     - name: Unzip application yml	# 설정파일 압축 해제
