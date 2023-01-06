@@ -1,28 +1,147 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-  <title>간단한 지도 표시하기</title>
-  <script type="text/javascript"
-          src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=i3qv4ecus5"></script>
-  <script type="text/javascript"
-          src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=i3qv4ecus5&submodules=geocoder"></script>
-</head>
-<body>
-<div id="map" style="width:80%;height:800px;"></div>
-<script th:inline="javascript">
-  var map = new naver.maps.Map('map', {
-    center: new naver.maps.LatLng([[${Lat}]], [[${lng}]]),
-    zoom: 15
-  });
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<!--    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">-->
+    <title>pin-pin</title>
 
-  var marker = new naver.maps.Marker({
-    position: new naver.maps.LatLng([[${Lat}]], [[${lng}]]),
-    map: map
-  });
-</script>
+    <!-- General CSS Files -->
+    <link rel="stylesheet" href="/css/modules/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/modules/fontawesome/css/all.min.css">
+
+    <!-- CSS Libraries -->
+
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+
+    <!-- Start Naver API -->
+    <script type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=i3qv4ecus5"></script>
+    <script type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=i3qv4ecus5&submodules=geocoder"></script>
+    <!-- /END GA --></head>
+
+<body>
+<div id="app">
+    <div class="main-wrapper main-wrapper-1">
+        <div class="navbar-bg"></div>
+        <nav class="navbar navbar-expand-lg main-navbar">
+            <form class="form-inline mr-auto">
+                <ul class="navbar-nav mr-3">
+                    <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><img
+                            src="/css/images/pin.png" alt="My Image"></a>
+                    </li>
+                    <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i
+                            class="fas fa-search"></i></a></li>
+                </ul>
+                <div class="search-element">
+                    <form action="./" method="get">
+                    <input class="form-control" type="search" placeholder="Search" aria-label="Search" width="1200" name="storeName">
+                    <button class="btn btn-primary">Search</button>
+                    </form>
+                    <div class="search-backdrop"></div>
+                </div>
+            </form>
+            <ul class="navbar-nav navbar-right">
+                <li class="dropdown"><a href="#" data-toggle="dropdown"
+                                        class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                    <img alt="image" src="/css/images/avatar.png" class="rounded-circle mr-1">
+                </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item has-icon text-danger">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <div class="main-sidebar sidebar-style-2">
+            <aside id="sidebar-wrapper">
+                <div class="sidebar-brand">
+                    <a href="index.html">pin-pin</a>
+                </div>
+                <div class="sidebar-brand sidebar-brand-sm">
+                    <a href="index.html">🔙</a>
+                </div>
+                <ul class="sidebar-menu">
+                    <li class="dropdown active">
+                        <a class="nav-link"><span>Stores</span></a>
+                    </li>
+                    <img alt="image" src="/css/images/BlueBottle.png" class="rounded-circle mr-1" width="240"
+                         style="border-radius:50%">
+                    <li class="store">
+                        <p><span id="storename">블루보틀 성수점</span></p>
+                    </li>
+                    <p></p>
+                    <li class="store-posting">
+                        <p><img alt="image" src="/css/images/pin.png" width="32"
+                                style="border-radius:50%"><span id="storeadrress">서울 성동구 아차산로 7 케이티링커스</span></p>
+                        <p></p>
+                    </li>
+                    <li class="store-review">
+                        <p><a href="https://blog.naver.com/icecream0514/222966646774">
+                            <img alt="image" src="/css/images/blogger.png" width="24" style="border-radius:50%"><span
+                                id="storeReview">[성수동 카페 추천] 블루보틀 성수::</span></a></p>
+                        <p><a href="https://blog.naver.com/wonsim105/222962817995">
+                            <img alt="image" src="/css/images/blogger.png" width="24" style="border-radius:50%"><span
+                                id="storeReview0">[뚝섬역 카페]블루보틀 성수(커피계의 애플)</span></a></p>
+                        <p><a href="https://blog.naver.com/dynamicduck/222945580448">
+                            <img alt="image" src="/css/images/blogger.png" width="24" style="border-radius:50%"><span
+                                id="storeReview1">블루보틀 성수</span></a></p>
+                        <p><a href="https://blog.naver.com/swiss9769/222807900863">
+                            <img alt="image" src="/css/images/blogger.png" width="24" style="border-radius:50%"><span
+                                id="storeReview2">[성수] 블루 보틀 성수 카페</span></a></p>
+                    </li>
+                </ul>
+                <div class="sidebar-brand sidebar-brand-sm">
+
+                </div>
+            </aside>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <section class="section">
+                <div class="section-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row mb-4">
+                                        <div class="col-4 col-12 col-md-6 col-lg-4">
+                                            <form id="search-form">
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div id="map" style="width:100%;height:1100px;"></div>
+                                    <script th:inline="javascript">
+                                        var map = new naver.maps.Map('map', {
+                                            center: new naver.maps.LatLng([[${Lat}]], [[${lng}]]),
+                                            zoom: 15
+                                        });
+
+                                        var marker = new naver.maps.Marker({
+                                            position: new naver.maps.LatLng([[${Lat}]], [[${lng}]]),
+                                            map: map
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <footer class="main-footer">
+            <div class="footer-right">
+            </div>
+        </footer>
+    </div>
+</div>
 </body>
 </html>
