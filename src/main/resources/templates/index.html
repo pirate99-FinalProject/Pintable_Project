@@ -15,12 +15,12 @@
 <div id="map" style="width:80%;height:800px;"></div>
 <script th:inline="javascript">
   var map = new naver.maps.Map('map', {
-    center: new naver.maps.LatLng([[${Lat}]], [[${lng}]]),
+    center: new naver.maps.LatLng([[${Lat}]], [[${Lng}]]),
     zoom: 15
   });
 
   var marker = new naver.maps.Marker({
-    position: new naver.maps.LatLng([[${Lat}]], [[${lng}]]),
+    position: new naver.maps.LatLng([[${Lat}]], [[${Lng}]]),
     map: map
   });
 </script>
