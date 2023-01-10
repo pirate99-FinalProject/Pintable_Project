@@ -1055,6 +1055,15 @@ table tr:hover .table-links {
   font-style: normal;
   font-weight: 400;
 }
+
+.iw_inner{
+  text-align: center;
+  font-size: 12px;
+  padding-right: 10px;
+  color: black;
+  font-family: 'Nanum Gothic', sans-serif;
+}
+
 /* 3.10 Pagination */
 .page-item .page-link {
   color: #04198C;

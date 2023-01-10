@@ -15,9 +15,21 @@ public class Naver {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String address;
+    private String roadnameaddress;     // 가게 주소
+    private int postnumber;     // 가게 주소
+    private String storename;           // 가게 이름
+    private String typeofbusiness;           // 가게 이름
+    private double xcoordinate;         // 위도
+    private double ycoordinate;         // 경도
+    private double starscore;
+    private int reviewcnt;
 
-    private String storeName;    // 가게 이름
-    private String placeAddress; // 가게 주소
-    private double Lat;          // 위도
-    private double Lng;          // 경도
+
+    public Naver(double xcoordinate, double ycoordinate, String storename,String roadnameaddress) {
+        this.xcoordinate = xcoordinate;
+        this.ycoordinate = ycoordinate;
+        this.storename = storename;
+        this.roadnameaddress = roadnameaddress;
+    }
 }

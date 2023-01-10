@@ -6,18 +6,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class NaverService {
     private final NaverRepository naverRepository;
 
-    public void naverMap(Model model, String storeName) {
-        // 1. DB에서 가게 이름을 조회 한다.
-        Naver naver = naverRepository.findByStoreName(storeName).orElseThrow(
-                () -> new RuntimeException("가게가 존재하지 않습니다.")
-        );
-        // 2. 조회한 가게이름의 위도 경도 값을 index.html로 보낸다.
-        model.addAttribute("Lat", naver.getLat());
-        model.addAttribute("lng", naver.getLng());
+    public void searchMap(Model model, String storeName) {
+
+        String storeNameTrim = storeName.replaceAll(" ", "");
+
+        List<Naver> naverList = naverRepository.findByStorenameContaining(storeNameTrim);
+
+        for (int i = 0 ; i < naverList.size(); i++) {
+            model.addAttribute("Lat"+i, naverList.get(i).getXcoordinate());
+            model.addAttribute("Lng"+i, naverList.get(i).getYcoordinate());
+            model.addAttribute("storeName"+i, naverList.get(i).getStorename());
+            model.addAttribute("placeAddress"+i, naverList.get(i).getRoadnameaddress());
+        }
     }
 }
