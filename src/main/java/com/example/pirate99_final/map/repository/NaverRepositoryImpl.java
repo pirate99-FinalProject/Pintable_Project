@@ -26,6 +26,7 @@ public class NaverRepositoryImpl implements NaverRepositoryCustom {
         QNaver naver = QNaver.naver;
         List<Naver> StoreNameInclude = queryFactory
                 .selectFrom(naver)
+                .limit(10)
                 .where(naver.storeName.contains(storeName))
                 .fetch();
         return StoreNameInclude;
@@ -35,6 +36,7 @@ public class NaverRepositoryImpl implements NaverRepositoryCustom {
         QNaver naver = QNaver.naver;
         List<Naver> roadAddressInclude = queryFactory
                 .selectFrom(naver)
+                .limit(10)
                 .where(naver.roadNameAddress.contains(roadNameAddress))
                 .fetch();
         return roadAddressInclude;
@@ -44,81 +46,90 @@ public class NaverRepositoryImpl implements NaverRepositoryCustom {
         QNaver naver = QNaver.naver;
         List<Naver> businessType = queryFactory
                 .selectFrom(naver)
+                .limit(10)
                 .where(naver.typeOfBusiness.eq(typeOfBusiness))
                 .fetch();
         return businessType;
     }
     // 평점 낮은순 ASC
-    public List<Naver> OrderByStarScore(String starScore) {
+    public List<Naver> OrderByStarScore() {
         QNaver naver = QNaver.naver;
         List<Naver> starScoreASC = queryFactory
                 .selectFrom(naver)
+                .limit(10)
                 .orderBy(naver.starScore.asc())
                 .fetch();
         return starScoreASC;
     }
     // 평점 높은순 DESC
-    public List<Naver> OrderByStarScoreDESC(String starScore) {
+    public List<Naver> OrderByStarScoreDESC() {
         QNaver naver = QNaver.naver;
         List<Naver> starScoreDESC = queryFactory
                 .selectFrom(naver)
+                .limit(10)
                 .orderBy(naver.starScore.desc())
                 .fetch();
         return starScoreDESC;
     }
     // 리뷰 낮은순 ASC
-    public List<Naver> OrderByReview(String reviewCnt) {
+    public List<Naver> OrderByReview() {
         QNaver naver = QNaver.naver;
         List<Naver> reviewASC = queryFactory
                 .selectFrom(naver)
+                .limit(10)
                 .orderBy(naver.reviewCnt.asc())
                 .fetch();
         return reviewASC;
     }
     // 리뷰 높은순 DESC
-    public List<Naver> OrderByReviewDESC(String reviewCnt) {
+    public List<Naver> OrderByReviewDESC() {
         QNaver naver = QNaver.naver;
         List<Naver> reviewDESC = queryFactory
                 .selectFrom(naver)
+                .limit(10)
                 .orderBy(naver.reviewCnt.desc())
                 .fetch();
         return reviewDESC;
     }
     // 평점 4점 이상
-    public List<Naver> BetweenStarScoreHigh(String starScore) {
+    public List<Naver> BetweenStarScoreHigh() {
         QNaver naver = QNaver.naver;
         List<Naver> BetweenStarScoreHigh = queryFactory
                 .selectFrom(naver)
+                .limit(10)
                 .where(naver.starScore.between(4, 5))           // 최소 4점에서 5점
                 .orderBy(naver.starScore.desc())
                 .fetch();
         return BetweenStarScoreHigh;
     }
-    // 평점 1점 이하
-    public List<Naver> BetweenStarScoreLow(String starScore) {
+    // 평점 2점 이하
+    public List<Naver> BetweenStarScoreLow() {
         QNaver naver = QNaver.naver;
         List<Naver> BetweenStarScoreLow = queryFactory
                 .selectFrom(naver)
-                .where(naver.starScore.between(0, 1))          // 최소 0점에서 1점
+                .limit(10)
+                .where(naver.starScore.between(0, 2))          // 최소 0점에서 1점
                 .orderBy(naver.starScore.desc())
                 .fetch();
         return BetweenStarScoreLow;
     }
     // 리뷰 1000개 이상
-    public List<Naver> BetweenReviewHigh(String reviewCnt) {
+    public List<Naver> BetweenReviewHigh() {
         QNaver naver = QNaver.naver;
         List<Naver> BetweenReviewHigh = queryFactory
                 .selectFrom(naver)
+                .limit(10)
                 .where(naver.reviewCnt.between(1000, 1000000)) // 최소 1000개부터 백만
                 .orderBy(naver.reviewCnt.desc())
                 .fetch();
         return BetweenReviewHigh;
     }
     // 리뷰 10개 이하
-    public List<Naver> BetweenReviewLow(String reviewCnt) {
+    public List<Naver> BetweenReviewLow() {
         QNaver naver = QNaver.naver;
         List<Naver> BetweenReviewLow = queryFactory
                 .selectFrom(naver)
+                .limit(10)
                 .where(naver.reviewCnt.between(0, 10))          // 최소 0개에서 10개
                 .orderBy(naver.reviewCnt.desc())
                 .fetch();
