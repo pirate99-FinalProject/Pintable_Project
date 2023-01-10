@@ -10,7 +10,6 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 public class StoreStatus {
 
@@ -19,17 +18,23 @@ public class StoreStatus {
     private Long id;
 
     @Column(nullable = false)
-    private String totalTableCnt;
+    private int totalTableCnt;
 
     @Column(nullable = false)
-    private String availableTableCnt;
+    private int availableTableCnt;
 
     @Column(nullable = false)
-    private String waitingCnt;
+    private int waitingCnt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @Column(nullable = false)
     private Store store;
 
+    public StoreStatus(Store store){
+        this.totalTableCnt      =   40;
+        this.availableTableCnt  =   40;
+        this.waitingCnt         =   0;
+        this.store              =   store;
+    }
 
 }

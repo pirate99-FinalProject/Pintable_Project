@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ReviewRequestDto {
-    private String userId;
+    private String username;
     private String content;
     private double starScore;
 }

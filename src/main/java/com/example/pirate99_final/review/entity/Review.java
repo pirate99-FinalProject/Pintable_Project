@@ -26,17 +26,22 @@ public class Review {
     private double starScore;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false)
+    @JoinColumn(name = "storeid", nullable = false)
     private Store store;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false)
+    @JoinColumn(name = "userid", nullable = false)
     private User user;
 
-    public Review(ReviewRequestDto requestDto){
+    public Review(ReviewRequestDto requestDto, Store store, User user){
         this.content    =   requestDto.getContent();
         this.starScore  =   requestDto.getStarScore();
+        this.store      =   store;
+        this.user       =   user;
     }
 
-
+    public void update(ReviewRequestDto requestDto){
+        this.content = requestDto.getContent();
+        this.starScore = requestDto.getStarScore();
+    }
 }
