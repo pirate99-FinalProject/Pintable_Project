@@ -15,6 +15,7 @@ public enum ErrorCode {
     STORE_POST_ERROR(HttpStatus.OK, "점포 등록에 실패했습니다."),
     STORE_DELETE_ERROR(HttpStatus.OK, "점포 삭제에 실패했습니다."),
     REVIEW_POST_ERROR(HttpStatus.OK, "리뷰 등록에 실패했습니다."),
+
     REVIEW_DELETE_ERROR(HttpStatus.OK, "리뷰 삭제에 실패했습니다."),
     NOT_FOUND_REVIEW_ERROR(HttpStatus.OK, "해당하는 리뷰가 없습니다."),
     NOT_FOUND_ID_ERROR(HttpStatus.OK, "해당하는 ID가 없습니다."),

@@ -6,6 +6,7 @@ import com.example.pirate99_final.map.repository.NaverRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -13,39 +14,28 @@ public class NaverService {
     private final NaverRepository naverRepository;
     private final NaverRepositoryImpl naverRepositoryImpl;
 
-    public void naverMap(Model model, String storeName) {
-        // 1. DB에서 가게 이름을 조회 한다.
-        Naver naver = naverRepository.findByStoreName(storeName).orElseThrow(
-                () -> new RuntimeException("가게가 존재하지 않습니다.")
-        );
-        // 2. 조회한 가게이름의 위도 경도 값을 index.html로 보낸다.
-        model.addAttribute("Lat", naver.getLat());
-        model.addAttribute("Lng", naver.getLng());
-//****************************************************************************************************************
-//        // 가게명 일치 여부
-//        Naver findByOneStoreName = naverRepositoryImpl.findByStoreName(storeName);
-//        // 가게명 일부 포함
-//        List<Naver> findByStoreNameInclude = naverRepositoryImpl.findByStoreNameInclude(storeName);
-//        // 도로명주소 포함 여부 (도로명주소의 일부 일치)
-//        List<Naver> findByRoadAddressInclude = naverRepositoryImpl.findByroadAddressInclude(roadNameAddress);
-//        // 업종별 분류
-//        List<Naver> findByBusiness = naverRepositoryImpl.findByBusiness(typeOfBusiness);
-//        // 평점 낮은순 ASC
-//        List<Naver> OrderByStarScoreASC = naverRepositoryImpl.OrderByStarScore(starScore);
-//        // 평점 높은순 DESC
-//        List<Naver> OrderByStarScoreDESC = naverRepositoryImpl.OrderByStarScoreDESC(starScore);
-//        // 리뷰 낮은순 ASC
-//        List<Naver> OrderByReviewASC = naverRepositoryImpl.OrderByReview(reviewCnt);
-//        // 리뷰 높은순 DESC
-//        List<Naver> OrderByReviewDESC = naverRepositoryImpl.OrderByReviewDESC(reviewCnt);
-//        // 평점 4점 이상
-//        List<Naver> BetweenStarScoreHigh = naverRepositoryImpl.BetweenStarScoreHigh(starScore);
-//        // 평점 1점 이하
-//        List<Naver> BetweenStarScoreLow = naverRepositoryImpl.BetweenStarScoreLow(starScore);
-//        // 리뷰 1000개 이상
-//        List<Naver> BetweenReviewHigh = naverRepositoryImpl.BetweenReviewHigh(reviewCnt);
-//        // 리뷰 10개 이하
-//        List<Naver> BetweenReviewLow = naverRepositoryImpl.BetweenReviewLow(reviewCnt);
-//****************************************************************************************************************
+    /*
+	  기능 : 현재 위치에서 검색 기능
+      작성자 : 김규리
+      작성일자 : 22.1.10
+    */
+    public void searchCurrentMap(Model model, String latitude, String longitude, String storeName) {
+
+        List<Naver> naverList = naverRepository.searchCurrent(latitude, longitude, storeName);                           // 1. 입력받은 위도, 경도, 가게 이름으로 DB에 검사한다.
+        model.addAttribute("searchList", naverList);                                                         // 2. index.html에 검색한 결과 전달
+    }
+
+    /*
+	  기능 : 지도 검색 기능
+      작성자 : 김규리
+      작성일자 : 22.1.10
+    */
+    public void searchMap(Model model, String storeName) {
+        String storeNameTrim = storeName.replaceAll(" ", "");                                            // 1. 검색 시 키워드 검색을 위한 문자 치환(" ", "")
+        List<Naver> naverList = naverRepository.findByStorenameContaining(storeNameTrim);                                // 2. %Like% 로 장소 검색
+        model.addAttribute("searchList", naverList);                                                         // 3. index.html에 검색한 결과 전달
+
     }
 }
+
+
