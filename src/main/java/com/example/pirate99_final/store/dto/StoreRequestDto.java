@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class StoreRequestDto{
-
     private String address;                                         // 주소
     private String roadNameAddress;                                 // 도로명주소
     private int postNumber;                                         // 우편주소
