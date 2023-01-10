@@ -2,6 +2,7 @@ package com.example.pirate99_final.map.service;
 
 import com.example.pirate99_final.map.entity.Naver;
 import com.example.pirate99_final.map.repository.NaverRepository;
+import com.example.pirate99_final.map.repository.NaverRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NaverService {
     private final NaverRepository naverRepository;
+    private final NaverRepositoryImpl naverRepositoryImpl;
 
     /*
 	  기능 : 현재 위치에서 검색 기능
@@ -32,6 +34,7 @@ public class NaverService {
         String storeNameTrim = storeName.replaceAll(" ", "");                                            // 1. 검색 시 키워드 검색을 위한 문자 치환(" ", "")
         List<Naver> naverList = naverRepository.findByStorenameContaining(storeNameTrim);                                // 2. %Like% 로 장소 검색
         model.addAttribute("searchList", naverList);                                                         // 3. index.html에 검색한 결과 전달
+
     }
 }
 

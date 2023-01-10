@@ -15,13 +15,15 @@ public class Naver {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String address;
-    private String roadnameaddress;
-    private int postnumber;
-    private String storename;
-    private String typeofbusiness;
-    private double xcoordinate;
-    private double ycoordinate;
-    private double starscore;
-    private int reviewcnt;
+    private String address;         // 가게 구 주소
+    private String roadNameAddress; // 가게 도로명 주소
+    private int postNumber;         // 우편 번호
+    private String storeName;       // 가게 이름
+    private String typeOfBusiness;  // 업종 분류
+//    private double Lat;             // 위도 query Dsl 테스트용
+//    private double Lng;             // 경도 query Dsl 테스트용
+    private double xCoordinate;     // x좌표
+    private double yCoordinate;     // y좌표
+    private double starScore;       // 별점
+    private int reviewCnt;          // 리뷰 갯수
 }

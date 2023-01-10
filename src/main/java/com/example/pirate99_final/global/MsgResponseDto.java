@@ -19,7 +19,9 @@ public class MsgResponseDto {
     }
 
     public MsgResponseDto(CustomException customException) {
-        this.statusCode = customException.getStatuscode();
+
+        this.statusCode = customException.getStatusCode();
+
         this.msg = customException.getMsg();
     }
     public MsgResponseDto(MethodArgumentNotValidException ex) {
