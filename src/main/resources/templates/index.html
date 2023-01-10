@@ -31,8 +31,6 @@
 </head>
 
 <body>
-
-
 <div id="app">
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
@@ -56,28 +54,32 @@
                             }
                         </script>
                         <button type="button" class="btn btn-primary" onclick=handleSearch()>Search</button>
+                        <button class="btn btn-primary" id="btn5" type="button">현위치</button>
+                        <script th:inline="javascript">
+
+
+                            let latitude = "", longitude = "";
+
+                            function onSuccess(position) {
+                                latitude = position.coords.latitude;
+                                longitude = position.coords.longitude;
+                                const storename = document.querySelector('.form-control').value;
+                                console.log((storename));
+                                location.href = "api/currentLocation?latitude=" + latitude + "&longitude=" + longitude + "&storeName=" + storename;
+                            }
+
+                            function onError() {
+                                alert("위치를 찾을 수 없습니다.");
+                            }
+
+                            document.getElementById("btn5").onclick = function () {
+                                navigator.geolocation.getCurrentPosition(onSuccess, onError);
+                            }
+                        </script>
                     </form>
                     <div class="search-backdrop"></div>
                 </div>
                 <div class="search-element">
-                    <button class="btn btn-primary" id="btn5" type="button">현위치</button>
-                    <script th:inline="javascript">
-                        let latitude = "", longitude = "";
-
-                        function onSuccess(position) {
-                            latitude = position.coords.latitude;
-                            longitude = position.coords.longitude;
-                            location.href = "api/currentLocation?latitude=" + latitude + "&longitude=" + longitude;
-                        }
-
-                        function onError() {
-                            alert("위치를 찾을 수 없습니다.");
-                        }
-
-                        document.getElementById("btn5").onclick = function () {
-                            navigator.geolocation.getCurrentPosition(onSuccess, onError);
-                        }
-                    </script>
                 </div>
             </form>
             <ul class="navbar-nav navbar-right">
@@ -103,33 +105,22 @@
                     <a href="index.html">🔙</a>
                 </div>
                 <ul class="sidebar-menu">
+                    <p></p>
+                    <p></p>
                     <li class="dropdown active">
                         <a class="nav-link"><span>Stores</span></a>
                     </li>
+                    <p></p><p></p><p></p>
                     <img alt="image" src="/css/images/shopping-mall.png" class="rounded-circle mr-1" width="240"
                          style="border-radius:50%">
                     <li class="store">
-                        <p><span id="storename">[[${storeName}]]</span></p>
+                        <p><span id="storename"></span></p>
                     </li>
                     <p></p>
                     <li class="store-posting">
                         <p><img alt="image" src="/css/images/pin.png" width="32"
-                                style="border-radius:50%"><span id="storeadrress">[[${placeAddress}]]</span></p>
+                                style="border-radius:50%"><span id="storeadrress"></span></p>
                         <p></p>
-                    </li>
-                    <li class="store-review">
-                        <p><a href="https://blog.naver.com/icecream0514/222966646774">
-                            <img alt="image" src="/css/images/blogger.png" width="24" style="border-radius:50%"><span
-                                id="storeReview">[성수동 카페 추천] 블루보틀 성수::</span></a></p>
-                        <p><a href="https://blog.naver.com/wonsim105/222962817995">
-                            <img alt="image" src="/css/images/blogger.png" width="24" style="border-radius:50%"><span
-                                id="storeReview0">[뚝섬역 카페]블루보틀 성수(커피계의 애플)</span></a></p>
-                        <p><a href="https://blog.naver.com/dynamicduck/222945580448">
-                            <img alt="image" src="/css/images/blogger.png" width="24" style="border-radius:50%"><span
-                                id="storeReview1">블루보틀 성수</span></a></p>
-                        <p><a href="https://blog.naver.com/swiss9769/222807900863">
-                            <img alt="image" src="/css/images/blogger.png" width="24" style="border-radius:50%"><span
-                                id="storeReview2">[성수] 블루 보틀 성수 카페</span></a></p>
                     </li>
                 </ul>
                 <div class="sidebar-brand sidebar-brand-sm">
@@ -155,83 +146,94 @@
                                     <div id="map" style="width:100%;height:1100px;"></div>
                                     <input type="hidden" name="username" value="..." id="username"/>
                                     <script th:inline="javascript">
-                                        var map = new naver.maps.Map('map', {
-                                            center: new naver.maps.LatLng([[${Lat0}]], [[${Lng0}]]),
-                                            zoom: 16
-                                        });
-                                        console.log([[${Lat0}]],[[${Lng0}]]);
+                                        const searchList = [[${searchList}]];
 
-                                        var marker = new naver.maps.Marker({
-                                            icon: {
-                                                url: "/css/images/pin.png",
-                                                scaledSize: new naver.maps.Size(30, 37),
-                                                origin: new naver.maps.Point(0, 0),
-                                            },
-                                            position: new naver.maps.LatLng([[${Lat0}]], [[${Lng0}]]),
-                                            map: map
-                                        });
+                                        // 예외처리 : 검색결과 없음
+                                        if (!searchList) {
+                                            const map = new naver.maps.Map('map', {
+                                                center: new naver.maps.LatLng([[${Lat}]], [[${Lng}]]),
+                                                zoom: 16
+                                            });
 
-                                        var marker = new naver.maps.Marker({
-                                            icon: {
-                                                url: "/css/images/pin.png",
-                                                scaledSize: new naver.maps.Size(30, 37),
-                                                origin: new naver.maps.Point(0, 0),
-                                            },
-                                            position: new naver.maps.LatLng([[${Lat1}]], [[${Lng1}]]),
-                                            map: map
-                                        });
+                                            const marker = new naver.maps.Marker({
+                                                icon: {
+                                                    url: "/css/images/pin.png",
+                                                    scaledSize: new naver.maps.Size(30, 37),
+                                                    origin: new naver.maps.Point(0, 0),
+                                                },
+                                                position: new naver.maps.LatLng([[${Lat}]], [[${Lng}]]),
+                                                map: map
+                                            });
 
-                                        var marker = new naver.maps.Marker({
-                                            icon: {
-                                                url: "/css/images/pin.png",
-                                                scaledSize: new naver.maps.Size(30, 37),
-                                                origin: new naver.maps.Point(0, 0),
-                                            },
-                                            position: new naver.maps.LatLng([[${Lat3}]], [[${Lng3}]]),
-                                            map: map
-                                        });
+                                            // content open 이벤트
+                                            naver.maps.Event.addListener(marker, "click", function (e) {
+                                                if (infowindow.getMap()) {
+                                                    infowindow.close();
+                                                } else {
+                                                    infowindow.open(map, marker);
+                                                }
+                                            });
 
-                                        var marker = new naver.maps.Marker({
-                                            icon: {
-                                                url: "/css/images/pin.png",
-                                                scaledSize: new naver.maps.Size(30, 37),
-                                                origin: new naver.maps.Point(0, 0),
-                                            },
-                                            position: new naver.maps.LatLng([[${Lat4}]], [[${Lng4}]]),
-                                            map: map
-                                        });
+                                        } else {
+                                            // map 좌표 지정
+                                            const searchNum = searchList.length;
+                                            const map = new naver.maps.Map('map', {
+                                                center: new naver.maps.LatLng(searchList[0].xcoordinate, searchList[0].ycoordinate),
+                                                zoom: 16
+                                            });
 
-                                        var contentString = [
-                                            '<div class="iw_inner" style="padding:5px; margin: 5px 5px 5px 5px; width: 150px; height: 45px; text-align: center; ">',
-                                            '<p>🏠 [[${storeName}]]</p>',
-                                            '<p>[[${placeAddress}]]</p>',
-                                            '</div>'
-                                        ].join('').replace(/\"/gi, "");
+                                            for (let i = 0; i < searchNum; i++) {
+                                                const {
+                                                    xcoordinate,
+                                                    ycoordinate,
+                                                    storename,
+                                                    roadnameaddress
+                                                } = searchList[i];
+                                                // 마커 생성
+                                                const marker = new naver.maps.Marker({
+                                                    icon: {
+                                                        url: "/css/images/pin.png",
+                                                        scaledSize: new naver.maps.Size(30, 37),
+                                                        origin: new naver.maps.Point(0, 0),
+                                                    },
+                                                    position: new naver.maps.LatLng(xcoordinate, ycoordinate),
+                                                    map: map
+                                                });
 
+                                                // 검색 결과 content
+                                                const contentString = [
+                                                    '<div class="iw_inner" style="padding:5px; margin: 5px 5px 5px 5px; width: 150px; height: 45px; text-align: center; ">',
+                                                    `<p>🏠 ${storename}</p>`, // index
+                                                    `<p>${roadnameaddress}</p>`, // index
+                                                    '</div>'
+                                                ].join('').replace(/\"/gi, "");
 
-                                        var infowindow = new naver.maps.InfoWindow({
-                                            content: contentString,
-                                            maxWidth: 200,
-                                            height: 50,
-                                            backgroundColor: "white",
-                                            borderColor: "black",
-                                            borderWidth: 1,
-                                            disableAnchor: true,
-                                            textAlign: "center",
-                                            margin: "auto",
+                                                const infowindow = new naver.maps.InfoWindow({
+                                                    content: contentString,
+                                                    maxWidth: 200,
+                                                    height: 50,
+                                                    backgroundColor: "white",
+                                                    borderColor: "black",
+                                                    borderWidth: 1,
+                                                    disableAnchor: true,
+                                                    textAlign: "center",
+                                                    margin: "auto",
 
-                                            pixelOffset: new naver.maps.Point(0, -5)
-                                        });
+                                                    pixelOffset: new naver.maps.Point(0, -5)
+                                                });
 
-                                        naver.maps.Event.addListener(marker, "click", function (e) {
-                                            if (infowindow.getMap()) {
-                                                infowindow.close();
-                                            } else {
-                                                infowindow.open(map, marker);
+                                                // content open 이벤트
+                                                naver.maps.Event.addListener(marker, "click", function (e) {
+                                                    if (infowindow.getMap()) {
+                                                        infowindow.close();
+                                                    } else {
+                                                        infowindow.open(map, marker);
+                                                        document.getElementById("storename").innerHTML = storename;
+                                                        document.getElementById("storeadrress").innerHTML = roadnameaddress;
+                                                    }
+                                                });
                                             }
-                                        });
-
-                                        infowindow.close();
+                                        }
                                     </script>
                                 </div>
                             </div>
