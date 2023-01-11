@@ -2,11 +2,13 @@ package com.example.pirate99_final.store.controller;
 
 
 import com.example.pirate99_final.global.MsgResponseDto;
+import com.example.pirate99_final.review.dto.ReviewRequestDto;
+import com.example.pirate99_final.store.dto.ConfirmRequestDto;
+import com.example.pirate99_final.store.dto.CountingStoreResponseDto;
 import com.example.pirate99_final.store.dto.StoreRequestDto;
-import com.example.pirate99_final.store.dto.StoreResponseDto;
+import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
 import com.example.pirate99_final.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,15 +28,35 @@ public class StoreController {
 
     // DB select all
     @GetMapping("/storeStatus")
-    public List<StoreResponseDto> getStores(){return storeService.getStores();}
+    public List<StoreStatusResponseDto> getStores(){return storeService.getStores();}
 
     // DB select one
-    @GetMapping("/storeStatus/{id}")
-    public StoreResponseDto getStore(@PathVariable long id){return storeService.getStore(id);}
+    @GetMapping("/storeStatus/{storeId}")
+    public StoreStatusResponseDto getStore(@PathVariable long storeId){return storeService.getStore(storeId);}
 
     // DB delete
-    @DeleteMapping("/storeStatus/{id}")
-    public MsgResponseDto deletesStore(@PathVariable Long id) {
-        return storeService.deleteStore(id);
+    @DeleteMapping("/storeStatus/{storeId}")
+    public MsgResponseDto deletesStore(@PathVariable Long storeId) {
+        return storeService.deleteStore(storeId);
+    }
+
+    @PutMapping("/storeStatus/enter/{storeId}/{people}")
+    public CountingStoreResponseDto enterStore(@PathVariable Long storeId, @PathVariable int people){
+        return storeService.enterStore(storeId, people);
+    }
+
+    @PutMapping("/storeStatus/leave/{storeId}/{people}")
+    public CountingStoreResponseDto leaveStore(@PathVariable Long storeId, @PathVariable int people){
+        return storeService.leaveStore(storeId, people);
+    }
+
+    @PutMapping("/storeStatus/call/{storeId}")
+    public MsgResponseDto callpeople(@PathVariable Long storeId, @PathVariable ConfirmRequestDto requestDto){
+        return storeService.callpeople(storeId, requestDto);
+    }
+
+    @PutMapping("/storeStatus/confirmEnter/{storeId}")
+    public MsgResponseDto confirmStore(@PathVariable Long storeId, @RequestBody ConfirmRequestDto requestDto){
+        return storeService.confirmStore(storeId, requestDto);
     }
 }
