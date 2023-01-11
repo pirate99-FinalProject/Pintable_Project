@@ -49,8 +49,13 @@ public class ReviewService {
 
     // Get memos from DB (all)
     public List<ReviewResponseDto> getReviews(long id) {
+
+        Store store = storeRepository.findById(id).orElseThrow(()
+                -> new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+        );
+
         // 1. Select All Memo
-        List<Review> ListReview = reviewRepository.findAllByOrderByIdAtDesc();
+        List<Review> ListReview = reviewRepository.findAllByStore(store);
 
         List<ReviewResponseDto> ListResponseDto = new ArrayList<>();
 

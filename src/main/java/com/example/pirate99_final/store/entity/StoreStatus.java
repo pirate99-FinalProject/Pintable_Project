@@ -26,8 +26,9 @@ public class StoreStatus {
     @Column(nullable = false)
     private int waitingCnt;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "storeid", nullable = false)
+
     private Store store;
 
     public StoreStatus(Store store){

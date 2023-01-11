@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
-    Store findById();
+    List<Store> findAllBy();
 }
