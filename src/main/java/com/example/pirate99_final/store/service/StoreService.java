@@ -35,7 +35,7 @@ public class StoreService {
     // Get memos from DB (all)
     public List<StoreResponseDto> getStores() {
         // 1. Select All Memo
-        List<Store> ListStore = storeRepository.findAllByOrderByIdAtDesc();                          // Select All
+        List<Store> ListStore = storeRepository.findAllBy();                          // Select All
 
         List<StoreResponseDto> ListResponseDto = new ArrayList<>();
 
