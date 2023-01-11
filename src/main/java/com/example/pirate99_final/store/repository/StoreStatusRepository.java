@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface StoreStatusRepository extends JpaRepository<StoreStatus, Long> {
-    List<StoreStatus> findAllByOrderByIdAtDesc();
+    List<StoreStatus> findAllBy();
 
     @Transactional
     void deleteByStore(Store store);

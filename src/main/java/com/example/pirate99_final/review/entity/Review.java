@@ -43,11 +43,5 @@ public class Review {
     public void update(ReviewRequestDto requestDto){
         this.content = requestDto.getContent();
         this.starScore = requestDto.getStarScore();
-
-    }
-
-    public void update(ReviewRequestDto requestDto){
-        this.content = requestDto.getContent();
-        this.starScore = requestDto.getStarScore();
     }
 }
