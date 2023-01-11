@@ -14,19 +14,19 @@ public interface NaverRepositoryCustom {
     // 업종별 분류
     List<Naver> findByBusiness(String typeOfBusiness);
     // 평점 오름차순
-    List<Naver> OrderByStarScore(String starScore);
+    List<Naver> OrderByStarScore();
     // 평점 내림차순
-    List<Naver> OrderByStarScoreDESC(String starScore);
+    List<Naver> OrderByStarScoreDESC();
     // 리뷰 갯수 오름차순
-    List<Naver> OrderByReview(String reviewCnt);
+    List<Naver> OrderByReview();
     // 리뷰 갯수 내림차순
-    List<Naver> OrderByReviewDESC(String reviewCnt);
+    List<Naver> OrderByReviewDESC();
     // 평점 4점 이상
-    List<Naver> BetweenStarScoreHigh(String starScore);
+    List<Naver> BetweenStarScoreHigh();
     // 평점 1점 이하
-    List<Naver> BetweenStarScoreLow(String starScore);
+    List<Naver> BetweenStarScoreLow();
     // 리뷰 1000개 이상
-    List<Naver> BetweenReviewHigh(String reviewCnt);
+    List<Naver> BetweenReviewHigh();
     // 리뷰 10개 이하
-    List<Naver> BetweenReviewLow(String reviewCnt);
+    List<Naver> BetweenReviewLow();
 }

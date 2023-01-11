@@ -57,5 +57,4 @@ public class Store {
         this.reviewCnt          =   0;                                  // 리뷰수
 
     }
-
 }
