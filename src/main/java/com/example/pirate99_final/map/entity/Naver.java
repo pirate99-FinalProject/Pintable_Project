@@ -20,8 +20,11 @@ public class Naver {
     private int postNumber;         // 우편 번호
     private String storeName;       // 가게 이름
     private String typeOfBusiness;  // 업종 분류
-    private double xCoordinate;     // x좌표
-    private double yCoordinate;     // y좌표
+//    private double xCoordinate;     // x좌표
+//    private double yCoordinate;     // y좌표
+    private double lat;
+    private double lng;
     private double starScore;       // 별점
     private int reviewCnt;          // 리뷰 갯수
+
 }
