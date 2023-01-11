@@ -28,7 +28,7 @@ public class StoreStatus {
     private int waitingCnt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "storeid", nullable = false)
+    @JoinColumn(name = "storeId", nullable = false)
 
     private Store store;
 

@@ -56,7 +56,7 @@ public class UserService  {
                 () -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
         );
 
-        if(password.equals(user.getPassword())){                                 // 비밀번호 비교
+        if(!password.equals(user.getPassword())){                                 // 비밀번호 비교
             throw  new CustomException(ErrorCode.WRONG_PASSWORD_ERROR);
         }
 

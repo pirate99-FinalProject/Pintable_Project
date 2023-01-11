@@ -19,10 +19,4 @@ public enum WaitingStatus {
 
     private final int waitingStatus;
 
-    public static WaitingStatus valueOfWaitingStatus(int waitingStatus){
-        return Arrays.stream(values())
-                .filter(value -> value.waitingStatus==(waitingStatus))
-                .findAny()
-                .orElse(null);
-    }
 }

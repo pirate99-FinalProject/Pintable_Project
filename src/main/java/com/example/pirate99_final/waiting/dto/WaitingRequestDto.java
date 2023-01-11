@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class WaitingRequestDto {
-    private String userId;
+    private String username;
 }

@@ -16,9 +16,9 @@ public class WaitingController {
 
     private final WaitingService waitingService;
 
-    @PostMapping(value = "/waiting")
-    public MsgResponseDto createWaiter(WaitingRequestDto request) {
-        return waitingService.createWaiter(request);
+    @PostMapping(value = "/waitingList/{storeStatusId}")
+    public MsgResponseDto createWaiter(@PathVariable Long storeStatusId, @RequestBody WaitingRequestDto request) {
+        return waitingService.createWaiter(storeStatusId, request);
     }
 
     @GetMapping("/waitingList")

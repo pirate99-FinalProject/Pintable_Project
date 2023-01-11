@@ -53,8 +53,8 @@ public class StoreService {
     }
 
     // Get store from DB (one)
-    public StoreStatusResponseDto getStore(long id){
-        StoreStatus storeStatus = storeStatusRepository.findById(id).orElseThrow(()->                                        // Select one
+    public StoreStatusResponseDto getStore(long storeId){
+        StoreStatus storeStatus = storeStatusRepository.findById(storeId).orElseThrow(()->                                        // Select one
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
@@ -65,14 +65,14 @@ public class StoreService {
 
     // DB delete function (data delete)
 
-    public MsgResponseDto deleteStore(Long id) {
+    public MsgResponseDto deleteStore(Long storeId) {
 
-        Store store  = storeRepository.findById(id).orElseThrow(                                             // find store
+        Store store  = storeRepository.findById(storeId).orElseThrow(                                             // find store
                 () -> new CustomException(ErrorCode.NOT_FOUND_ID_ERROR)
         );
 
         storeStatusRepository.deleteByStore(store);                                     // 상점 상태 테이블 삭제
-        storeRepository.deleteById(id);                                                          // 해당 상점 삭제
+        storeRepository.deleteById(storeId);                                                          // 해당 상점 삭제
 
         return  new MsgResponseDto(DELETE_REVIEW);
     }

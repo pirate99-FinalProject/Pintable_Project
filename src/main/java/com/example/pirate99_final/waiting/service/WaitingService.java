@@ -4,6 +4,12 @@ import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.global.exception.CustomException;
 import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.global.exception.SuccessCode;
+import com.example.pirate99_final.store.entity.Store;
+import com.example.pirate99_final.store.entity.StoreStatus;
+import com.example.pirate99_final.store.repository.StoreRepository;
+import com.example.pirate99_final.store.repository.StoreStatusRepository;
+import com.example.pirate99_final.user.entity.User;
+import com.example.pirate99_final.user.repository.UserRepository;
 import com.example.pirate99_final.waiting.dto.WaitingRequestDto;
 import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
 import com.example.pirate99_final.waiting.entity.Waiting;
@@ -23,13 +29,18 @@ public class WaitingService {
 
     private final WaitingRepository waitingRepository;
 
+    private final StoreStatusRepository storeStatusRepository;
+    private final UserRepository userRepository;
 
 
     @Transactional
-    public MsgResponseDto createWaiter(WaitingRequestDto requestDto) {
-
-        Waiting waiting = waitingRepository.save(new Waiting(requestDto));
-        if(waiting.getUserId() == null) {
+    public MsgResponseDto createWaiter(Long storeStatusId, WaitingRequestDto requestDto) {
+        User user = userRepository.findByUsername(requestDto.getUsername())
+                .orElseThrow();
+        StoreStatus storeStatus = storeStatusRepository.findById(storeStatusId)
+                .orElseThrow();
+        Waiting waiting = waitingRepository.save(new Waiting(user, storeStatus, requestDto));
+        if(waiting.getUser() == null) {
             throw new CustomException(ErrorCode.WAITING_POST_ERROR);
         }
         return new MsgResponseDto(SuccessCode.CREATE_WAITING);
