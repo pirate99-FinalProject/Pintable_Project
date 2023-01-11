@@ -27,15 +27,16 @@ public class StoreStatus {
     @Column(nullable = false)
     private int waitingCnt;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @Column(nullable = false)
-//    private Store store;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "storeid", nullable = false)
+
+    private Store store;
 
     public StoreStatus(Store store){
         this.totalTableCnt      =   40;
         this.availableTableCnt  =   40;
         this.waitingCnt         =   0;
-//        this.store              =   store;
+        this.store              =   store;
     }
 
 }

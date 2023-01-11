@@ -30,7 +30,7 @@ public class ReviewService {
     private final UserRepository userRepository;
 
     // Store Create function
-    public MsgResponseDto createReview(Long id, ReviewRequestDto requestDto){
+    public MsgResponseDto createReview(long id, ReviewRequestDto requestDto){
         //1. create store Object and insert DB
 
         Store store = storeRepository.findById(id).orElseThrow(()->
@@ -48,9 +48,14 @@ public class ReviewService {
     }
 
     // Get memos from DB (all)
-    public List<ReviewResponseDto> getReviews(Long id) {
+    public List<ReviewResponseDto> getReviews(long id) {
+
+        Store store = storeRepository.findById(id).orElseThrow(()
+                -> new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+        );
+
         // 1. Select All Memo
-        List<Review> ListReview = reviewRepository.findAllByOrderByIdAtDesc();
+        List<Review> ListReview = reviewRepository.findAllByStore(store);
 
         List<ReviewResponseDto> ListResponseDto = new ArrayList<>();
 
@@ -61,7 +66,7 @@ public class ReviewService {
     }
 
     // Get store from DB (one)
-    public ReviewResponseDto getReview(Long storeId, Long reviewId){
+    public ReviewResponseDto getReview(long storeId, long reviewId){
         Review review = reviewRepository.findById(storeId).orElseThrow(()->
                 new CustomException(ErrorCode.NOT_FOUND_REVIEW_ERROR)
         );
@@ -88,7 +93,7 @@ public class ReviewService {
 
 
     // DB delete function (data delete)
-    public MsgResponseDto deleteReview(Long storeId, Long reviewId) {
+    public MsgResponseDto deleteReview(Long storeId, Long reviewid) {
 
         Review review  = reviewRepository.findById(storeId).orElseThrow(                                             // find memo
                 () -> new CustomException(ErrorCode.NOT_FOUND_ID_ERROR)

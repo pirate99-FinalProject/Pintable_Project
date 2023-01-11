@@ -21,9 +21,12 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // DB save
-    @PostMapping("/review/{storeId}")
-    public MsgResponseDto createReview(@PathVariable Long storeId, @RequestBody ReviewRequestDto requestDto){
-        return reviewService.createReview(storeId, requestDto);
+
+    @PostMapping("/review/{stordId}")
+    public MsgResponseDto createReview(@PathVariable Long stordId, @RequestBody ReviewRequestDto requestDto){
+        return reviewService.createReview(stordId, requestDto);
+
+
     }
 
     // DB select all
@@ -31,8 +34,11 @@ public class ReviewController {
     public List<ReviewResponseDto> getReviews(@PathVariable Long storeId){return reviewService.getReviews(storeId);}
 
     // DB select one
-    @GetMapping("/review/{storeId}/{reviewId}")
-    public ReviewResponseDto getReview(@PathVariable Long storeId, @PathVariable Long reviewId){return reviewService.getReview(storeId, reviewId);}
+
+    @GetMapping("/review/{stordId}/{reviewId}")
+    public ReviewResponseDto getReview(@PathVariable Long stordId, @PathVariable Long reviewId){return reviewService.getReview(stordId, reviewId);}
+
+
 
 
     // DB delete
