@@ -1,6 +1,8 @@
 package com.example.pirate99_final.waiting.service;
 
 import com.example.pirate99_final.global.MsgResponseDto;
+import com.example.pirate99_final.global.exception.CustomException;
+import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.global.exception.SuccessCode;
 import com.example.pirate99_final.waiting.dto.WaitingRequestDto;
 import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
@@ -27,7 +29,9 @@ public class WaitingService {
     public MsgResponseDto createWaiter(WaitingRequestDto requestDto) {
 
         Waiting waiting = waitingRepository.save(new Waiting(requestDto));
-
+        if(waiting.getUserId() == null) {
+            throw new CustomException(ErrorCode.WAITING_POST_ERROR);
+        }
         return new MsgResponseDto(SuccessCode.CREATE_WAITING);
     }
 
