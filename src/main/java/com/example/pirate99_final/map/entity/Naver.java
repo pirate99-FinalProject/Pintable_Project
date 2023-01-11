@@ -14,14 +14,14 @@ import javax.persistence.Id;
 public class Naver {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String address;         // 가게 구 주소
-    private String roadNameAddress; // 가게 도로명 주소
-    private int postNumber;         // 우편 번호
-    private String storeName;       // 가게 이름
-    private String typeOfBusiness;  // 업종 분류
-    private double xCoordinate;     // x좌표
-    private double yCoordinate;     // y좌표
-    private double starScore;       // 별점
-    private int reviewCnt;          // 리뷰 갯수
+    private Long id;                // DB에 저장되는 id
+    private String address;         // 일반 주소
+    private String roadnameaddress; // 도로명 주소
+    private int postnumber;         // 우편 번호
+    private String storename;       // 가게 이름
+    private String typeofbusiness;  // 업종
+    private double xcoordinate;     // 위도(x좌표)
+    private double ycoordinate;     // 경도(y좌표)
+    private double starscore;       // 별점
+    private int reviewcnt;          // 리뷰 갯수
 }
