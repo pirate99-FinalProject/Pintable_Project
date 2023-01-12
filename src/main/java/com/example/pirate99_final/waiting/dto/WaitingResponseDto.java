@@ -20,7 +20,6 @@ public class WaitingResponseDto {
     private LocalDateTime createdAt;
 
 
-
     public WaitingResponseDto(Waiting waiting) {
         this.waitingId = waiting.getWaitingId();
         this.waitingStatus = waiting.getWaitingStatus();
