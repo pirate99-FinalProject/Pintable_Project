@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 public class StoreStatus {
 
     @Id
@@ -27,9 +28,9 @@ public class StoreStatus {
     private int waitingCnt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "storeid", nullable = false)
-
+    @JoinColumn(name = "storeId", nullable = false)
     private Store store;
+
 
     public StoreStatus(Store store){
         this.totalTableCnt      =   40;
@@ -38,4 +39,11 @@ public class StoreStatus {
         this.store              =   store;
     }
 
+    public void update(int availableTableCnt){
+        this.availableTableCnt  =   availableTableCnt;
+    }
+
+    public void update_waitingcnt(int waitingCnt){
+        this.waitingCnt = waitingCnt;
+    }
 }
