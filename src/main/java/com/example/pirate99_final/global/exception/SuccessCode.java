@@ -17,6 +17,7 @@ public enum SuccessCode {
     CREATE_REVIEW(HttpStatus.OK, "리뷰 등록 성공"),
     DELETE_REVIEW(HttpStatus.OK, "리뷰 삭제 성공"),
     CONFIRM_ENTER(HttpStatus.OK, "입장 확인"),
+    CONFIRM_LEAVE(HttpStatus.OK, "퇴장 확인"),
 
     CALL_PEOPLE(HttpStatus.OK, "대기자를 호출했습니다.");
 

@@ -18,6 +18,11 @@ public class MsgResponseDto {
         this.statusCode = successCode.getHttpStatus().value();
     }
 
+    public MsgResponseDto(int statusCode, String msg) {
+        this.msg = msg;
+        this.statusCode = statusCode;
+    }
+
     public MsgResponseDto(CustomException customException) {
 
         this.statusCode = customException.getStatusCode();

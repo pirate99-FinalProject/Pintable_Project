@@ -11,5 +11,4 @@ public class Pirate99FinalApplication {
     public static void main(String[] args) {
         SpringApplication.run(Pirate99FinalApplication.class, args);
     }
-
 }
