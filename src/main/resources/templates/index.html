@@ -27,6 +27,8 @@
 
     <!-- Js Files -->
     <script src="/js/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script> console.log(axios)</script>
 
     <!--head 태그 내 추가-->
     <link rel="icon" href="/css/images/pin.png">
@@ -136,6 +138,75 @@
                         <p><img alt="image" src="/css/images/pin.png" width="32"
                                 style="border-radius:50%"><span id="storeadrress"></span></p>
                         <p></p>
+                    </li>
+                    <li class="store-posting">
+                        <div id="storeStatus">
+                            <p> 대기 현황 : # 팀 </p>
+                            <div id="myStatusShow">
+                                <p> 내 상태: # 팀 </p>
+                            </div>
+                            <button type="button" class="btn1" id="requestwaiting" onclick="waiting()"> 대기 요청 </button>
+                            <button type="button" class="btn1" id="canclewaiting" onclick="cancle()"> 대기 취소</button>
+                            <button type="button" class="btn1" id="Confirmstatus" onclick="status()"> 상태 조회 </button>
+                        </div>
+                    </li>
+                    <p></p>
+                    <li class="waiting-login">
+                        <div class="signin" id="signin">
+                            <script></script>
+                            <a><span>비회원 대기 신청</span></a>
+                            <div class="input-box">
+                                <input type="username" placeholder="id" style="height: 30px">
+                            </div>
+                            <p></p>
+                            <button type="button" id="loginbtn" style="color: white; background: black;" onclick="callWaiting()"> Login </button>
+                        </div>
+                        <script>
+                            function callWaiting() {
+                                const url = 'http://localhost:8080/api/waitingList/3';
+                                axios({
+                                    method: "post",                                                                     // [요청 타입]
+                                    url: url,                                                                           // [요청 주소]
+                                    data: JSON.stringify(
+                                        {username: 'test1'}
+                                    ),                                                    // [요청 데이터]
+                                    headers: {                                                                          // [요청 헤더]
+                                        "Content-Type": "application/json; charset=utf-8"                               // responseType: "json" // [응답 데이터 : stream , json]
+                                    },
+                                })
+                                    .then(function (response) {
+                                        console.log("");
+                                        console.log("RESPONSE : " + JSON.stringify(response.data));
+                                        console.log("");
+                                    })
+                                    .catch(function (error) {
+                                        console.log("");
+                                        console.log("ERROR : " + JSON.stringify(error));
+                                        console.log("");
+                                    });
+                            }
+                        </script>
+                    </li>
+                    <li class="waiting-cancle">
+                        <div class="cancle" id="waitingCancle">
+                            <script></script>
+                            <a><span>대기 취소</span></a>
+                            <div class="input-box">
+                                <input type="username" placeholder="id" style="height: 30px">
+                            </div>
+                            <p></p>
+                            <button type="button" id="canclebtn" style="color: white; background: black;"> Cancle </button>
+                        </div>
+                    </li>
+                    <li class="mystatus">
+                        <div class="cancle" id="statusConfirm">
+                            <script></script>
+                            <a><span>내 상태 조회</span></a>
+                            <div class="input-box">
+                                <input type="username" placeholder="id" style="height: 30px">
+                            </div>
+                            <button type="button" id="statusbtn" style="color: white; background: black;" onclick="showStatus()"> Confirm </button>
+                        </div>
                     </li>
                 </ul>
                 <div class="sidebar-brand sidebar-brand-sm">
@@ -265,3 +336,5 @@
 </div>
 </body>
 </html>
+
+
