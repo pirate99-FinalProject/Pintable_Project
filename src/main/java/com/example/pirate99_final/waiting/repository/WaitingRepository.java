@@ -12,10 +12,7 @@ import java.util.Optional;
 
 public interface WaitingRepository  extends JpaRepository<Waiting, Long> {
 
-    List<Waiting> findAllByOrderByCreatedAtDesc();
     Waiting findByWaitingId(Long waitingId);
-
-    List<Waiting> findAllByWaitingStatusAndWaitingStatus(int waitingStatus, int waitingStatus2);
 
     List<Waiting> findAllByWaitingStatusOrWaitingStatus(int waitingStatus, int waitingStatus2);
 
