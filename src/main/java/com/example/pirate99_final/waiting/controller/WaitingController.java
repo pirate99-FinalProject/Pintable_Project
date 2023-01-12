@@ -17,25 +17,25 @@ public class WaitingController {
 
     private final WaitingService waitingService;
 
-    @PostMapping(value = "/waitingList/{storeStatusId}")
-    public MsgResponseDto createWaiter(@PathVariable Long storeStatusId, @RequestBody WaitingRequestDto request) {
-        return waitingService.createWaiter(storeStatusId, request);
+    @PostMapping(value = "/waitingList/{storeId}")
+    public MsgResponseDto createWaiter(@PathVariable Long storeId, @RequestBody WaitingRequestDto request) {
+        return waitingService.createWaiter(storeId, request);
     }
 
-    @GetMapping("/waitingList/{storeStatusId}")
-    public List<WaitingResponseDto> getListWaiters(@PathVariable Long storeStatusId) {
-        return waitingService.getListWaiters(storeStatusId);
+    @GetMapping("/waitingList/{storeId}")
+    public List<WaitingResponseDto> getListWaiters(@PathVariable Long storeId) {
+
+        return waitingService.getListWaiters(storeId);
     }
 
-    @GetMapping("/waitingList/{storeStatusId}/{waitingId}")
-    public WaitingResponseDto getWaiter(@PathVariable Long storeStatusId, @PathVariable Long waitingId) {
+    @GetMapping("/waitingList/{storeId}/{waitingId}")
+    public WaitingResponseDto getWaiter(@PathVariable Long storeId, @PathVariable Long waitingId) {
 
-
-        return waitingService.getWaiter(storeStatusId, waitingId);
+        return waitingService.getWaiter(storeId, waitingId);
     }
 
-    @DeleteMapping("/waitingList/{storeStatusId}/{waitingId}")
-    public MsgResponseDto deleteWaiter(@PathVariable Long storeStatusId, @PathVariable Long waitingId) {
-        return waitingService.deleteWaiter(waitingId);
+    @PutMapping("/waitingList/{storeId}/{waitingId}")
+    public MsgResponseDto deleteWaiter(@PathVariable Long storeId, @PathVariable Long waitingId) {
+        return waitingService.deleteWaiter(storeId, waitingId);
     }
 }

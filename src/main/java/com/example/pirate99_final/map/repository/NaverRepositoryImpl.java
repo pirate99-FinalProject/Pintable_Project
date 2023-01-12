@@ -2,14 +2,11 @@ package com.example.pirate99_final.map.repository;
 
 import com.example.pirate99_final.map.entity.Naver;
 import com.example.pirate99_final.map.entity.QNaver;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
-
 
 @Repository
 @RequiredArgsConstructor
@@ -96,12 +93,12 @@ public class NaverRepositoryImpl implements NaverRepositoryCustom {
         return starScoreASC;
     }
 
-     /*
-	  기능 : 가게를 평점이 높은순으로 정렬하는 기능
-      작성자 : 이상훈
-      작성일자 : 22.1.10
-      수정일자 : 22.1.11
-    */
+    /*
+     기능 : 가게를 평점이 높은순으로 정렬하는 기능
+     작성자 : 이상훈
+     작성일자 : 22.1.10
+     수정일자 : 22.1.11
+   */
     public List<Naver> OrderByStarScoreDESC() {                             // 평점 높은순 DESC
         QNaver naver = QNaver.naver;
         List<Naver> starScoreDESC = queryFactory

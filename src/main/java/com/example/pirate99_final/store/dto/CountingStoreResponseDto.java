@@ -1,6 +1,9 @@
 package com.example.pirate99_final.store.dto;
 
+import lombok.Getter;
+import net.bytebuddy.asm.Advice;
 
+@Getter
 public class CountingStoreResponseDto {
     int availableTableCnt;
 

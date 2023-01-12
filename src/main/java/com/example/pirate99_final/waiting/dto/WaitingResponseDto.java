@@ -15,31 +15,11 @@ public class WaitingResponseDto {
 
     private Long waitingId;
     private int waitingStatus;
+
     private User user;
     private LocalDateTime createdAt;
 
 
-    public WaitingResponseDto(Waiting waiting, User user) {
-        this.waitingId = waiting.getWaitingId();
-        this.waitingStatus = waiting.getWaitingStatus();
-        this.user = waiting.getUser();
-        this.createdAt = waiting.getCreatedAt();
-    }
-
-
-    private int waitingStatus;
-
-    private User user;
-
-    private LocalDateTime createdAt;
-
-
-    public WaitingResponseDto(Waiting waiting, User user) {
-        this.waitingId = waiting.getWaitingId();
-        this.waitingStatus = waiting.getWaitingStatus();
-        this.user = user;
-        this.createdAt = waiting.getCreatedAt();
-    }
 
     public WaitingResponseDto(Waiting waiting) {
         this.waitingId = waiting.getWaitingId();

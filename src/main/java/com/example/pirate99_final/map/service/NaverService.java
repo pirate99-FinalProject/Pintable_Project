@@ -6,6 +6,7 @@ import com.example.pirate99_final.map.repository.NaverRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+
 import java.util.List;
 
 @Service
@@ -92,12 +93,12 @@ public class NaverService {
         model.addAttribute("searchList", OrderByStarScoreASC);
     }
 
-     /*
-	  기능 : 가게를 평점이 높은순으로 정렬하는 기능
-      작성자 : 이상훈
-      작성일자 : 22.1.10
-      수정일자 : 22.1.11
-    */
+    /*
+     기능 : 가게를 평점이 높은순으로 정렬하는 기능
+     작성자 : 이상훈
+     작성일자 : 22.1.10
+     수정일자 : 22.1.11
+   */
     public void OrderByStarScoreDESC(Model model) {
         List<Naver> OrderByStarScoreDESC = naverRepositoryImpl.OrderByStarScoreDESC();                                  // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", OrderByStarScoreDESC);

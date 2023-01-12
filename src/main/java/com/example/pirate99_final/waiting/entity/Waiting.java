@@ -27,7 +27,6 @@ public class Waiting extends TimeStamped {
     @JoinColumn(name = "storeStatus")
     private StoreStatus storeStatus;
 
-
     @Column
     private int waitingStatus;
 
@@ -35,8 +34,8 @@ public class Waiting extends TimeStamped {
         this.user = user;
         this.storeStatus = storeStatus;
         this.waitingStatus = 0;
-
-    public void update(int waitingStatus){
+    }
+    public void update(int waitingStatus) {
         this.waitingStatus = waitingStatus;
 
     }
