@@ -35,17 +35,6 @@ function waiting() {
     }
 }
 
-// function cancle() {
-//     const cancleWaiting = document.getElementById('waitingCancle');
-//
-//     if(cancleWaiting.style.display !== 'none') {
-//         cancleWaiting.style.display = 'none';
-//     }
-//     else {
-//         cancleWaiting.style.display = 'block';
-//     }
-// }
-
 function status() {
     const statusConfirm = document.getElementById('statusConfirm');
 
@@ -57,10 +46,6 @@ function status() {
     }
 }
 
-// function showStatus(){
-//     const myStatusShow = document.getElementById('myStatusShow');
-//     myStatusShow.style.display = 'block';
-// }
 
 function signIn() {
     let username = document.querySelector('.userId').value;
@@ -80,6 +65,7 @@ function signIn() {
         .then(function (response) {
             console.log("");
             console.log("RESPONSE : " + JSON.stringify(response.data));
+            alert("로그인 성공, confirm 버튼을 눌러주세요!")
         })
         .catch(function (error) {
             console.log("");
@@ -121,12 +107,13 @@ function callWaiting() {
 function mystatus() {
     let id = document.getElementById("id").innerHTML
     let username = document.querySelector('.userId1').value;
-    const url = 'http://localhost:8080/api/waitingList/';
+    const url = 'http://localhost:8080/api/waitingList/myTurn/';
 
     axios({
-        method: "get",                                                                     // [요청 타입]
-        url: url + id + "/" + username,                                                                      // [요청 주소]
+        method: "post",                                                                     // [요청 타입]
+        url: url + id,                                                                      // [요청 주소]
         data: JSON.stringify(
+            {username: username}
         ),                                                                                  // [요청 데이터]
         headers: {                                                                          // [요청 헤더]
             "Content-Type": "application/json; charset=utf-8"                               // responseType: "json" // [응답 데이터 : stream , json]
@@ -137,8 +124,11 @@ function mystatus() {
             console.log("RESPONSE : " + JSON.stringify(response.data));
             const transferStatus = JSON.stringify(response.data);
             var status = JSON.parse(transferStatus);
-            document.getElementById("myStatusShow").innerHTML = "내 웨이팅 현황 : " + status.waitingStatus;
-            alert("내 상태 조회 완료!")
+            document.getElementById("storeStatusShow").innerHTML = "대기 현황 : " + status.totalWaitingCnt;
+            document.getElementById("myStatusShow").innerHTML = "내 웨이팅 현황 : " + status.myTurn;
+            const storeStatusShow = document.getElementById('statusConfirm');
+            storeStatusShow.style.display = 'none';
+            alert("상태 조회 완료!")
         })
         .catch(function (error) {
             console.log("");
