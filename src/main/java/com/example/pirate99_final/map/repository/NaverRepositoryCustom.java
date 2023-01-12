@@ -21,11 +21,11 @@ public interface NaverRepositoryCustom {
 
     List<Naver> OrderByReviewDESC();                                // 리뷰 갯수 내림차순
 
-    List<Naver> BetweenStarScoreHigh();                             // 평점 4점 이상
+    List<Naver> BetweenStarScoreHigh(double score);                 // 평점 4점 이상
 
-    List<Naver> BetweenStarScoreLow();                              // 평점 1점 이하
+    List<Naver> BetweenStarScoreLow(double score);                  // 평점 1점 이하
 
-    List<Naver> BetweenReviewHigh();                                // 리뷰 1000개 이상
+    List<Naver> BetweenReviewHigh(int review);                      // 리뷰 1000개 이상
 
-    List<Naver> BetweenReviewLow();                                 // 리뷰 10개 이하
+    List<Naver> BetweenReviewLow(int review);                       // 리뷰 10개 이하
 }

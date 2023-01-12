@@ -53,6 +53,8 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
     // 개발환경에서만 씀 (query에 대한 log를 찍어줌)
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
+    //stringutils 동적쿼리 관련
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 }
 
 tasks.named('test') {

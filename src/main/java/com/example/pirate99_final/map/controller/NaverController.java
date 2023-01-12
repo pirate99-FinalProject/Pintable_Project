@@ -138,55 +138,50 @@ public class NaverController {
     }
 
     /*
-      기능 : 평점이 높은 가게를 찾는 페이지 4점이상
+      기능 : 평점이 높은 가게를 찾는 페이지 n점이상
       작성자 : 이상훈
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    @GetMapping("/api/search/StarScoreHigh")
-    public String BetweenStarScoreHigh(Model model) {
-        naverService.BetweenStarScoreHigh(model);
+    @GetMapping("/api/search/StarScoreHigh/{score}")
+    public String BetweenStarScoreHigh(Model model, @PathVariable double score) {
+        naverService.BetweenStarScoreHigh(model, score);
         return "index";
     }
 
     /*
-      기능 : 평점이 낮은 가게를 찾는 페이지 2점이하
+      기능 : 평점이 낮은 가게를 찾는 페이지 n점이하
       작성자 : 이상훈
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    @GetMapping("/api/search/StarScoreLow")
-    public String BetweenStarScoreLow(Model model) {
-        naverService.BetweenStarScoreLow(model);
+    @GetMapping("/api/search/StarScoreLow/{score}")
+    public String BetweenStarScoreLow(Model model, @PathVariable double score) {
+        naverService.BetweenStarScoreLow(model, score);
         return "index";
     }
 
     /*
-      기능 : 리뷰가 1000개 이상인 가게를 찾는 페이지
+      기능 : 리뷰가 n개 이상인 가게를 찾는 페이지
       작성자 : 이상훈
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    @GetMapping("/api/search/ReviewHigh")
-    public String BetweenReviewHigh(Model model) {
-        naverService.BetweenReviewHigh(model);
+    @GetMapping("/api/search/ReviewHigh/{review}")
+    public String BetweenReviewHigh(Model model, @PathVariable int review) {
+        naverService.BetweenReviewHigh(model, review);
         return "index";
     }
 
     /*
-      기능 : 리뷰가 10개 이인 가게를 찾는 페이지
+      기능 : 리뷰가 n개 이하인 가게를 찾는 페이지
       작성자 : 이상훈
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    @GetMapping("/api/search/ReviewLow")
-    public String BetweenReviewLow(Model model) {
-        naverService.BetweenReviewLow(model);
+    @GetMapping("/api/search/ReviewLow/{review}")
+    public String BetweenReviewLow(Model model, @PathVariable int review) {
+        naverService.BetweenReviewLow(model, review);
         return "index";
     }
-
-
-
-
-
 }

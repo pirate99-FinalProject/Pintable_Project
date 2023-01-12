@@ -126,46 +126,46 @@ public class NaverService {
     }
 
     /*
-      기능 : 가게 평점이 4점 이상인 가게만 보여주는 기능
+      기능 : 가게 평점이 n점 이상인 가게만 보여주는 기능
       작성자 : 이상훈
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    public void BetweenStarScoreHigh(Model model) {
-        List<Naver> BetweenStarScoreHigh = naverRepositoryImpl.BetweenStarScoreHigh();                                  // 1. naverRepositoryImpl 구현
+    public void BetweenStarScoreHigh(Model model, double score) {
+        List<Naver> BetweenStarScoreHigh = naverRepositoryImpl.BetweenStarScoreHigh(score);                                  // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", BetweenStarScoreHigh);
     }
 
     /*
-      기능 : 가게 평점이 2점 이하인 가게만 보여주는 기능
+      기능 : 가게 평점이 n점 이하인 가게만 보여주는 기능
       작성자 : 이상훈
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    public void BetweenStarScoreLow(Model model) {
-        List<Naver> BetweenStarScoreLow = naverRepositoryImpl.BetweenStarScoreLow();                                    // 1. naverRepositoryImpl 구현
+    public void BetweenStarScoreLow(Model model, double score) {
+        List<Naver> BetweenStarScoreLow = naverRepositoryImpl.BetweenStarScoreLow(score);                                    // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", BetweenStarScoreLow);
     }
 
     /*
-      기능 : 가게 리뷰가 1000개이상인 가게만 보여주는 기능
+      기능 : 가게 리뷰가 n개이상인 가게만 보여주는 기능
       작성자 : 이상훈
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    public void BetweenReviewHigh(Model model) {
-        List<Naver> BetweenReviewHigh = naverRepositoryImpl.BetweenReviewHigh();                                        // 1. naverRepositoryImpl 구현
+    public void BetweenReviewHigh(Model model, int review) {
+        List<Naver> BetweenReviewHigh = naverRepositoryImpl.BetweenReviewHigh(review);                                   // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", BetweenReviewHigh);
     }
 
     /*
-      기능 : 가게 리뷰가 10개이하인 가게만 보여주는 기능
+      기능 : 가게 리뷰가 n개이하인 가게만 보여주는 기능
       작성자 : 이상훈
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    public void BetweenReviewLow(Model model) {
-        List<Naver> BetweenReviewLow = naverRepositoryImpl.BetweenReviewLow();                                          // 1. naverRepositoryImpl 구현
+    public void BetweenReviewLow(Model model, int review) {
+        List<Naver> BetweenReviewLow = naverRepositoryImpl.BetweenReviewLow(review);                                    // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", BetweenReviewLow);
     }
 }
