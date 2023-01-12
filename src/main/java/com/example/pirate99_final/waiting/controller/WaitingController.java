@@ -23,7 +23,7 @@ public class WaitingController {
         return waitingService.createWaiter(storeId, request);
     }
 
-    @GetMapping("/waitingList/myTurn/{storeId}")
+    @PostMapping("/waitingList/myTurn/{storeId}")
     public MyTurnResponseDto getMyTurn(@PathVariable Long storeId, @RequestBody WaitingRequestDto requestDto) {
 
         return waitingService.getMyTurn(storeId, requestDto);
