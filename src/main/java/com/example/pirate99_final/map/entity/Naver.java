@@ -25,3 +25,4 @@ public class Naver {
     private double starscore;       // 별점
     private int reviewcnt;          // 리뷰 갯수
 }
+

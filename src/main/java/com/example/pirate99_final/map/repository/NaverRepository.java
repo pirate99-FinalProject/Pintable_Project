@@ -1,3 +1,4 @@
+
 package com.example.pirate99_final.map.repository;
 
 import com.example.pirate99_final.map.entity.Naver;
@@ -16,3 +17,4 @@ public interface NaverRepository extends JpaRepository<Naver, Long> {
             ,nativeQuery = true)
     List<Naver> searchCurrent(String latitude, String longitude, String storeName);
 }
+

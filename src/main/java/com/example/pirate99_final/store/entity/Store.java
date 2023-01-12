@@ -14,8 +14,8 @@ import javax.persistence.*;
 public class Store {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long storeId;
 
     @Column(nullable = false)
     private String address;                                             // 주소

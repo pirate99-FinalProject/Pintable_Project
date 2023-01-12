@@ -23,7 +23,10 @@
             src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=i3qv4ecus5"></script>
     <script type="text/javascript"
             src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=i3qv4ecus5&submodules=geocoder"></script>
-    <!-- /END GA -->
+
+
+    <!-- Js Files -->
+    <script src="/js/index.js"></script>
 
     <!--head 태그 내 추가-->
     <link rel="icon" href="/css/images/pin.png">
@@ -64,6 +67,7 @@
                         </select>
                         <input class="form-control" type="search" placeholder="Search" aria-label="Search" width="1200"
                                name="storeName">
+
                         <script>
                             function handleSearch() {
                                 let query = document.querySelector('.form-control').value;
@@ -74,24 +78,12 @@
                                 window.location = value + query;
                             }
                         </script>
+
+
                         <button type="button" class="btn btn-primary" onclick=handleSearch()>Search</button>
                         <button class="btn btn-primary" id="btn5" type="button">현위치</button>
                         <script th:inline="javascript">
-
-
                             let latitude = "", longitude = "";
-
-                            function onSuccess(position) {
-                                latitude = position.coords.latitude;
-                                longitude = position.coords.longitude;
-                                const storename = document.querySelector('.form-control').value;
-                                console.log((storename));
-                                location.href = "api/currentLocation?latitude=" + latitude + "&longitude=" + longitude + "&storeName=" + storename;
-                            }
-
-                            function onError() {
-                                alert("위치를 찾을 수 없습니다.");
-                            }
 
                             document.getElementById("btn5").onclick = function () {
                                 navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -131,7 +123,9 @@
                     <li class="dropdown active">
                         <a class="nav-link"><span>Stores</span></a>
                     </li>
-                    <p></p><p></p><p></p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
                     <img alt="image" src="/css/images/shopping-mall.png" class="rounded-circle mr-1" width="240"
                          style="border-radius:50%">
                     <li class="store">
@@ -168,7 +162,7 @@
                                     <input type="hidden" name="username" value="..." id="username"/>
                                     <script th:inline="javascript">
                                         const searchList = [[${searchList}]];
-
+                                        console.log("호출")
                                         // 예외처리 : 검색결과 없음
                                         if (!searchList) {
                                             const map = new naver.maps.Map('map', {
