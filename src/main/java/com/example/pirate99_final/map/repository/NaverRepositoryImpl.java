@@ -2,16 +2,20 @@ package com.example.pirate99_final.map.repository;
 
 import com.example.pirate99_final.map.entity.Naver;
 import com.example.pirate99_final.map.entity.QNaver;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+
 
 @Repository
 @RequiredArgsConstructor
 public class NaverRepositoryImpl implements NaverRepositoryCustom {
     private final JPAQueryFactory queryFactory;
+    QNaver naver = QNaver.naver;
 
     /*
       기능 : 입력한 storeName과 정확히 일치하는 가게명 한곳을 찾는 기능
@@ -141,34 +145,34 @@ public class NaverRepositoryImpl implements NaverRepositoryCustom {
     }
 
     /*
-      기능 : 가게 평점이 4점 이상인 가게만 보여주는 기능
+      기능 : 가게 평점이 입력값 이상인 가게만 보여주는 기능
       작성자 : 이상훈
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    public List<Naver> BetweenStarScoreHigh() {                             // 평점 4점 이상
+    public List<Naver> BetweenStarScoreHigh(double score) {                 // 평점 4점 이상
         QNaver naver = QNaver.naver;
         List<Naver> BetweenStarScoreHigh = queryFactory
                 .selectFrom(naver)
                 .limit(10)
-                .where(naver.starscore.between(4, 5))                       // 최소 4점에서 5점
+                .where(naver.starscore.between(score, 5))                   // 최소 4점에서 5점
                 .orderBy(naver.starscore.desc())
                 .fetch();
         return BetweenStarScoreHigh;
     }
 
     /*
-      기능 : 가게 평점이 2점 이하인 가게만 보여주는 기능
+      기능 : 가게 평점이 입력값 이하인 가게만 보여주는 기능
       작성자 : 이상훈
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    public List<Naver> BetweenStarScoreLow() {                              // 평점 2점 이하
+    public List<Naver> BetweenStarScoreLow(double score) {                  // 평점 2점 이하
         QNaver naver = QNaver.naver;
         List<Naver> BetweenStarScoreLow = queryFactory
                 .selectFrom(naver)
                 .limit(10)
-                .where(naver.starscore.between(0, 2))                       // 최소 0점에서 1점
+                .where(naver.starscore.between(0, score))                   // 최소 0점에서 1점
                 .orderBy(naver.starscore.desc())
                 .fetch();
         return BetweenStarScoreLow;
@@ -180,12 +184,12 @@ public class NaverRepositoryImpl implements NaverRepositoryCustom {
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    public List<Naver> BetweenReviewHigh() {                                // 리뷰 1000개 이상
+    public List<Naver> BetweenReviewHigh(int review) {                      // 리뷰 1000개 이상
         QNaver naver = QNaver.naver;
         List<Naver> BetweenReviewHigh = queryFactory
                 .selectFrom(naver)
                 .limit(10)
-                .where(naver.reviewcnt.between(1000, 1000000))              // 최소 1000개부터 백만
+                .where(naver.reviewcnt.between(review, 1000000))            // 최소 1000개부터 백만
                 .orderBy(naver.reviewcnt.desc())
                 .fetch();
         return BetweenReviewHigh;
@@ -197,12 +201,12 @@ public class NaverRepositoryImpl implements NaverRepositoryCustom {
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    public List<Naver> BetweenReviewLow() {                                 // 리뷰 10개 이하
+    public List<Naver> BetweenReviewLow(int review) {                        // 리뷰 10개 이하
         QNaver naver = QNaver.naver;
         List<Naver> BetweenReviewLow = queryFactory
                 .selectFrom(naver)
                 .limit(10)
-                .where(naver.reviewcnt.between(0, 10))                      // 최소 0개에서 10개
+                .where(naver.reviewcnt.between(0, review))                   // 최소 0개에서 10개
                 .orderBy(naver.reviewcnt.desc())
                 .fetch();
         return BetweenReviewLow;
