@@ -6,7 +6,6 @@ import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.global.exception.SuccessCode;
 import com.example.pirate99_final.store.dto.ConfirmRequestDto;
 import com.example.pirate99_final.store.dto.CountingStoreResponseDto;
-
 import com.example.pirate99_final.store.dto.StoreRequestDto;
 import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
 import com.example.pirate99_final.store.entity.Store;
@@ -18,8 +17,8 @@ import com.example.pirate99_final.user.repository.UserRepository;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
 import com.sun.net.httpserver.Authenticator;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +26,7 @@ import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.pirate99_final.global.exception.SuccessCode.CREATE_STORE;
-import static com.example.pirate99_final.global.exception.SuccessCode.DELETE_REVIEW;
+import static com.example.pirate99_final.global.exception.SuccessCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,9 +34,10 @@ public class StoreService {
 
     private final StoreRepository storeRepository;                      // store repo connect
     private final StoreStatusRepository storeStatusRepository;          // storeStatus repo connect
-    private final WaitingRepository waitingRepository;                  // waiting repo connect
-    private final UserRepository userRepository;                        // user repo connect
 
+    private final WaitingRepository waitingRepository;                  // waiting repo connect
+
+    private final UserRepository userRepository;                        // user repo connect
 
     // Store Create function
     public MsgResponseDto createStore(StoreRequestDto requestDto){
@@ -69,14 +68,11 @@ public class StoreService {
 
     // Get store from DB (one)
     public StoreStatusResponseDto getStore(long storeId){
-
         Store store = storeRepository.findById(storeId).orElseThrow(()->
-
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
-
 
         StoreStatusResponseDto responseDto = new StoreStatusResponseDto(storeStatus);
 
@@ -94,13 +90,12 @@ public class StoreService {
         storeStatusRepository.deleteByStore(store);                                     // 상점 상태 테이블 삭제
         storeRepository.deleteById(storeId);                                                          // 해당 상점 삭제
 
-        return  new MsgResponseDto(DELETE_REVIEW);
+        return  new MsgResponseDto(DELETE_STORE);
     }
 
     @Transactional
-    public CountingStoreResponseDto enterStore(Long storeId, int people) {
+    public MsgResponseDto enterStore(Long storeId, int people) {
         int availableCnt   =   0;                                                       // 이용 가능 좌석
-        List<Waiting> Listwaiting;
 
         // 1. find store
         Store store = storeRepository.findById(storeId).orElseThrow(()->
@@ -123,18 +118,18 @@ public class StoreService {
 
             storeStatus.update(availableCnt);
 
-            throw new IllegalArgumentException("빈 자석이 없습니다. " + message + "분은 예약 등록 부탁드립니다.");
+            return new MsgResponseDto(HttpStatus.OK.value(),"빈 자석이 없습니다. " + message + "분은 예약 등록 부탁드립니다.");
         }
 
         // 4. update storeStatus
         storeStatus.update(availableCnt);
 
-        return new CountingStoreResponseDto(availableCnt);
+        return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
     }
 
     // Leave people from store
     @Transactional
-    public CountingStoreResponseDto leaveStore(Long storeId, int people) {
+    public MsgResponseDto leaveStore(Long storeId, int people) {
         int availableCnt   =   0;                                                       // 이용 가능 좌석
 
         // 1. find store
@@ -150,7 +145,7 @@ public class StoreService {
         // Leaving people check
         storeStatus.update(availableCnt);
 
-        return new CountingStoreResponseDto(availableCnt);
+        return new MsgResponseDto(SuccessCode.CONFIRM_LEAVE);
     }
 
     public MsgResponseDto confirmStore(Long storeId, ConfirmRequestDto requestDto) {

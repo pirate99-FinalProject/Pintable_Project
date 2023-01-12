@@ -38,16 +38,15 @@ public class StoreController {
     @DeleteMapping("/storeStatus/{storeId}")
     public MsgResponseDto deletesStore(@PathVariable Long storeId) {
         return storeService.deleteStore(storeId);
-
     }
 
     @PutMapping("/storeStatus/enter/{storeId}/{people}")
-    public CountingStoreResponseDto enterStore(@PathVariable Long storeId, @PathVariable int people){
+    public MsgResponseDto enterStore(@PathVariable Long storeId, @PathVariable int people){
         return storeService.enterStore(storeId, people);
     }
 
     @PutMapping("/storeStatus/leave/{storeId}/{people}")
-    public CountingStoreResponseDto leaveStore(@PathVariable Long storeId, @PathVariable int people){
+    public MsgResponseDto leaveStore(@PathVariable Long storeId, @PathVariable int people){
         return storeService.leaveStore(storeId, people);
     }
 
@@ -59,6 +58,5 @@ public class StoreController {
     @PutMapping("/storeStatus/confirmEnter/{storeId}")
     public MsgResponseDto confirmStore(@PathVariable Long storeId, @RequestBody ConfirmRequestDto requestDto){
         return storeService.confirmStore(storeId, requestDto);
-
     }
 }
