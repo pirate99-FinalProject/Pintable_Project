@@ -51,7 +51,7 @@ public class StoreController {
     }
 
     @PutMapping("/storeStatus/call/{storeId}")
-    public MsgResponseDto callpeople(@PathVariable Long storeId, @PathVariable ConfirmRequestDto requestDto){
+    public MsgResponseDto callpeople(@PathVariable Long storeId, @RequestBody ConfirmRequestDto requestDto){
         return storeService.callpeople(storeId, requestDto);
     }
 

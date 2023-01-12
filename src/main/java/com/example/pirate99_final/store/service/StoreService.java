@@ -148,6 +148,7 @@ public class StoreService {
         return new MsgResponseDto(SuccessCode.CONFIRM_LEAVE);
     }
 
+    @Transactional
     public MsgResponseDto confirmStore(Long storeId, ConfirmRequestDto requestDto) {
         // 1. find store
         Store store = storeRepository.findById(storeId).orElseThrow(()->
