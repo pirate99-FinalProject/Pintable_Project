@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <!--    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">-->
-    <title>pin-pin</title>
+    <title>Pin-Table</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="/css/modules/bootstrap/css/bootstrap.min.css">
@@ -24,7 +24,6 @@
     <script type="text/javascript"
             src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=i3qv4ecus5&submodules=geocoder"></script>
 
-
     <!-- Js Files -->
     <script src="/js/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -34,7 +33,6 @@
     <link rel="icon" href="/css/images/pin.png">
 
 </head>
-
 <body>
 <div id="app">
     <div class="main-wrapper main-wrapper-1">
@@ -50,22 +48,22 @@
                 </ul>
                 <div class="search-element">
                     <form action="/api/search" method="get">
-                        <select id="category">
-                            <option value="none">=== 선택 ===</option>
-                            <option name="test" value="/api/search/storeName/?storeName=">가게 이름 일치</option>
-                            <option name="test" value="/api/search/storeNameInclude/?storeNameInclude=">가게 이름</option>
-                            <option name="test" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소</option>
-                            <option name="test" value="/api/search/Business/?typeOfBusiness=">업종</option>
-                            <option name="test" value="/api/search/ReviewHigh/">리뷰 n개이상</option>
-                            <option name="test" value="/api/search/ReviewLow/">리뷰 n개이하</option>
-                            <option name="test" value="/api/search/StarScoreHigh/">평점 n점이상</option>
-                            <option name="test" value="/api/search/StarScoreLow/">평점 n점이하</option>
-                            <option value="none">=== 바로 검색 ===</option>
-                            <option name="test" value="/api/search/ReviewASC">리뷰 적은순</option>
-                            <option name="test" value="/api/search/ReviewDESC">리뷰 많은순</option>
-                            <option name="test" value="/api/search/StarScoreASC">평점 낮은순</option>
-                            <option name="test" value="/api/search/StarScoreDESC">평점 높은순</option>
-
+                        <select class="form-select form-select-sm" id="category" aria-label=".form-select-sm example">
+                            <option value="none" selected style="color: gray"> Select </option>
+                                <optgroup label="=== 검색어 지정 ===">
+                                    <option name="test" value="/api/search/storeName/?storeName=">가게 이름 일치</option>
+                                    <option name="test" value="/api/search/storeNameInclude/?storeNameInclude=">가게 이름</option>
+                                    <option name="test" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소</option>
+                                    <option name="test" value="/api/search/ReviewLow/">리뷰 n개이하</option>
+                                    <option name="test" value="/api/search/StarScoreHigh/">평점 n점이상</option>
+                                    <option name="test" value="/api/search/StarScoreLow/">평점 n점이하</option>
+                                </optgroup>
+                                <optgroup label="=== 검색어 없이 ===">
+                                    <option name="test" value="/api/search/ReviewASC">리뷰 적은순</option>
+                                    <option name="test" value="/api/search/ReviewDESC">리뷰 많은순</option>
+                                    <option name="test" value="/api/search/StarScoreASC">평점 낮은순</option>
+                                    <option name="test" value="/api/search/StarScoreDESC">평점 높은순</option>
+                                </optgroup>
                         </select>
                         <input class="form-control" type="search" placeholder="Search" aria-label="Search" width="1200"
                                name="storeName">
@@ -114,7 +112,7 @@
         <div class="main-sidebar sidebar-style-2">
             <aside id="sidebar-wrapper">
                 <div class="sidebar-brand">
-                    <a href="index.html">pin-pin</a>
+                    <a href="index.html">Pin-Table</a>
                 </div>
                 <div class="sidebar-brand sidebar-brand-sm">
                     <a href="index.html">🔙</a>
@@ -133,6 +131,9 @@
                     <li class="store">
                         <p><span id="storename"></span></p>
                     </li>
+                    <li class="store">
+                        <p><span id="id" hidden></span></p>
+                    </li>
                     <p></p>
                     <li class="store-posting">
                         <p><img alt="image" src="/css/images/pin.png" width="32"
@@ -143,10 +144,11 @@
                         <div id="storeStatus">
                             <p> 대기 현황 : # 팀 </p>
                             <div id="myStatusShow">
-                                <p> 내 상태: # 팀 </p>
+                                <p> 내 웨이팅 현황 : </p>
                             </div>
+                                <P></P>
                             <button type="button" class="btn1" id="requestwaiting" onclick="waiting()"> 대기 요청 </button>
-                            <button type="button" class="btn1" id="canclewaiting" onclick="cancle()"> 대기 취소</button>
+<!--                            <button type="button" class="btn1" id="canclewaiting" onclick="cancle()"> 대기 취소</button>-->
                             <button type="button" class="btn1" id="Confirmstatus" onclick="status()"> 상태 조회 </button>
                         </div>
                     </li>
@@ -154,48 +156,16 @@
                     <li class="waiting-login">
                         <div class="signin" id="signin">
                             <script></script>
-                            <a><span>비회원 대기 신청</span></a>
+                            <a><span>대기 신청</span></a>
                             <div class="input-box">
-                                <input type="username" placeholder="id" style="height: 30px">
+                                <input class="userId" type="username" placeholder="id" style="height: 30px">
+                            </div>
+                            <div class="input-box">
+                                <input class="password" type="password" placeholder="password" style="height: 30px">
                             </div>
                             <p></p>
-                            <button type="button" id="loginbtn" style="color: white; background: black;" onclick="callWaiting()"> Login </button>
-                        </div>
-                        <script>
-                            function callWaiting() {
-                                const url = 'http://localhost:8080/api/waitingList/3';
-                                axios({
-                                    method: "post",                                                                     // [요청 타입]
-                                    url: url,                                                                           // [요청 주소]
-                                    data: JSON.stringify(
-                                        {username: 'test1'}
-                                    ),                                                    // [요청 데이터]
-                                    headers: {                                                                          // [요청 헤더]
-                                        "Content-Type": "application/json; charset=utf-8"                               // responseType: "json" // [응답 데이터 : stream , json]
-                                    },
-                                })
-                                    .then(function (response) {
-                                        console.log("");
-                                        console.log("RESPONSE : " + JSON.stringify(response.data));
-                                        console.log("");
-                                    })
-                                    .catch(function (error) {
-                                        console.log("");
-                                        console.log("ERROR : " + JSON.stringify(error));
-                                        console.log("");
-                                    });
-                            }
-                        </script>
-                    </li>
-                    <li class="waiting-cancle">
-                        <div class="cancle" id="waitingCancle">
-                            <script></script>
-                            <a><span>대기 취소</span></a>
-                            <div class="input-box">
-                                <input type="username" placeholder="id" style="height: 30px">
-                            </div>
-                            <p></p>
-                            <button type="button" id="canclebtn" style="color: white; background: black;"> Cancle </button>
+                            <button type="button" id="loginbtn" style="color: white; background: black;" onclick="signIn();"> join </button>
+                            <button type="button" id="confirmbtn" style="color: white; background: black;" onclick="callWaiting()"> cofirm </button>
                         </div>
                     </li>
                     <li class="mystatus">
@@ -203,9 +173,9 @@
                             <script></script>
                             <a><span>내 상태 조회</span></a>
                             <div class="input-box">
-                                <input type="username" placeholder="id" style="height: 30px">
+                                <input class="userId1" type="username" placeholder="id" style="height: 30px">
                             </div>
-                            <button type="button" id="statusbtn" style="color: white; background: black;" onclick="showStatus()"> Confirm </button>
+                            <button type="button" id="statusbtn" style="color: white; background: black;" onclick="mystatus()"> Confirm </button>
                         </div>
                     </li>
                 </ul>
@@ -273,7 +243,8 @@
                                                     xcoordinate,
                                                     ycoordinate,
                                                     storename,
-                                                    roadnameaddress
+                                                    roadnameaddress,
+                                                    id
                                                 } = searchList[i];
                                                 // 마커 생성
                                                 const marker = new naver.maps.Marker({
@@ -316,6 +287,7 @@
                                                         infowindow.open(map, marker);
                                                         document.getElementById("storename").innerHTML = storename;
                                                         document.getElementById("storeadrress").innerHTML = roadnameaddress;
+                                                        document.getElementById("id").innerHTML = id;
                                                     }
                                                 });
                                             }
