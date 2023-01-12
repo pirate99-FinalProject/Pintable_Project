@@ -1,6 +1,7 @@
 package com.example.pirate99_final.waiting.service;
 
 import com.example.pirate99_final.global.MsgResponseDto;
+
 import com.example.pirate99_final.global.exception.CustomException;
 import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.global.exception.SuccessCode;
@@ -12,15 +13,15 @@ import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.user.repository.UserRepository;
 import com.example.pirate99_final.waiting.dto.WaitingRequestDto;
 import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
+
 import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 @Service

@@ -38,6 +38,7 @@ public class StoreController {
     @DeleteMapping("/storeStatus/{storeId}")
     public MsgResponseDto deletesStore(@PathVariable Long storeId) {
         return storeService.deleteStore(storeId);
+
     }
 
     @PutMapping("/storeStatus/enter/{storeId}/{people}")
@@ -58,5 +59,6 @@ public class StoreController {
     @PutMapping("/storeStatus/confirmEnter/{storeId}")
     public MsgResponseDto confirmStore(@PathVariable Long storeId, @RequestBody ConfirmRequestDto requestDto){
         return storeService.confirmStore(storeId, requestDto);
+
     }
 }

@@ -6,7 +6,6 @@ import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
 import com.example.pirate99_final.waiting.service.WaitingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -35,4 +34,5 @@ public class WaitingController {
     public MsgResponseDto deleteWaiter(@PathVariable Long waitingId) {
         return waitingService.deleteWaiter(waitingId);
     }
+
 }

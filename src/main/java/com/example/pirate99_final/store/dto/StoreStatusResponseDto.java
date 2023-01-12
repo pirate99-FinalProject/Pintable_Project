@@ -18,5 +18,6 @@ public class StoreStatusResponseDto {
         this.availableTableCnt = storestatus.getAvailableTableCnt();
         this.waitingCnt = storestatus.getWaitingCnt();
         this.storeId = storestatus.getStore().getStoreId();
+
     }
 }

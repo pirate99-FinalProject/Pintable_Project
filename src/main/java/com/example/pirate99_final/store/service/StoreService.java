@@ -6,6 +6,7 @@ import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.global.exception.SuccessCode;
 import com.example.pirate99_final.store.dto.ConfirmRequestDto;
 import com.example.pirate99_final.store.dto.CountingStoreResponseDto;
+
 import com.example.pirate99_final.store.dto.StoreRequestDto;
 import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
 import com.example.pirate99_final.store.entity.Store;
@@ -17,8 +18,8 @@ import com.example.pirate99_final.user.repository.UserRepository;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
 import com.sun.net.httpserver.Authenticator;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,10 +36,9 @@ public class StoreService {
 
     private final StoreRepository storeRepository;                      // store repo connect
     private final StoreStatusRepository storeStatusRepository;          // storeStatus repo connect
-
     private final WaitingRepository waitingRepository;                  // waiting repo connect
-
     private final UserRepository userRepository;                        // user repo connect
+
 
     // Store Create function
     public MsgResponseDto createStore(StoreRequestDto requestDto){
@@ -75,6 +75,7 @@ public class StoreService {
 
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
+
         StoreStatusResponseDto responseDto = new StoreStatusResponseDto(storeStatus);
 
         return responseDto;
@@ -90,6 +91,7 @@ public class StoreService {
 
         storeStatusRepository.deleteByStore(store);                                     // 상점 상태 테이블 삭제
         storeRepository.deleteById(storeId);                                                          // 해당 상점 삭제
+
 
         return  new MsgResponseDto(DELETE_REVIEW);
     }

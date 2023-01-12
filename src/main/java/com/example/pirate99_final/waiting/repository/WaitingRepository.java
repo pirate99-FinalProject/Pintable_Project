@@ -1,5 +1,6 @@
 package com.example.pirate99_final.waiting.repository;
 
+
 import com.example.pirate99_final.store.entity.Store;
 import com.example.pirate99_final.store.entity.StoreStatus;
 import com.example.pirate99_final.user.entity.User;
@@ -18,4 +19,5 @@ public interface WaitingRepository  extends JpaRepository<Waiting, Long> {
     List<Waiting> findAllByStoreStatusAndWaitingStatusAndOrderByWaitingIdAtDesc(StoreStatus storeStatus, int waitingStatus);
 
     Waiting findByUser(User user);
+
 }
