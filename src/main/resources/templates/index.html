@@ -24,15 +24,16 @@
     <script type="text/javascript"
             src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=i3qv4ecus5&submodules=geocoder"></script>
 
+
     <!-- Js Files -->
     <script src="/js/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script> console.log(axios)</script>
 
     <!--head 태그 내 추가-->
     <link rel="icon" href="/css/images/pin.png">
 
 </head>
+
 <body>
 <div id="app">
     <div class="main-wrapper main-wrapper-1">
@@ -48,22 +49,23 @@
                 </ul>
                 <div class="search-element">
                     <form action="/api/search" method="get">
-                        <select class="form-select form-select-sm" id="category" aria-label=".form-select-sm example">
-                            <option value="none" selected style="color: gray"> Select </option>
-                                <optgroup label="=== 검색어 지정 ===">
-                                    <option name="test" value="/api/search/storeName/?storeName=">가게 이름 일치</option>
-                                    <option name="test" value="/api/search/storeNameInclude/?storeNameInclude=">가게 이름</option>
-                                    <option name="test" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소</option>
-                                    <option name="test" value="/api/search/ReviewLow/">리뷰 n개이하</option>
-                                    <option name="test" value="/api/search/StarScoreHigh/">평점 n점이상</option>
-                                    <option name="test" value="/api/search/StarScoreLow/">평점 n점이하</option>
-                                </optgroup>
-                                <optgroup label="=== 검색어 없이 ===">
-                                    <option name="test" value="/api/search/ReviewASC">리뷰 적은순</option>
-                                    <option name="test" value="/api/search/ReviewDESC">리뷰 많은순</option>
-                                    <option name="test" value="/api/search/StarScoreASC">평점 낮은순</option>
-                                    <option name="test" value="/api/search/StarScoreDESC">평점 높은순</option>
-                                </optgroup>
+                        <select id="category">
+                            <optgroup label="=== 검색어 지정 ===">
+                                <option name="test" value="/api/search/storeName/?storeName=">가게 이름 일치</option>
+                                <option name="test" value="/api/search/storeNameInclude/?storeNameInclude=">가게 이름</option>
+                                <option name="test" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소</option>
+                                <option name="test" value="/api/search/Business/?typeOfBusiness=">업종</option>
+                                <option name="test" value="/api/search/ReviewHigh/">리뷰 n개이상</option>
+                                <option name="test" value="/api/search/ReviewLow/">리뷰 n개이하</option>
+                                <option name="test" value="/api/search/StarScoreHigh/">평점 n점이상</option>
+                                <option name="test" value="/api/search/StarScoreLow/">평점 n점이하</option>
+                            </optgroup>
+                            <optgroup label="=== 검색어 없이 ===">
+                                <option name="test" value="/api/search/ReviewASC">리뷰 적은순</option>
+                                <option name="test" value="/api/search/ReviewDESC">리뷰 많은순</option>
+                                <option name="test" value="/api/search/StarScoreASC">평점 낮은순</option>
+                                <option name="test" value="/api/search/StarScoreDESC">평점 높은순</option>
+                            </optgroup>
                         </select>
                         <input class="form-control" type="search" placeholder="Search" aria-label="Search" width="1200"
                                name="storeName">

@@ -41,12 +41,13 @@ public class NaverService {
 	  기능 : 입력한 storeName과 정확히 일치하는 가게명 한곳을 찾는 기능
       작성자 : 이상훈
       작성일자 : 22.1.10
-      수정일자 : 22.1.11
+      수정일자 : 22.1.11 / 22.1.12
+      수정내용 : 22.1.12 - 단건 조회시 가게정보창이 뜨지 않아서 단건 조회도 list형태로 반환하게끔 변경
     */
     public void findByOneStoreName(Model model, String storeName) {
-        Naver findByOneStoreName = naverRepositoryImpl.findByStoreName(storeName);                                      // 1. naverRepositoryImpl 에서 구현된 메소드로 가게명 찾음
-        model.addAttribute("Lat", findByOneStoreName.getXcoordinate());                                      // 2. index로 경도 위도값 보내줌
-        model.addAttribute("Lng", findByOneStoreName.getYcoordinate());
+        List<Naver> findByOneStoreName = naverRepositoryImpl.findByStoreName(storeName);                                // 1. naverRepositoryImpl 구현
+        model.addAttribute("searchList", findByOneStoreName);
+
     }
 
     /*
