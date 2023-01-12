@@ -13,7 +13,7 @@ public class StoreStatusResponseDto {
     private Long storeId;               // 상호 ID
 
     public StoreStatusResponseDto(StoreStatus storestatus){
-        this.storeStatusId = storestatus.getId();
+        this.storeStatusId = storestatus.getStoreStatusId();
         this.totalTableCnt = storestatus.getTotalTableCnt();
         this.availableTableCnt = storestatus.getAvailableTableCnt();
         this.waitingCnt = storestatus.getWaitingCnt();

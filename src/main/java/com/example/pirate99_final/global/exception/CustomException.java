@@ -12,10 +12,4 @@ public class CustomException extends RuntimeException{
         this.statusCode = errorCode.getHttpStatus().value();
         this.msg = errorCode.getMessage();
     }
-
-    public CustomException(int statusCode, String msg) {
-
-        this.statusCode = statusCode;
-        this.msg = msg;
-    }
 }

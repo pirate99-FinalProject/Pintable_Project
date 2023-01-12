@@ -23,13 +23,13 @@ public class WaitingResponseDto {
     public WaitingResponseDto(Waiting waiting, User user) {
         this.waitingId = waiting.getWaitingId();
         this.waitingStatus = waiting.getWaitingStatus();
-        this.user = waiting.getUser();
+        this.user = user;
         this.createdAt = waiting.getCreatedAt();
     }
 
     public WaitingResponseDto(Waiting waiting) {
         this.waitingId = waiting.getWaitingId();
         this.waitingStatus = waiting.getWaitingStatus();
-        this.createdAt = waiting.getCreatedAt();
+        this.createdAt = waiting.getModifiedAt();
     }
 }

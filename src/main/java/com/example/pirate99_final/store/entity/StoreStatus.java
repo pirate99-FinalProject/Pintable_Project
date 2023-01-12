@@ -15,8 +15,8 @@ import javax.persistence.*;
 public class StoreStatus {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long storeStatusId;
 
     @Column(nullable = false)
     private int totalTableCnt;
@@ -27,7 +27,7 @@ public class StoreStatus {
     @Column(nullable = false)
     private int waitingCnt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "storeId", nullable = false)
 
     private Store store;
