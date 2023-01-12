@@ -49,7 +49,7 @@
                 <div class="search-element">
                     <form action="/api/search" method="get">
                         <select id="category">
-                            <option value="none">=== 선택 ===</option>
+                            <optgroup label="=== 검색어 지정 ===">
                             <option name="test" value="/api/search/storeName/?storeName=">가게 이름 일치</option>
                             <option name="test" value="/api/search/storeNameInclude/?storeNameInclude=">가게 이름</option>
                             <option name="test" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소</option>
@@ -58,12 +58,13 @@
                             <option name="test" value="/api/search/ReviewLow/">리뷰 n개이하</option>
                             <option name="test" value="/api/search/StarScoreHigh/">평점 n점이상</option>
                             <option name="test" value="/api/search/StarScoreLow/">평점 n점이하</option>
-                            <option value="none">=== 바로 검색 ===</option>
+                            </optgroup>
+                            <optgroup label="=== 검색어 없이 ===">
                             <option name="test" value="/api/search/ReviewASC">리뷰 적은순</option>
                             <option name="test" value="/api/search/ReviewDESC">리뷰 많은순</option>
                             <option name="test" value="/api/search/StarScoreASC">평점 낮은순</option>
                             <option name="test" value="/api/search/StarScoreDESC">평점 높은순</option>
-
+                            </optgroup>
                         </select>
                         <input class="form-control" type="search" placeholder="Search" aria-label="Search" width="1200"
                                name="storeName">

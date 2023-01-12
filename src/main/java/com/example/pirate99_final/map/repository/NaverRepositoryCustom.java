@@ -5,7 +5,7 @@ import com.example.pirate99_final.map.entity.Naver;
 import java.util.List;
 
 public interface NaverRepositoryCustom {
-    Naver findByStoreName(String storeName);                        // 가게명 일치 여부
+    List<Naver> findByStoreName(String storeName);                  // 가게명 일치 여부
 
     List<Naver> findByStoreNameInclude(String storeName);           // 가게명 포함 여부 (가게명의 일부 일치)
 
