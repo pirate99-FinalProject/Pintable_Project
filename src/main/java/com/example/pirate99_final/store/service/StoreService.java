@@ -172,12 +172,12 @@ public class StoreService {
         if(requestDto.getWaitingStatus() == 1){
             waiting.update(2);
             int waitingCnt = storeStatus.getWaitingCnt() - 1;
-            storeStatus.update_waitingcnt(waitingCnt);
+            storeStatus.update_waitingCnt(waitingCnt);
         }
         else if(requestDto.getWaitingStatus() == 3){
             waiting.update(3);
             int waitingCnt = storeStatus.getWaitingCnt() - 1;
-            storeStatus.update_waitingcnt(waitingCnt);
+            storeStatus.update_waitingCnt(waitingCnt);
         }
 
         return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
