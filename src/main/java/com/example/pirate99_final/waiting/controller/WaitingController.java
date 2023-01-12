@@ -34,8 +34,8 @@ public class WaitingController {
         return waitingService.getWaiter(storeId, waitingId);
     }
 
-    @PutMapping("/waitingList/{storeStatusId}/{waitingId}")
-    public MsgResponseDto deleteWaiter(@PathVariable Long storeStatusId, @PathVariable Long waitingId) {
-        return waitingService.deleteWaiter(storeStatusId, waitingId);
+    @PutMapping("/waitingList/{storeId}/{waitingId}")
+    public MsgResponseDto deleteWaiter(@PathVariable Long storeId, @PathVariable Long waitingId) {
+        return waitingService.deleteWaiter(storeId, waitingId);
     }
 }
