@@ -23,7 +23,10 @@
             src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=i3qv4ecus5"></script>
     <script type="text/javascript"
             src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=i3qv4ecus5&submodules=geocoder"></script>
-    <!-- /END GA -->
+
+
+    <!-- Js Files -->
+    <script src="/js/index.js"></script>
 
     <!--head 태그 내 추가-->
     <link rel="icon" href="/css/images/pin.png">
@@ -45,32 +48,42 @@
                 </ul>
                 <div class="search-element">
                     <form action="/api/search" method="get">
+                        <select id="category">
+                            <option value="none">=== 선택 ===</option>
+                            <option name="test" value="/api/search/storeName/?storeName=">가게 이름 일치</option>
+                            <option name="test" value="/api/search/storeNameInclude/?storeNameInclude=">가게 이름</option>
+                            <option name="test" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소</option>
+                            <option name="test" value="/api/search/Business/?typeOfBusiness=">업종</option>
+                            <option name="test" value="/api/search/ReviewHigh/">리뷰 n개이상</option>
+                            <option name="test" value="/api/search/ReviewLow/">리뷰 n개이하</option>
+                            <option name="test" value="/api/search/StarScoreHigh/">평점 n점이상</option>
+                            <option name="test" value="/api/search/StarScoreLow/">평점 n점이하</option>
+                            <option value="none">=== 바로 검색 ===</option>
+                            <option name="test" value="/api/search/ReviewASC">리뷰 적은순</option>
+                            <option name="test" value="/api/search/ReviewDESC">리뷰 많은순</option>
+                            <option name="test" value="/api/search/StarScoreASC">평점 낮은순</option>
+                            <option name="test" value="/api/search/StarScoreDESC">평점 높은순</option>
+
+                        </select>
                         <input class="form-control" type="search" placeholder="Search" aria-label="Search" width="1200"
                                name="storeName">
+
                         <script>
                             function handleSearch() {
-                                const query = document.querySelector('.form-control').value;
-                                window.location = "/api/searchLocation?storeName=" + query;
+                                let query = document.querySelector('.form-control').value;
+                                let test = document.getElementById("category");
+                                let value = (category.options[test.selectedIndex].value);
+
+                                // window.location = "/api/searchLocation?storeName=" + query;
+                                window.location = value + query;
                             }
                         </script>
+
+
                         <button type="button" class="btn btn-primary" onclick=handleSearch()>Search</button>
                         <button class="btn btn-primary" id="btn5" type="button">현위치</button>
                         <script th:inline="javascript">
-
-
                             let latitude = "", longitude = "";
-
-                            function onSuccess(position) {
-                                latitude = position.coords.latitude;
-                                longitude = position.coords.longitude;
-                                const storename = document.querySelector('.form-control').value;
-                                console.log((storename));
-                                location.href = "api/currentLocation?latitude=" + latitude + "&longitude=" + longitude + "&storeName=" + storename;
-                            }
-
-                            function onError() {
-                                alert("위치를 찾을 수 없습니다.");
-                            }
 
                             document.getElementById("btn5").onclick = function () {
                                 navigator.geolocation.getCurrentPosition(onSuccess, onError);
@@ -110,7 +123,9 @@
                     <li class="dropdown active">
                         <a class="nav-link"><span>Stores</span></a>
                     </li>
-                    <p></p><p></p><p></p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
                     <img alt="image" src="/css/images/shopping-mall.png" class="rounded-circle mr-1" width="240"
                          style="border-radius:50%">
                     <li class="store">
@@ -147,7 +162,7 @@
                                     <input type="hidden" name="username" value="..." id="username"/>
                                     <script th:inline="javascript">
                                         const searchList = [[${searchList}]];
-
+                                        console.log("호출")
                                         // 예외처리 : 검색결과 없음
                                         if (!searchList) {
                                             const map = new naver.maps.Map('map', {
