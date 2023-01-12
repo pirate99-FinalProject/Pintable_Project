@@ -6,6 +6,7 @@ import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
 import com.example.pirate99_final.waiting.service.WaitingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class WaitingController {
 
     @GetMapping("/waitingList/{storeStatusId}/{waitingId}")
     public WaitingResponseDto getWaiter(@PathVariable Long storeStatusId, @PathVariable Long waitingId) {
+
 
         return waitingService.getWaiter(storeStatusId, waitingId);
     }

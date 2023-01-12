@@ -2,6 +2,9 @@ package com.example.pirate99_final.store.controller;
 
 
 import com.example.pirate99_final.global.MsgResponseDto;
+import com.example.pirate99_final.review.dto.ReviewRequestDto;
+import com.example.pirate99_final.store.dto.ConfirmRequestDto;
+import com.example.pirate99_final.store.dto.CountingStoreResponseDto;
 import com.example.pirate99_final.store.dto.StoreRequestDto;
 import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
 import com.example.pirate99_final.store.service.StoreService;
@@ -35,5 +38,27 @@ public class StoreController {
     @DeleteMapping("/storeStatus/{storeId}")
     public MsgResponseDto deletesStore(@PathVariable Long storeId) {
         return storeService.deleteStore(storeId);
+
+    }
+
+    @PutMapping("/storeStatus/enter/{storeId}/{people}")
+    public CountingStoreResponseDto enterStore(@PathVariable Long storeId, @PathVariable int people){
+        return storeService.enterStore(storeId, people);
+    }
+
+    @PutMapping("/storeStatus/leave/{storeId}/{people}")
+    public CountingStoreResponseDto leaveStore(@PathVariable Long storeId, @PathVariable int people){
+        return storeService.leaveStore(storeId, people);
+    }
+
+    @PutMapping("/storeStatus/call/{storeId}")
+    public MsgResponseDto callpeople(@PathVariable Long storeId, @PathVariable ConfirmRequestDto requestDto){
+        return storeService.callpeople(storeId, requestDto);
+    }
+
+    @PutMapping("/storeStatus/confirmEnter/{storeId}")
+    public MsgResponseDto confirmStore(@PathVariable Long storeId, @RequestBody ConfirmRequestDto requestDto){
+        return storeService.confirmStore(storeId, requestDto);
+
     }
 }

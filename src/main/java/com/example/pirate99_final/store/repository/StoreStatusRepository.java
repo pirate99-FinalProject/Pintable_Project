@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface StoreStatusRepository extends JpaRepository<StoreStatus, Long> {
     List<StoreStatus> findAllBy();
+    StoreStatus findByStore(Store store);
 
     @Transactional
     void deleteByStore(Store store);
