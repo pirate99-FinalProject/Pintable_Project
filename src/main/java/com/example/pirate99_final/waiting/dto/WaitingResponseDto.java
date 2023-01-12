@@ -15,6 +15,7 @@ public class WaitingResponseDto {
 
     private Long waitingId;
     private int waitingStatus;
+
     private User user;
     private LocalDateTime createdAt;
 
