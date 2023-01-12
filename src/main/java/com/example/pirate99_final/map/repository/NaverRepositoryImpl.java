@@ -20,12 +20,12 @@ public class NaverRepositoryImpl implements NaverRepositoryCustom {
       작성일자 : 22.1.10
       수정일자 : 22.1.11
     */
-    public Naver findByStoreName(String storeName) {                        // 가게명 일치 여부
+    public List<Naver> findByStoreName(String storeName) {                  // 가게명 일치 여부
         QNaver naver = QNaver.naver;                                        // query dsl의 QEntity 선언
-        Naver findByStoreName = queryFactory
+        List<Naver> findByStoreName = queryFactory
                 .selectFrom(naver)
                 .where(naver.storename.eq(storeName))                       // DB의 storename과 입력한 파라메터 storeName Equal
-                .fetchOne();                                                // 단 건 조회(없을시 null, 2개이상 NonUniqueResultException)
+                .fetch();                                                   // 단 건 조회(없을시 null, 2개이상 NonUniqueResultException)
         return findByStoreName;
     }
 
