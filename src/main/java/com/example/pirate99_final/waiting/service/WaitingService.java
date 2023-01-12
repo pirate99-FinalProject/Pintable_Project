@@ -10,6 +10,7 @@ import com.example.pirate99_final.store.repository.StoreRepository;
 import com.example.pirate99_final.store.repository.StoreStatusRepository;
 import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.user.repository.UserRepository;
+import com.example.pirate99_final.waiting.dto.MyTurnResponseDto;
 import com.example.pirate99_final.waiting.dto.WaitingRequestDto;
 import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
 import com.example.pirate99_final.waiting.entity.Waiting;
@@ -71,6 +72,35 @@ public class WaitingService {
         }
         return waitingResponseDto;
     }
+
+    @Transactional
+    public MyTurnResponseDto getMyTurn(Long storeId, WaitingRequestDto requestDto) {
+        int myTurn = 0;
+        int totalWaitingCnt = 0;
+
+        Store store = storeRepository.findById(storeId).orElseThrow(()->
+                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+        );
+
+        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+
+        List<Waiting> waitingList = waitingRepository.findAllByWaitingStatusOrWaitingStatus(0,1);
+
+        User getUser = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+
+        totalWaitingCnt = waitingList.size();
+
+        for (int i = 0; i < waitingList.size(); i++) {
+
+            if (waitingList.get(i).getUser().equals(getUser)) {
+                myTurn = i + 1;
+            }
+        }
+        return new MyTurnResponseDto(totalWaitingCnt, myTurn);
+    }
+
+
 
     @Transactional
     public WaitingResponseDto getWaiter(Long storeId, Long waitingId) {

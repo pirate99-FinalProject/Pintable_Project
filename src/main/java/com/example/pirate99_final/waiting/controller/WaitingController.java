@@ -1,6 +1,7 @@
 package com.example.pirate99_final.waiting.controller;
 
 import com.example.pirate99_final.global.MsgResponseDto;
+import com.example.pirate99_final.waiting.dto.MyTurnResponseDto;
 import com.example.pirate99_final.waiting.dto.WaitingRequestDto;
 import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
 import com.example.pirate99_final.waiting.service.WaitingService;
@@ -20,6 +21,12 @@ public class WaitingController {
     @PostMapping(value = "/waitingList/{storeId}")
     public MsgResponseDto createWaiter(@PathVariable Long storeId, @RequestBody WaitingRequestDto request) {
         return waitingService.createWaiter(storeId, request);
+    }
+
+    @GetMapping("/waitingList/myTurn/{storeId}")
+    public MyTurnResponseDto getMyTurn(@PathVariable Long storeId, @RequestBody WaitingRequestDto requestDto) {
+
+        return waitingService.getMyTurn(storeId, requestDto);
     }
 
     @GetMapping("/waitingList/{storeId}")
