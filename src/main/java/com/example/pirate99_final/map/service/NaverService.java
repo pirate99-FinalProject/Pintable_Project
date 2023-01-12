@@ -169,4 +169,3 @@ public class NaverService {
         model.addAttribute("searchList", BetweenReviewLow);
     }
 }
-

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -20,19 +22,20 @@ public class WaitingController {
         return waitingService.createWaiter(storeStatusId, request);
     }
 
-    @GetMapping("/waitingList")
-    public List<WaitingResponseDto> getListWaiters() {
-        return waitingService.getListWaiters();
+    @GetMapping("/waitingList/{storeStatusId}")
+    public List<WaitingResponseDto> getListWaiters(@PathVariable Long storeStatusId) {
+        return waitingService.getListWaiters(storeStatusId);
     }
 
-    @GetMapping("/waitingList/{waitingId}")
-    public WaitingResponseDto getWaiter(@PathVariable Long waitingId) {
-        return waitingService.getWaiter(waitingId);
+    @GetMapping("/waitingList/{storeStatusId}/{waitingId}")
+    public WaitingResponseDto getWaiter(@PathVariable Long storeStatusId, @PathVariable Long waitingId) {
+
+
+        return waitingService.getWaiter(storeStatusId, waitingId);
     }
 
-    @DeleteMapping("waitingList/{waitingId}")
-    public MsgResponseDto deleteWaiter(@PathVariable Long waitingId) {
+    @DeleteMapping("/waitingList/{storeStatusId}/{waitingId}")
+    public MsgResponseDto deleteWaiter(@PathVariable Long storeStatusId, @PathVariable Long waitingId) {
         return waitingService.deleteWaiter(waitingId);
     }
-
 }

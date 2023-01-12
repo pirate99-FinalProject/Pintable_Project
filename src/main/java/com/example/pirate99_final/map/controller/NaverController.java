@@ -184,9 +184,5 @@ public class NaverController {
         naverService.BetweenReviewLow(model);
         return "index";
     }
-
-
-
-
-
 }
+
