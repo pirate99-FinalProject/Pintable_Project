@@ -28,31 +28,42 @@ import java.util.List;
 public class WaitingService {
 
     private final WaitingRepository waitingRepository;
-
     private final StoreStatusRepository storeStatusRepository;
     private final UserRepository userRepository;
 
+    private final StoreRepository storeRepository;
+
 
     @Transactional
-    public MsgResponseDto createWaiter(Long storeStatusId, WaitingRequestDto requestDto) {
+    public MsgResponseDto createWaiter(Long storeId, WaitingRequestDto requestDto) {
+
+        Store store = storeRepository.findById(storeId).orElseThrow(()->
+                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+        );
+
+        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+
+
         User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
 
                 () -> new IllegalArgumentException("유저를 찾을 수 없습니다.")
         );
-        StoreStatus storeStatus = storeStatusRepository.findById(storeStatusId).orElseThrow(
-                () -> new IllegalArgumentException("점포 상태를 찾을 수 없습니다.")
-        );
         Waiting waiting = waitingRepository.save(new Waiting(user, storeStatus));
 
-        if(waiting.getUser() == null) {
-            throw new IllegalArgumentException("대기자 등록에 실패하였습니다.");
-        }
+        storeStatus.update_waitingCnt(storeStatus.getWaitingCnt() + 1);
+
         return new MsgResponseDto(SuccessCode.CREATE_WAITING);
     }
 
     @Transactional
-    public List<WaitingResponseDto> getListWaiters() {
-        List<Waiting> waitingList = waitingRepository.findAllByOrderByCreatedAtDesc();
+    public List<WaitingResponseDto> getListWaiters(Long storeId) {
+        Store store = storeRepository.findById(storeId).orElseThrow(()->
+                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+        );
+
+        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+
+        List<Waiting> waitingList = waitingRepository.findAllByWaitingStatusOrWaitingStatus(0,1);
         List<WaitingResponseDto> waitingResponseDto = new ArrayList<>();
 
         for (Waiting waiting : waitingList) {
@@ -62,45 +73,29 @@ public class WaitingService {
     }
 
     @Transactional
-    public WaitingResponseDto getWaiter(Long waitingId) {
+    public WaitingResponseDto getWaiter(Long storeId, Long waitingId) {
+
+        Store store = storeRepository.findById(storeId).orElseThrow(()->
+                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+        );
+
+        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+
         Waiting waiting = waitingRepository.findByWaitingId(waitingId);
         return new WaitingResponseDto(waiting);
     }
 
     @Transactional
-    public MsgResponseDto deleteWaiter(Long waitingId) {
-        Waiting waiting = waitingRepository.findByWaitingId(waitingId);
-        waitingRepository.delete(waiting);
-        return new MsgResponseDto(SuccessCode.DELETE_WAITING);
-    }
-
-    @Transactional
-    public List<WaitingResponseDto> getListWaiters(Long storeStatusId) {
-        List<Waiting> waitingList = waitingRepository.findAllByOrderByCreatedAtDesc();
-        List<WaitingResponseDto> waitingResponseDto = new ArrayList<>();
-        StoreStatus storeStatus = storeStatusRepository.findById(storeStatusId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_STORE_STATUS_ERROR)
+    public MsgResponseDto deleteWaiter(Long storeId, Long waitingId) {
+        Store store = storeRepository.findById(storeId).orElseThrow(()->
+                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
-        for (Waiting waiting : waitingList) {
-            waitingResponseDto.add(new WaitingResponseDto(waiting));
-        }
-        return waitingResponseDto;
-    }
+        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-    @Transactional
-    public WaitingResponseDto getWaiter(Long storeStatusId, Long waitingId) {
-        StoreStatus storeStatus = storeStatusRepository.findById(storeStatusId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_STORE_STATUS_ERROR)
-        );
         Waiting waiting = waitingRepository.findByWaitingId(waitingId);
-        return new WaitingResponseDto(waiting);
-    }
 
-    @Transactional
-    public MsgResponseDto deleteWaiter(Long waitingId) {
-        Waiting waiting = waitingRepository.findByWaitingId(waitingId);
-        waitingRepository.delete(waiting);
+        waiting.update(3);
         return new MsgResponseDto(SuccessCode.DELETE_WAITING);
     }
 }
