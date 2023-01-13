@@ -43,8 +43,9 @@ public class StoreStatus {
         this.availableTableCnt  =   availableTableCnt;
     }
 
-    public void update_waitingCnt(int waitingCnt){
+    public void update_waitingCnt(int waitingCnt, int availableTableCnt){
 
         this.waitingCnt = waitingCnt;
+        this.availableTableCnt = availableTableCnt;
     }
 }
