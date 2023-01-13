@@ -80,7 +80,7 @@
 </details>
 
 ## 4. 시연영상 🎥
-
+[시연영상 바로가기](https://www.youtube.com/watch?v=iY3YxFOawYs)
 
 ## 5. 서비스 아키텍처 🎨
 ![image](https://user-images.githubusercontent.com/117708164/212272737-a1633c36-db2d-4717-8392-b202a5f30ea7.png)
