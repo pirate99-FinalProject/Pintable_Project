@@ -50,7 +50,7 @@ function status() {
 function signIn() {
     let username = document.querySelector('.userId').value;
     let password = document.querySelector('.password').value;
-    const url = 'http://3.36.123.179/api/signup/';
+    const url = 'http://localhost:8080/api/signup/';
 
     axios({
         method: "post",                                                                     // [요청 타입]
@@ -77,7 +77,7 @@ function signIn() {
 function callWaiting() {
     let id = document.getElementById("id").innerHTML
     let username = document.querySelector('.userId').value;
-    const url = 'http://3.36.123.179/api/waitingList/';
+    const url = 'http://localhost:8080/api/waitingList/';
 
     axios({
         method: "post",                                                                     // [요청 타입]
@@ -107,7 +107,7 @@ function callWaiting() {
 function mystatus() {
     let id = document.getElementById("id").innerHTML
     let username = document.querySelector('.userId1').value;
-    const url = 'http://3.36.123.179/api/waitingList/myTurn/';
+    const url = 'http://localhost:8080/api/waitingList/myTurn/';
 
     axios({
         method: "post",                                                                     // [요청 타입]
@@ -139,7 +139,7 @@ function mystatus() {
 
 function storeStatus() {
     let id = document.getElementById("id").innerHTML
-    const url = 'http://3.36.123.179/api/waitingList/';
+    const url = 'http://localhost:8080/api/waitingList/';
 
     axios({
         method: "get",                                                                     // [요청 타입]
