@@ -21,16 +21,10 @@ public class Store {
     private String address;                                             // 주소
 
     @Column(nullable = false)
-    private int postNumber;                                             // 우편번호
-
-    @Column(nullable = false)
-    private int reviewCnt;                                              // 리뷰수
-
-    @Column(nullable = false)
     private String roadNameAddress;                                     // 도로명주소
 
     @Column(nullable = false)
-    private double starScore;                                           // 별점
+    private int postNumber;                                             // 우편번호
 
     @Column(nullable = false)
     private String storeName;                                           // 상호명
@@ -43,6 +37,12 @@ public class Store {
 
     @Column(nullable = false)
     private double yCoordinate;                                         // Y좌표
+
+    @Column(nullable = false)
+    private double starScore;                                           // 별점
+
+    @Column(nullable = false)
+    private int reviewCnt;                                              // 리뷰수
 
     //
     public Store(StoreRequestDto requestDto){
