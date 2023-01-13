@@ -163,7 +163,7 @@ public class StoreService {
                 new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
         );
 
-        Waiting waiting = waitingRepository.findByUser(user);
+        Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
 
         if(requestDto.getWaitingStatus() == 1){
             waiting.update(2);
@@ -203,7 +203,7 @@ public class StoreService {
                 new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
         );
 
-        Waiting waiting = waitingRepository.findByUser(user);
+        Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
         waiting.update(1);
 
         return new MsgResponseDto(SuccessCode.CALL_PEOPLE);
