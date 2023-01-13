@@ -51,8 +51,8 @@ public class Store {
         this.postNumber         =   requestDto.getPostNumber();         // 우편번호
         this.storeName          =   requestDto.getStoreName();          // 상호명
         this.typeOfBusiness     =   requestDto.getTypeOfBusiness();     // 업종명
-        this.xCoordinate        =   requestDto.getXCoordinate();        // X좌표
-        this.yCoordinate        =   requestDto.getYCoordinate();        // Y좌표
+        this.xCoordinate        =   requestDto.getXcoordinate();        // X좌표
+        this.yCoordinate        =   requestDto.getYcoordinate();        // Y좌표
         this.starScore          =   0;                                  // 별점
         this.reviewCnt          =   0;                                  // 리뷰수
 
