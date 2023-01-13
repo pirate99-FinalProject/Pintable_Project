@@ -246,8 +246,8 @@
                                                 const {
                                                     xcoordinate,
                                                     ycoordinate,
-                                                    storename,
-                                                    roadnameaddress,
+                                                    storeName,
+                                                    roadNameAddress,
                                                     id
                                                 } = searchList[i];
                                                 // 마커 생성
@@ -264,8 +264,8 @@
                                                 // 검색 결과 content
                                                 const contentString = [
                                                     '<div class="iw_inner" style="padding:5px; margin: 5px 5px 5px 5px; width: 150px; height: 45px; text-align: center; ">',
-                                                    `<p>🏠 ${storename}</p>`, // index
-                                                    `<p>${roadnameaddress}</p>`, // index
+                                                    `<p>🏠 ${storeName}</p>`, // index
+                                                    `<p>${roadNameAddress}</p>`, // index
                                                     '</div>'
                                                 ].join('').replace(/\"/gi, "");
 
@@ -289,8 +289,8 @@
                                                         infowindow.close();
                                                     } else {
                                                         infowindow.open(map, marker);
-                                                        document.getElementById("storename").innerHTML = storename;
-                                                        document.getElementById("storeadrress").innerHTML = roadnameaddress;
+                                                        document.getElementById("storename").innerHTML = storeName;
+                                                        document.getElementById("storeadrress").innerHTML = roadNameAddress;
                                                         document.getElementById("id").innerHTML = id;
                                                     }
                                                 });
