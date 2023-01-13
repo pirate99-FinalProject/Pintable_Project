@@ -84,7 +84,7 @@ public class WaitingService {
 
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-        List<Waiting> waitingList = waitingRepository.findAllByWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(0,1);
+        List<Waiting> waitingList = waitingRepository.findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0,1);
 
         User getUser = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
