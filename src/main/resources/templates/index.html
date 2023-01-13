@@ -207,6 +207,7 @@
                                     <input type="hidden" name="username" value="..." id="username"/>
                                     <script th:inline="javascript">
                                         const searchList = [[${searchList}]];
+                                        console.log(searchList)
                                         console.log("호출")
                                         // 예외처리 : 검색결과 없음
                                         if (!searchList) {
@@ -248,7 +249,7 @@
                                                     ycoordinate,
                                                     storeName,
                                                     roadNameAddress,
-                                                    id
+                                                    storeId
                                                 } = searchList[i];
                                                 // 마커 생성
                                                 const marker = new naver.maps.Marker({
@@ -291,7 +292,7 @@
                                                         infowindow.open(map, marker);
                                                         document.getElementById("storename").innerHTML = storeName;
                                                         document.getElementById("storeadrress").innerHTML = roadNameAddress;
-                                                        document.getElementById("id").innerHTML = id;
+                                                        document.getElementById("id").innerHTML = storeId;
                                                     }
                                                 });
                                             }
