@@ -82,16 +82,16 @@
 </div>
 </details>
 
-## 4. 시연영상 
+## 4. 시연영상 🎥
 
 
-## 5. 서비스 아키텍처
+## 5. 서비스 아키텍처 🎨
 ![image](https://user-images.githubusercontent.com/117708164/212272737-a1633c36-db2d-4717-8392-b202a5f30ea7.png)
 
-## 6. ERD 
+## 6. ERD 👨🏻‍💻
 ![image](https://user-images.githubusercontent.com/117708164/212272837-ef542bf2-e9a1-465a-92d3-767f91868021.png)
 
-## 6. API
+## 6. API 💬
 [API명세서 바로가기](https://www.notion.so/2c418627d047416fb8b21c59b49b83d9?v=f17213f3433e45328148b004b36e81e6)
 
 
