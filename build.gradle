@@ -42,8 +42,8 @@ dependencies {
     implementation 'mysql:mysql-connector-java'
     implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.31'
 
-    // S3 의존성 설치
-
+    // Swagger 설치
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
 
     //querydsl 추가
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
