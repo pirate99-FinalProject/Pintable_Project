@@ -1,8 +1,8 @@
 package com.example.pirate99_final.map.service;
 
-import com.example.pirate99_final.map.entity.Naver;
-import com.example.pirate99_final.map.repository.NaverRepository;
 import com.example.pirate99_final.map.repository.NaverRepositoryImpl;
+import com.example.pirate99_final.store.entity.Store;
+import com.example.pirate99_final.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -12,8 +12,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NaverService {
-    private final NaverRepository naverRepository;                                                                      // naverRepository 의존성 주입
+//    private final NaverRepository naverRepository;                                                                      // naverRepository 의존성 주입
     private final NaverRepositoryImpl naverRepositoryImpl;                                                              // query Dsl Repository 의존성 주입
+    private final StoreRepository storeRepository;
 
     /*
       기능 : 현재 위치에서 검색 기능
@@ -22,7 +23,7 @@ public class NaverService {
     */
     public void searchCurrentMap(Model model, String latitude, String longitude, String storeName) {
 
-        List<Naver> naverList = naverRepository.searchCurrent(latitude, longitude, storeName);                           // 1. 입력받은 위도, 경도, 가게 이름으로 DB에 검사한다.
+        List<Store> naverList = storeRepository.searchCurrent(latitude, longitude, storeName);                           // 1. 입력받은 위도, 경도, 가게 이름으로 DB에 검사한다.
         model.addAttribute("searchList", naverList);                                                         // 2. index.html에 검색한 결과 전달
     }
 
@@ -33,7 +34,7 @@ public class NaverService {
     */
     public void searchMap(Model model, String storeName) {
         String storeNameTrim = storeName.replaceAll(" ", "");                                            // 1. 검색 시 키워드 검색을 위한 문자 치환(" ", "")
-        List<Naver> naverList = naverRepository.findByStorenameContaining(storeNameTrim);                                // 2. %Like% 로 장소 검색
+        List<Store> naverList = storeRepository.findByStoreNameContaining(storeNameTrim);                                // 2. %Like% 로 장소 검색
         model.addAttribute("searchList", naverList);                                                         // 3. index.html에 검색한 결과 전달
     }
 
@@ -45,7 +46,7 @@ public class NaverService {
       수정내용 : 22.1.12 - 단건 조회시 가게정보창이 뜨지 않아서 단건 조회도 list형태로 반환하게끔 변경
     */
     public void findByOneStoreName(Model model, String storeName) {
-        List<Naver> findByOneStoreName = naverRepositoryImpl.findByStoreName(storeName);                                // 1. naverRepositoryImpl 구현
+        List<Store> findByOneStoreName = naverRepositoryImpl.findByStoreName(storeName);                                // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", findByOneStoreName);
 
     }
@@ -57,7 +58,7 @@ public class NaverService {
       수정일자 : 22.1.11
     */
     public void findByStoreNameInclude(Model model, String storeNameInclude) {                                          // 1. naverRepositoryImpl 구현
-        List<Naver> findByStoreNameInclude = naverRepositoryImpl.findByStoreNameInclude(storeNameInclude);
+        List<Store> findByStoreNameInclude = naverRepositoryImpl.findByStoreNameInclude(storeNameInclude);
         model.addAttribute("searchList", findByStoreNameInclude);
     }
 
@@ -68,7 +69,7 @@ public class NaverService {
       수정일자 : 22.1.11
     */
     public void findByRoadAddressInclude(Model model, String roadNameAddress) {
-        List<Naver> findByRoadAddressInclude = naverRepositoryImpl.findByroadAddressInclude(roadNameAddress);           // 1. naverRepositoryImpl 구현
+        List<Store> findByRoadAddressInclude = naverRepositoryImpl.findByroadAddressInclude(roadNameAddress);           // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", findByRoadAddressInclude);
     }
 
@@ -79,7 +80,7 @@ public class NaverService {
       수정일자 : 22.1.11
     */
     public void findByBusiness(Model model, String typeOfBusiness) {
-        List<Naver> findByBusiness = naverRepositoryImpl.findByBusiness(typeOfBusiness);                                // 1. naverRepositoryImpl 구현
+        List<Store> findByBusiness = naverRepositoryImpl.findByBusiness(typeOfBusiness);                                // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", findByBusiness);
     }
 
@@ -90,7 +91,7 @@ public class NaverService {
       수정일자 : 22.1.11
     */
     public void OrderByStarScoreASC(Model model) {
-        List<Naver> OrderByStarScoreASC = naverRepositoryImpl.OrderByStarScore();                                       // 1. naverRepositoryImpl 구현
+        List<Store> OrderByStarScoreASC = naverRepositoryImpl.OrderByStarScore();                                       // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", OrderByStarScoreASC);
     }
 
@@ -101,7 +102,7 @@ public class NaverService {
      수정일자 : 22.1.11
    */
     public void OrderByStarScoreDESC(Model model) {
-        List<Naver> OrderByStarScoreDESC = naverRepositoryImpl.OrderByStarScoreDESC();                                  // 1. naverRepositoryImpl 구현
+        List<Store> OrderByStarScoreDESC = naverRepositoryImpl.OrderByStarScoreDESC();                                  // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", OrderByStarScoreDESC);
     }
 
@@ -112,7 +113,7 @@ public class NaverService {
       수정일자 : 22.1.11
     */
     public void OrderByReviewASC(Model model) {
-        List<Naver> OrderByReviewASC = naverRepositoryImpl.OrderByReview();                                             // 1. naverRepositoryImpl 구현
+        List<Store> OrderByReviewASC = naverRepositoryImpl.OrderByReview();                                             // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", OrderByReviewASC);
     }
 
@@ -123,7 +124,7 @@ public class NaverService {
       수정일자 : 22.1.11
     */
     public void OrderByReviewDESC(Model model) {
-        List<Naver> OrderByReviewDESC = naverRepositoryImpl.OrderByReviewDESC();                                        // 1. naverRepositoryImpl 구현
+        List<Store> OrderByReviewDESC = naverRepositoryImpl.OrderByReviewDESC();                                        // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", OrderByReviewDESC);
     }
 
@@ -134,7 +135,7 @@ public class NaverService {
       수정일자 : 22.1.11
     */
     public void BetweenStarScoreHigh(Model model, double score) {
-        List<Naver> BetweenStarScoreHigh = naverRepositoryImpl.BetweenStarScoreHigh(score);                                  // 1. naverRepositoryImpl 구현
+        List<Store> BetweenStarScoreHigh = naverRepositoryImpl.BetweenStarScoreHigh(score);                                  // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", BetweenStarScoreHigh);
     }
 
@@ -145,7 +146,7 @@ public class NaverService {
       수정일자 : 22.1.11
     */
     public void BetweenStarScoreLow(Model model, double score) {
-        List<Naver> BetweenStarScoreLow = naverRepositoryImpl.BetweenStarScoreLow(score);                                    // 1. naverRepositoryImpl 구현
+        List<Store> BetweenStarScoreLow = naverRepositoryImpl.BetweenStarScoreLow(score);                                    // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", BetweenStarScoreLow);
     }
 
@@ -156,7 +157,7 @@ public class NaverService {
       수정일자 : 22.1.11
     */
     public void BetweenReviewHigh(Model model, int review) {
-        List<Naver> BetweenReviewHigh = naverRepositoryImpl.BetweenReviewHigh(review);                                   // 1. naverRepositoryImpl 구현
+        List<Store> BetweenReviewHigh = naverRepositoryImpl.BetweenReviewHigh(review);                                   // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", BetweenReviewHigh);
     }
 
@@ -167,7 +168,7 @@ public class NaverService {
       수정일자 : 22.1.11
     */
     public void BetweenReviewLow(Model model, int review) {
-        List<Naver> BetweenReviewLow = naverRepositoryImpl.BetweenReviewLow(review);                                    // 1. naverRepositoryImpl 구현
+        List<Store> BetweenReviewLow = naverRepositoryImpl.BetweenReviewLow(review);                                    // 1. naverRepositoryImpl 구현
         model.addAttribute("searchList", BetweenReviewLow);
     }
 }
