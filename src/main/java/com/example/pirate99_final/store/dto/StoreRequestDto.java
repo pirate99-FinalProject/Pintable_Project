@@ -10,6 +10,6 @@ public class StoreRequestDto{
     private int postNumber;                                         // 우편주소
     private String storeName;                                       // 상호명
     private String typeOfBusiness;                                  // 업종명
-    private double xCoordinate;                                     // X좌표
-    private double yCoordinate;                                     // Y좌표
+    private double xcoordinate;                                     // X좌표
+    private double ycoordinate;                                     // Y좌표
 }
