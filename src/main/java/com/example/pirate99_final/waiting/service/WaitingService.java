@@ -51,7 +51,7 @@ public class WaitingService {
         );
         Waiting waiting = waitingRepository.save(new Waiting(user, storeStatus));
 
-        storeStatus.update_waitingCnt(storeStatus.getWaitingCnt() + 1);
+        storeStatus.update_waitingCnt(storeStatus.getWaitingCnt() + 1, storeStatus.getAvailableTableCnt());
 
         return new MsgResponseDto(SuccessCode.CREATE_WAITING);
     }
