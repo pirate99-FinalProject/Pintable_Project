@@ -1,17 +1,17 @@
-#version: 0.0
-#os: linux
-#files:
-#  - source: /
-#    destination: /home/ubuntu/git-action-test # 인스턴스에서 파일이 저장될 위치
-#    overwrite: yes
-#permissions:
-#  - object: /home/ubuntu/git-action-test
-#    #    pattern: "**"
-#    owner: ubuntu
-#    group: ubuntu
-#    mode: 755
-#hooks:
-#  AfterInstall:
-#    - location: deploy.sh    # locaiton 기준 => project root 디렉토리
-#      timeout: 60
-#      runas: root
+version: 0.0
+os: linux
+files:
+ - source: /
+   destination: /home/ubuntu/git-action-test # 인스턴스에서 파일이 저장될 위치
+   overwrite: yes
+permissions:
+ - object: /home/ubuntu/git-action-test
+   #    pattern: "**"
+   owner: ubuntu
+   group: ubuntu
+   mode: 755
+hooks:
+ AfterInstall:
+   - location: deploy.sh    # locaiton 기준 => project root 디렉토리
+     timeout: 60
+     runas: root
