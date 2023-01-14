@@ -6,7 +6,7 @@ files:
    overwrite: yes
 permissions:
  - object: /home/ubuntu/git-action-test
-   #    pattern: "**"
+   #    pattern: "**" 
    owner: ubuntu
    group: ubuntu
    mode: 755
