@@ -55,6 +55,10 @@ dependencies {
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
     //stringutils 동적쿼리 관련
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+    // google SMTP
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
 tasks.named('test') {

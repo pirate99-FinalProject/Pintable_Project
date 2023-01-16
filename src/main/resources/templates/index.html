@@ -171,11 +171,19 @@
                             <div class="input-box">
                                 <input class="password" type="password" placeholder="password" style="height: 30px">
                             </div>
+                            <div class="input-box">
+                                <input class="email" type="email" placeholder="email" style="height: 30px; width: 100px">
+                                <button type="button" id="emailsend" style="color: white; background: black; margin: 2px" onclick="sendMail();"> 요청 </button>
+                            </div>
+                            <div class="input-box">
+                                <input class="code" type="code" placeholder="code" style="height: 30px; width: 100px">
+                                <button type="button" id="emailcheck" style="color: white; background: black; margin: 2px" onclick="checkCode();"> 확인 </button>
+                            </div>
                             <p></p>
-                            <button type="button" id="loginbtn" style="color: white; background: black;"
+                            <button type="button" id="loginbtn" style="color: white; background: black; margin: 2px"
                                     onclick="signIn();"> join
                             </button>
-                            <button type="button" id="confirmbtn" style="color: white; background: black;"
+                            <button type="button" id="confirmbtn" style="color: white; background: black; margin: 2px"
                                     onclick="callWaiting()"> cofirm
                             </button>
                         </div>
