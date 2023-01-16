@@ -3,10 +3,7 @@ package com.example.pirate99_final.store.controller;
 
 import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.review.dto.ReviewRequestDto;
-import com.example.pirate99_final.store.dto.ConfirmRequestDto;
-import com.example.pirate99_final.store.dto.CountingStoreResponseDto;
-import com.example.pirate99_final.store.dto.StoreRequestDto;
-import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
+import com.example.pirate99_final.store.dto.*;
 import com.example.pirate99_final.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -51,8 +48,8 @@ public class StoreController {
     }
 
     @PutMapping("/storeStatus/call/{storeId}")
-    public MsgResponseDto callpeople(@PathVariable Long storeId, @RequestBody ConfirmRequestDto requestDto){
-        return storeService.callpeople(storeId, requestDto);
+    public MsgResponseDto callpeople(@PathVariable Long storeId, @RequestBody MailSendDto mailSendDto){
+        return storeService.callpeople(storeId, mailSendDto);
     }
 
     @PutMapping("/storeStatus/confirmEnter/{storeId}")

@@ -4,10 +4,7 @@ import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.global.exception.CustomException;
 import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.global.exception.SuccessCode;
-import com.example.pirate99_final.store.dto.ConfirmRequestDto;
-import com.example.pirate99_final.store.dto.CountingStoreResponseDto;
-import com.example.pirate99_final.store.dto.StoreRequestDto;
-import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
+import com.example.pirate99_final.store.dto.*;
 import com.example.pirate99_final.store.entity.Store;
 import com.example.pirate99_final.store.entity.StoreStatus;
 import com.example.pirate99_final.store.repository.StoreRepository;
@@ -18,7 +15,10 @@ import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
 import com.sun.net.httpserver.Authenticator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +38,8 @@ public class StoreService {
     private final WaitingRepository waitingRepository;                  // waiting repo connect
 
     private final UserRepository userRepository;                        // user repo connect
+
+    private final JavaMailSender emailSender;                                 // email sender
 
     // Store Create function
     public MsgResponseDto createStore(StoreRequestDto requestDto){
@@ -189,7 +191,7 @@ public class StoreService {
 
     // call people
     @Transactional
-    public MsgResponseDto callpeople(Long storeId, ConfirmRequestDto requestDto) {
+    public MsgResponseDto callpeople(Long storeId, MailSendDto mailSendDto) {
         // 1. find store
         Store store = storeRepository.findById(storeId).orElseThrow(()->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
@@ -198,13 +200,20 @@ public class StoreService {
         // 2. storeStatus check
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-        // 3. User find
-        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(()->
-                new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
-        );
+//        // 3. User find
+//        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(()->
+//                new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
+//        );
+//
+//        Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
+//        waiting.update(1);
 
-        Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
-        waiting.update(1);
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("developjisung@gmail.com");
+        message.setTo(mailSendDto.getAddress());
+        message.setSubject(mailSendDto.getTitle());
+        message.setText(mailSendDto.getContent());
+        emailSender.send(message);
 
         return new MsgResponseDto(SuccessCode.CALL_PEOPLE);
     }

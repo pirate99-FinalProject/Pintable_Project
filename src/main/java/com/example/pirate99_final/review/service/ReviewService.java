@@ -55,7 +55,7 @@ public class ReviewService {
         );
 
         // 1. Select All Memo
-        List<Review> ListReview = reviewRepository.findAllByStore(store);
+        List<Review> ListReview = reviewRepository.findTop10ByStoreOrderByIdDesc(store);
 
         List<ReviewResponseDto> ListResponseDto = new ArrayList<>();
 
