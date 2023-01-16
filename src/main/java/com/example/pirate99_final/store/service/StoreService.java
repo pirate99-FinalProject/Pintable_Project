@@ -191,7 +191,7 @@ public class StoreService {
 
     // call people
     @Transactional
-    public MsgResponseDto callpeople(Long storeId, MailSendDto mailSendDto) {
+    public MsgResponseDto callpeople(Long storeId, ConfirmRequestDto requestDto) {
         // 1. find store
         Store store = storeRepository.findById(storeId).orElseThrow(()->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
@@ -200,19 +200,19 @@ public class StoreService {
         // 2. storeStatus check
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-//        // 3. User find
-//        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(()->
-//                new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
-//        );
-//
-//        Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
-//        waiting.update(1);
+        // 3. User find
+        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(()->
+                new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
+        );
+
+        Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
+        waiting.update(1);
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("developjisung@gmail.com");
-        message.setTo(mailSendDto.getAddress());
-        message.setSubject(mailSendDto.getTitle());
-        message.setText(mailSendDto.getContent());
+        message.setTo(user.getAddress());
+        message.setSubject(store.getStoreName() + " 대기 호출");
+        message.setText(store.getStoreName() + "에 대기해주신 고객님 감사합니다. 입장 부탁드립니다.");
         emailSender.send(message);
 
         return new MsgResponseDto(SuccessCode.CALL_PEOPLE);

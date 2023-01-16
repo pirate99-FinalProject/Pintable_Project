@@ -48,8 +48,8 @@ public class StoreController {
     }
 
     @PutMapping("/storeStatus/call/{storeId}")
-    public MsgResponseDto callpeople(@PathVariable Long storeId, @RequestBody MailSendDto mailSendDto){
-        return storeService.callpeople(storeId, mailSendDto);
+    public MsgResponseDto callpeople(@PathVariable Long storeId, @RequestBody ConfirmRequestDto requestDto){
+        return storeService.callpeople(storeId, requestDto);
     }
 
     @PutMapping("/storeStatus/confirmEnter/{storeId}")

@@ -40,6 +40,7 @@ public class UserService {
         // 1. USERNAME, PASSWORD SETTING
         String username = signupRequestDto.getUsername();                                                               // username setting (DTO ->  val)
         String password = signupRequestDto.getPassword();                                                               // password setting (DTO ->  val)
+        String address  = signupRequestDto.getAddress();
 
         // 2. find user (duplicate user)
         Optional<User> found = userRepository.findByUsername(username);                                                 // 회원 중복 확인
@@ -48,7 +49,7 @@ public class UserService {
         }
 
         // 5. DB insert
-        User user = new User(username, password);                                                                       // DTO -> Entity
+        User user = new User(username, password, address);                                                                       // DTO -> Entity
         userRepository.save(user);
         return new MsgResponseDto(SIGN_UP);
     }
