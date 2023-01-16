@@ -40,7 +40,7 @@ public class UserService {
         // 1. USERNAME, PASSWORD SETTING
         String username = signupRequestDto.getUsername();                                                               // username setting (DTO ->  val)
         String password = signupRequestDto.getPassword();                                                               // password setting (DTO ->  val)
-        String address  = signupRequestDto.getAddress();
+        String address  = signupRequestDto.getEmail();
 
         // 2. find user (duplicate user)
         Optional<User> found = userRepository.findByUsername(username);                                                 // 회원 중복 확인
