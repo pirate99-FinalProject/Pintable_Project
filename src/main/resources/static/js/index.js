@@ -59,12 +59,12 @@ function signIn() {
     let email = document.querySelector('.email').value;
     console.log(isCertification);
     console.log(email);
-    const api = 'http://localhost:8080/api/signup';
+    const api = '/api/signup';
 
     if(isCertification == true) {
         axios({
             method: "post",
-            url: api,
+            url: baseUrl + api,
             data: JSON.stringify(
                 {username: username, password: password, email:email }
             ),
