@@ -23,6 +23,8 @@ public enum ErrorCode {
     NOT_FOUND_USER_ERROR(HttpStatus.OK, "해당하는 사용자를 찾을 수 없습니다."),
     DUPLICATE_USER_ERROR(HttpStatus.OK, "이미 존재하는 회원입니다."),
     WRONG_PASSWORD_ERROR(HttpStatus.OK, "잘못된 비밀번호입니다."),
+
+    WRONG_LIMIT_WAITING_ERROR(HttpStatus.OK, "인원 제한 설정 값은 현재 대기자 인원보다 적을 수 없습니다."),
     NOT_ENOUGH_TABLE(HttpStatus.OK, "빈 자리가 없습니다. 예약 등록 부탁드립니다.");
 
 

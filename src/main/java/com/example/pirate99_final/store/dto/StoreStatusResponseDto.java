@@ -12,11 +12,14 @@ public class StoreStatusResponseDto {
     private int  waitingCnt;            // 대기 팀 수
     private Long storeId;               // 상호 ID
 
+    private int limitWaitingCnt;
+
     public StoreStatusResponseDto(StoreStatus storestatus){
         this.storeStatusId = storestatus.getStoreStatusId();
         this.totalTableCnt = storestatus.getTotalTableCnt();
         this.availableTableCnt = storestatus.getAvailableTableCnt();
         this.waitingCnt = storestatus.getWaitingCnt();
         this.storeId = storestatus.getStore().getStoreId();
+        this.limitWaitingCnt = storestatus.getLimitWaitingCnt();
     }
 }

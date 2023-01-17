@@ -56,4 +56,9 @@ public class StoreController {
     public MsgResponseDto confirmStore(@PathVariable Long storeId, @RequestBody ConfirmRequestDto requestDto){
         return storeService.confirmStore(storeId, requestDto);
     }
+
+    @PutMapping("/storeStatus/limitWaitingCnt/{storeId}")
+    public MsgResponseDto limitWaitingCnt(@PathVariable Long storeId, @RequestBody LimitWaitingCntRequestDto requestDto){
+        return storeService.limitWaitingCnt(storeId, requestDto);
+    }
 }

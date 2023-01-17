@@ -33,11 +33,16 @@ public class StoreStatus {
     private Store store;
 
 
+    @Column(nullable = false)
+    private int limitWaitingCnt;
+
+
     public StoreStatus(Store store){
         this.totalTableCnt      =   40;
         this.availableTableCnt  =   40;
         this.waitingCnt         =   0;
         this.store              =   store;
+        this.limitWaitingCnt    =   0;
     }
     public void update(int availableTableCnt){
         this.availableTableCnt  =   availableTableCnt;
@@ -47,5 +52,9 @@ public class StoreStatus {
 
         this.waitingCnt = waitingCnt;
         this.availableTableCnt = availableTableCnt;
+    }
+
+    public void update_limitWaitingCnt(int limitWaitingCnt) {
+        this.limitWaitingCnt = limitWaitingCnt;
     }
 }
