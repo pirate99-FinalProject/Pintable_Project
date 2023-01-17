@@ -223,6 +223,58 @@ public class StoreService {
         return new MsgResponseDto(SuccessCode.CALL_PEOPLE);
     }
 
+    //Limit Waiting Count 최대 예약팀 설정
+    @Transactional
+    public MsgResponseDto limitWaitingCnt(Long storeId, LimitWaitingCntRequestDto requestDto) {
+
+        int totalWaitingCnt, limitWaitingCnt =0;
+
+
+        // 1. find store
+        Store store = storeRepository.findById(storeId).orElseThrow(()->
+                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+        );
+
+        // 2. storeStatus check
+        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+
+        List<Waiting> waitingList = waitingRepository.
+                findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0,1);
+
+
+        storeStatus.update_limitWaitingCnt(requestDto.getLimitWaitingCnt());
+        limitWaitingCnt = storeStatus.getLimitWaitingCnt();
+
+
+        totalWaitingCnt = waitingList.size();
+
+
+        if (limitWaitingCnt == 0) {
+
+            return new MsgResponseDto(SuccessCode.LIMIT_DEFAULT);
+
+        } else if (limitWaitingCnt >= totalWaitingCnt) {
+
+            return new MsgResponseDto(SuccessCode.LIMIT_SETTING);
+
+        } else if (limitWaitingCnt < totalWaitingCnt) {
+
+            for (int i = limitWaitingCnt; i < totalWaitingCnt; i++) {
+
+                    SimpleMailMessage message = new SimpleMailMessage();
+                    message.setFrom("pintable99@gmail.com");
+                    message.setTo(waitingList.get(i).getUser().getAddress());
+                    message.setSubject(store.getStoreName() + " 안내 이메일");
+                    message.setText(store.getStoreName() + "에 대기해주신 고객님 감사합니다. 금일 점포 사정으로 서비스를 제공해드리기가 어렵습니다.");
+                    emailSender.send(message);
+
+            }
+
+            return new MsgResponseDto(ErrorCode.WRONG_LIMIT_WAITING_ERROR);
+        }
+        return null;
+    }
+
     // 기능 : 현재 위치에서 검색 기능
     public void searchCurrentMap(Model model, String latitude, String longitude, String storeName) {
 

@@ -1,6 +1,7 @@
 package com.example.pirate99_final.global;
 
 import com.example.pirate99_final.global.exception.CustomException;
+import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.global.exception.SuccessCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,5 +33,9 @@ public class MsgResponseDto {
     public MsgResponseDto(MethodArgumentNotValidException ex) {
         this.msg = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         this.statusCode = HttpStatus.BAD_REQUEST.value();
+    }
+    public MsgResponseDto(ErrorCode errorCode) {
+        this.statusCode = errorCode.getHttpStatus().value();
+        this.msg = errorCode.getMessage();
     }
 }
