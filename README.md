@@ -1,5 +1,4 @@
-
-![pin (4) (2)](https://user-images.githubusercontent.com/117708164/212247300-5102d550-5dab-44ba-8c7c-b188737c9828.png)
+![pinTable_Logo](https://user-images.githubusercontent.com/117708164/212932426-9d380d13-1172-4708-8d6b-32837889cdb7.png)
 
 # PIN Table 🍽
 - 위치 데이터를 활용한 장소 위치 검색을 할 수 있어요 🙆🏻
