@@ -4,16 +4,20 @@ import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.global.exception.CustomException;
 import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.global.exception.SuccessCode;
+import com.example.pirate99_final.store.config.SearchCondition;
+import com.example.pirate99_final.store.dto.ConfirmRequestDto;
+import com.example.pirate99_final.store.dto.StoreRequestDto;
+import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
 import com.example.pirate99_final.store.dto.*;
 import com.example.pirate99_final.store.entity.Store;
 import com.example.pirate99_final.store.entity.StoreStatus;
+import com.example.pirate99_final.store.repository.StoreRepositoryImpl;
 import com.example.pirate99_final.store.repository.StoreRepository;
 import com.example.pirate99_final.store.repository.StoreStatusRepository;
 import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.user.repository.UserRepository;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
-import com.sun.net.httpserver.Authenticator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,8 +25,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
-import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +43,7 @@ public class StoreService {
 
     private final UserRepository userRepository;                        // user repo connect
 
+    private final StoreRepositoryImpl naverRepositoryImpl;                                                              // query Dsl Repository 의존성 주입
     private final JavaMailSender emailSender;                                 // email sender
 
     // Store Create function
@@ -216,5 +221,23 @@ public class StoreService {
         emailSender.send(message);
 
         return new MsgResponseDto(SuccessCode.CALL_PEOPLE);
+    }
+
+    // 기능 : 현재 위치에서 검색 기능
+    public void searchCurrentMap(Model model, String latitude, String longitude, String storeName) {
+
+        List<Store> naverList = storeRepository.searchCurrent(latitude, longitude, storeName);                           // 1. 입력받은 위도, 경도, 가게 이름으로 DB에 검사한다.
+        model.addAttribute("searchList", naverList);                                                         // 2. index.html에 검색한 결과 전달
+    }
+    // 기능 : 지도 검색 기능
+    public void searchMap(Model model, String storeName) {
+        String storeNameTrim = storeName.replaceAll(" ", "");                                            // 1. 검색 시 키워드 검색을 위한 문자 치환(" ", "")
+        List<Store> naverList = storeRepository.findByStoreNameContaining(storeNameTrim);                                // 2. %Like% 로 장소 검색
+        model.addAttribute("searchList", naverList);                                                         // 3. index.html에 검색한 결과 전달
+    }
+
+    public void testDynamicSQL(Model model, SearchCondition condition, String select) {
+        List<Store> testDynamicSQL = naverRepositoryImpl.DynamicSQL(condition, select);
+        model.addAttribute("searchList", testDynamicSQL);
     }
 }

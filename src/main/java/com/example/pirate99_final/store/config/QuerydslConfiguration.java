@@ -1,4 +1,4 @@
-package com.example.pirate99_final.map.config;
+package com.example.pirate99_final.store.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;
