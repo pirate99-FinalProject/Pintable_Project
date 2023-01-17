@@ -1,7 +1,9 @@
 package com.example.pirate99_final.review.dto;
 
 import com.example.pirate99_final.review.entity.Review;
+import lombok.Getter;
 
+@Getter
 public class ReviewResponseDto {
     private Long reviewId;
     private String username;
