@@ -446,6 +446,60 @@ select.form-control:not([size]):not([multiple]) {
 .btn1 span:hover:after {
   width: 100%;
 }
+
+
+/* 16 */
+.btn2 {
+  border: none;
+  color: #000;
+  padding: 5px;
+  height: 25px;
+  width: 45px
+}
+.btn2:after {
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 100%;
+  top: 0;
+  left: 0;
+  direction: rtl;
+  z-index: -1;
+  box-shadow:
+          -7px -7px 20px 0px #fff9,
+          -4px -4px 5px 0px #fff9,
+          7px 7px 20px 0px #0002,
+          4px 4px 5px 0px #0001;
+  transition: all 0.3s ease;
+}
+.btn2:hover {
+  color: #000;
+}
+
+.review{
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: flex-start;
+/*  justify-content: center;*/
+}
+
+.review img {
+  margin-right: 8px;
+  margin-left: 20px;
+  width : 16px;
+  height: 16px;
+  border-radius : 50%;
+}
+
+/*.btn2:hover:after {*/
+/*  left: auto;*/
+/*  right: 0;*/
+/*  width: 100%;*/
+/*}*/
+/*.btn2:active {*/
+/*  top: 2px;*/
+/*}*/
 /*.signup{*/
 /*  align-items: center;*/
 /*  font-size: 12px;*/
