@@ -89,5 +89,6 @@
 
 ## 7. API 💬
 [API명세서 바로가기](https://www.notion.so/2c418627d047416fb8b21c59b49b83d9?v=f17213f3433e45328148b004b36e81e6)
+[Swagger](https://pintable.co.kr/swagger-ui/index.html?urls.primaryName=store#/store-controller/createStoreUsingPOST)
 
 
