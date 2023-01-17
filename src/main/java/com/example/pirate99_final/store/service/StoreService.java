@@ -8,6 +8,7 @@ import com.example.pirate99_final.store.config.SearchCondition;
 import com.example.pirate99_final.store.dto.ConfirmRequestDto;
 import com.example.pirate99_final.store.dto.StoreRequestDto;
 import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
+import com.example.pirate99_final.store.dto.*;
 import com.example.pirate99_final.store.entity.Store;
 import com.example.pirate99_final.store.entity.StoreStatus;
 import com.example.pirate99_final.store.repository.StoreRepositoryImpl;
@@ -18,7 +19,10 @@ import com.example.pirate99_final.user.repository.UserRepository;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -40,7 +44,7 @@ public class StoreService {
     private final UserRepository userRepository;                        // user repo connect
 
     private final StoreRepositoryImpl naverRepositoryImpl;                                                              // query Dsl Repository 의존성 주입
-
+    private final JavaMailSender emailSender;                                 // email sender
 
     // Store Create function
     public MsgResponseDto createStore(StoreRequestDto requestDto){
@@ -208,6 +212,13 @@ public class StoreService {
 
         Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
         waiting.update(1);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("developjisung@gmail.com");
+        message.setTo(user.getAddress());
+        message.setSubject(store.getStoreName() + " 대기 호출");
+        message.setText(store.getStoreName() + "에 대기해주신 고객님 감사합니다. 입장 부탁드립니다.");
+        emailSender.send(message);
 
         return new MsgResponseDto(SuccessCode.CALL_PEOPLE);
     }

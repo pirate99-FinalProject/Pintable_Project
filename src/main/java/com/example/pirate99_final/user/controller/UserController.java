@@ -4,15 +4,17 @@ package com.example.pirate99_final.user.controller;
 import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.global.exception.SuccessCode;
 import com.example.pirate99_final.user.dto.LoginRequestDto;
+import com.example.pirate99_final.user.dto.MailConfirmRequestDto;
 import com.example.pirate99_final.user.dto.SignupRequestDto;
 import com.example.pirate99_final.user.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api")
@@ -35,6 +37,13 @@ public class UserController {
         userService.login(loginRequestDto);
 
         return new MsgResponseDto(SuccessCode.LOG_IN);
+    }
+
+    // 사용자 메일 유효성 체크 기능
+    @PostMapping("/login/mailConfirm")
+    public String mailConfirm(@RequestBody MailConfirmRequestDto mailAddress) throws MessagingException {
+        String authCode = userService.sendEmail(mailAddress.getEmail());
+        return authCode;
     }
 
 }
