@@ -148,8 +148,8 @@
                         <p>
 <!--                            <img alt="image" src="/css/images/star.png" width="32" style="border-radius:50%; align-content: center"><span id="storeStar"></span> 4.45-->
                         <p>
-                        <img alt="image" src="/css/images/star.png" width="32" style="border-radius:50%"><span id="storeStar"></span> 별점 : 4.45
-                        <img alt="image" src="/css/images/line.png" width="32" style="border-radius:50%"><span id="storeReview"></span> 방문자 리뷰 : 2000
+                        <img alt="image" src="/css/images/star.png" width="32" style="border-radius:50%"><span> 별점 : </span><span id="storeStar"></span>
+                        <img alt="image" src="/css/images/line.png" width="32" style="border-radius:50%"><span> 방문자 리뷰 : </span><span id="storeReview"></span>
                         </p>
                         <img alt="image" src="/css/images/1.png" width="32" style="border-radius:50%">
                         <p></p>
@@ -287,7 +287,9 @@
                                                     ycoordinate,
                                                     storeName,
                                                     roadNameAddress,
-                                                    storeId
+                                                    storeId,
+                                                    starScore,
+                                                    reviewCnt
                                                 } = searchList[i];
                                                 // 마커 생성
 
@@ -332,6 +334,8 @@
                                                         document.getElementById("storename").innerHTML = storeName;
                                                         document.getElementById("storeadrress").innerHTML = roadNameAddress;
                                                         document.getElementById("id").innerHTML = storeId;
+                                                        document.getElementById("storeStar").innerHTML = starScore;
+                                                        document.getElementById("storeReview").innerHTML = reviewCnt;
                                                         storeReview(storeId);
                                                     }
                                                 });
