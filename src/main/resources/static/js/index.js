@@ -1,7 +1,7 @@
-const baseUrl = "http://3.34.95.233";
+// const baseUrl = "http://3.34.95.233";
+const baseUrl = "http://localhost:8080";
 let code = "";
 var isCertification = false;
-
 
 window.onload = function () {
     const requestWaiting = document.getElementById('signin');
@@ -22,7 +22,6 @@ function onSuccess(position) {
     latitude = position.coords.latitude;
     longitude = position.coords.longitude;
     const storename = document.querySelector('.form-control').value;
-    console.log((storename));
     location.href = "api/currentLocation?latitude=" + latitude + "&longitude=" + longitude + "&storeName=" + storename;
 }
 
@@ -57,8 +56,6 @@ function signIn() {
     let username = document.querySelector('.userId').value;
     let password = document.querySelector('.password').value;
     let email = document.querySelector('.email').value;
-    console.log(isCertification);
-    console.log(email);
     const api = '/api/signup';
 
     if(isCertification == true) {
@@ -214,19 +211,73 @@ function sendMail() {
 
 // 메일 인증코드 유효성 검사 기능
 function checkCode() {
-
     invailedCode = code.replace(/\"/gi, "");                                                      // 전송된 이메일 코드(Json.stringfy로 Data 받아올 시 " " 제거하여 가져옴)
     let emailCode = document.querySelector(".code").value;                                                      // 사용자가 입력한 코드
 
-    if (emailCode == invailedCode) {                                                                                    // 사용자가 입력한 코드와 발송된 코드가 동일할 경우
-        isCertification = true;                                                                                         // isCertification true로 변경 (= 미인증시 웨이팅 신청 불가하게 하도록 위함)
-        alert("확인!");
+    if (emailCode == invailedCode ) {                                                                                    // 사용자가 입력한 코드와 발송된 코드가 동일할 경우
+        isCertification = true;                                                                                         // isCertification true로 변경 (= 미인증시// 웨이팅 신청 불가하게 하도록 위함)
+        const emailcheck = document.getElementById('emailcheck');
+        emailcheck.style.display = 'none';
+        const emailcheckConfirm = document.getElementById('emailcheckConfirm');
+        emailcheckConfirm.style.display = 'block';
+        alert("확인 되었습니다.");
     } else {
         isCertification = false;                                                                                        // 일치하지 않을 경우 isCertification = false
-        alert("코드가 일치하지 않습니다");
+        alert("코드가 일치하지 않습니다.");
     }
 }
 
+
+// 블로그 리뷰 확인 기능
+function storeReview(storeId) {
+    let id = storeId;
+    const api = '/api/review/';
+
+    axios({
+        method: "get",
+        url: baseUrl + api + id,
+        data: JSON.stringify(
+        ),
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"                                                           // responseType: "json" // [응답 데이터 : stream , json]
+        },
+    })
+        .then(function (response) {
+            console.log("");
+            console.log("RESPONSE : " + JSON.stringify(response.data));
+
+            const transeBlog = JSON.stringify(response.data);
+            var blogList = JSON.parse(transeBlog);
+            const blogNum = blogList.length;
+
+            const reviewList = document.getElementsByClassName('reviewList')[0];
+
+            for (let i = 0; i < blogNum; i++) {
+                const { content } = blogList[i];
+
+                const review = document.createElement('div');
+                review.classList.add('review');
+
+                const img = document.createElement('img');
+                img.src = '/css/images/blogger.png';
+
+                const p = document.createElement('p');
+                p.classList.add(`blogReview${i}`);
+
+                const reviewContent = document.createTextNode(content);
+                p.appendChild(reviewContent);
+
+                review.appendChild(img);
+                review.appendChild(p);
+
+                reviewList.appendChild(review);
+            }
+        })
+        .catch(function (error) {
+            console.log("");
+            console.log("ERROR : " + JSON.stringify(error));
+        });
+}
 
 
 

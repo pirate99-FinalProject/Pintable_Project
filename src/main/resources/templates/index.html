@@ -30,7 +30,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <!--head 태그 내 추가-->
-    <link rel="icon" href="/css/images/pin.png">
+    <link rel="icon" href="/css/images/pinTable_Logo.png">
 
 </head>
 
@@ -145,6 +145,14 @@
                         <p><img alt="image" src="/css/images/pin.png" width="32"
                                 style="border-radius:50%"><span id="storeadrress"></span></p>
                         <p></p>
+                        <p>
+<!--                            <img alt="image" src="/css/images/star.png" width="32" style="border-radius:50%; align-content: center"><span id="storeStar"></span> 4.45-->
+                        <p>
+                        <img alt="image" src="/css/images/star.png" width="32" style="border-radius:50%"><span id="storeStar"></span> 별점 : 4.45
+                        <img alt="image" src="/css/images/line.png" width="32" style="border-radius:50%"><span id="storeReview"></span> 방문자 리뷰 : 2000
+                        </p>
+                        <img alt="image" src="/css/images/1.png" width="32" style="border-radius:50%">
+                        <p></p>
                     </li>
                     <li class="store-posting">
                         <div id="storeStatus">
@@ -156,10 +164,14 @@
                             </div>
                             <P></P>
                             <button type="button" class="btn1" id="requestwaiting" onclick="waiting()"> 대기 요청</button>
-                            <!--                            <button type="button" class="btn1" id="canclewaiting" onclick="cancle()"> 대기 취소</button>-->
                             <button type="button" class="btn1" id="Confirmstatus" onclick="status()"> 상태 조회</button>
+                            <P></P>
+                            <p>
+                                <img alt="image" src="/css/images/1.png" width="32" style="border-radius:50%">
+                            </p>
                         </div>
                     </li>
+
                     <p></p>
                     <li class="waiting-login">
                         <div class="signin" id="signin">
@@ -172,20 +184,20 @@
                                 <input class="password" type="password" placeholder="password" style="height: 30px">
                             </div>
                             <div class="input-box">
-                                <input class="email" type="email" placeholder="email" style="height: 30px; width: 100px">
-                                <button type="button" id="emailsend" style="color: white; background: black; margin: 2px" onclick="sendMail();"> 요청 </button>
+                                <input class="email" type="email" placeholder="email" style="height: 30px; width: 90px">
+                                <button type="button" id="emailsend" style="color: white; background: black; padding: 5px; height: 25px; width: 40px" onclick="sendMail();"> 요청 </button>
                             </div>
                             <div class="input-box">
-                                <input class="code" type="code" placeholder="code" style="height: 30px; width: 100px">
-                                <button type="button" id="emailcheck" style="color: white; background: black; margin: 2px" onclick="checkCode();"> 확인 </button>
+                                <input class="code" type="code" placeholder="code" style="height: 30px; width: 90px">
+                                <button type="button" id="emailcheck" style="color: white; background: black; padding: 5px; height: 25px; width: 40px" onclick="checkCode();"> 확인 </button>
                             </div>
                             <p></p>
-                            <button type="button" id="loginbtn" style="color: white; background: black; margin: 2px"
-                                    onclick="signIn();"> join
-                            </button>
-                            <button type="button" id="confirmbtn" style="color: white; background: black; margin: 2px"
-                                    onclick="callWaiting()"> cofirm
-                            </button>
+                            <button type="button" class="btn2" id="loginbtn" onclick="signIn()"> join </button>
+                            <button type="button" class="btn2" id="confirmbtn" onclick="callWaiting()"> cofirm </button>
+                            <p></p>
+                            <p>
+                                <img alt="image" src="/css/images/1.png" width="32" style="border-radius:50%">
+                            </p>
                         </div>
                     </li>
                     <li class="mystatus">
@@ -198,6 +210,14 @@
                             <button type="button" id="statusbtn" style="color: white; background: black;"
                                     onclick="mystatus()"> Confirm
                             </button>
+                        </div>
+                    </li>
+                    <li class="storeReviewes">
+                        <div class="reviewList" id="storeReviewes" style="text-align:center; color:darkslategray;">
+                            <a><span>방문자 리뷰</span></a>
+<!--                            <div class="review">-->
+<!--                                <img alt="image" src="/css/images/blogger.png" style="border-radius:50%"><p id="blogReview0"></p>-->
+<!--                            </div>-->
                         </div>
                     </li>
                 </ul>
@@ -225,8 +245,8 @@
                                     <input type="hidden" name="username" value="..." id="username"/>
                                     <script th:inline="javascript">
                                         const searchList = [[${searchList}]];
-                                        console.log(searchList)
-                                        console.log("호출")
+
+
                                         // 예외처리 : 검색결과 없음
                                         if (!searchList) {
                                             const map = new naver.maps.Map('map', {
@@ -270,6 +290,7 @@
                                                     storeId
                                                 } = searchList[i];
                                                 // 마커 생성
+
                                                 const marker = new naver.maps.Marker({
                                                     icon: {
                                                         url: "/css/images/pin.png",
@@ -311,6 +332,7 @@
                                                         document.getElementById("storename").innerHTML = storeName;
                                                         document.getElementById("storeadrress").innerHTML = roadNameAddress;
                                                         document.getElementById("id").innerHTML = storeId;
+                                                        storeReview(storeId);
                                                     }
                                                 });
                                             }
