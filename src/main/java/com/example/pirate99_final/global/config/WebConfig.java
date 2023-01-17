@@ -12,6 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:8080")
                 .allowedOrigins("http://3.36.123.179")
                 .allowedOrigins("http://3.36.123.179:8080")
+                .allowedOrigins("https://pintable.co.kr")
                 .allowedMethods("*")
                 .allowedHeaders("*");
     }
