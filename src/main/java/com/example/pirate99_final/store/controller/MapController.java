@@ -37,12 +37,13 @@ public class MapController {
         return "index";
     }
 
+    // 동적 쿼리
     @GetMapping("/api/search/{ }")
-    public String testDynamicSQL(Model model, HttpServletRequest request, SearchCondition condition) {
+    public String DynamicSQL(Model model, HttpServletRequest request, SearchCondition condition) {
         String uri = request.getRequestURI();
         String select = uri.substring(12);
         select = select.replace("/", "");                                                             // url 정보 저장
-        storeService.testDynamicSQL(model, condition, select);
+        storeService.DynamicSQL(model, condition, select);
         return "index";
     }
 }

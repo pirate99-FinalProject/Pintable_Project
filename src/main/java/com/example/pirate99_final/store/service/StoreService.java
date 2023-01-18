@@ -236,8 +236,8 @@ public class StoreService {
         model.addAttribute("searchList", naverList);                                                         // 3. index.html에 검색한 결과 전달
     }
 
-    public void testDynamicSQL(Model model, SearchCondition condition, String select) {
-        List<Store> testDynamicSQL = naverRepositoryImpl.DynamicSQL(condition, select);
-        model.addAttribute("searchList", testDynamicSQL);
+    public void DynamicSQL(Model model, SearchCondition condition, String select) {
+        List<Store> DynamicSQL = naverRepositoryImpl.DynamicSQL(condition, select);
+        model.addAttribute("searchList", DynamicSQL);
     }
 }

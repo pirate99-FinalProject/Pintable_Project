@@ -51,21 +51,21 @@
                     <form action="/api/search" method="get">
                         <select id="category">
                             <optgroup label="=== 검색어 지정 ===">
-                                <option name="test" value="/api/search/storeName/?storeName=">가게 이름 일치</option>
-                                <option name="test" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소</option>
-                                <option name="test" value="/api/search/storeNameInclude/?storeNameInclude=">가게 이름
+                                <option name="url" value="/api/search/storeName/?storeName=">가게 이름 일치</option>
+                                <option name="url" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소</option>
+                                <option name="url" value="/api/search/storeNameInclude/?storeName=">가게 이름
                                 </option>
-                                <option name="test" value="/api/search/Business/?typeOfBusiness=">업종</option>
-                                <option name="test" value="/api/search/StarScoreHigh/?starScore=">평점 n점이상</option>
-                                <option name="test" value="/api/search/StarScoreLow/?starScore=">평점 n점이하</option>
-                                <option name="test" value="/api/search/ReviewHigh/?reviewCnt=">리뷰 n개이상</option>
-                                <option name="test" value="/api/search/ReviewLow/?reviewCnt=">리뷰 n개이하</option>
+                                <option name="url" value="/api/search/Business/?typeOfBusiness=">업종</option>
+                                <option name="url" value="/api/search/StarScoreHigh/?starScore=">평점 n점이상</option>
+                                <option name="url" value="/api/search/StarScoreLow/?starScore=">평점 n점이하</option>
+                                <option name="url" value="/api/search/ReviewHigh/?reviewCnt=">리뷰 n개이상</option>
+                                <option name="url" value="/api/search/ReviewLow/?reviewCnt=">리뷰 n개이하</option>
                             </optgroup>
                             <optgroup label="=== 검색어 없이 ===">
-                                <option name="test" value="/api/search/ReviewASC">리뷰 적은순</option>
-                                <option name="test" value="/api/search/ReviewDESC">리뷰 많은순</option>
-                                <option name="test" value="/api/search/StarScoreASC">평점 낮은순</option>
-                                <option name="test" value="/api/search/StarScoreDESC">평점 높은순</option>
+                                <option name="url" value="/api/search/ReviewASC">리뷰 적은순</option>
+                                <option name="url" value="/api/search/ReviewDESC">리뷰 많은순</option>
+                                <option name="url" value="/api/search/StarScoreASC">평점 낮은순</option>
+                                <option name="url" value="/api/search/StarScoreDESC">평점 높은순</option>
                             </optgroup>
                         </select>
                         <input class="form-control" type="search" placeholder="Search" aria-label="Search" width="1200"
@@ -74,8 +74,8 @@
                         <script>
                             function handleSearch() {
                                 let query = document.querySelector('.form-control').value;
-                                let test = document.getElementById("category");
-                                let value = (category.options[test.selectedIndex].value);
+                                let url = document.getElementById("category");
+                                let value = (category.options[url.selectedIndex].value);
                                 // window.location = "/api/searchLocation?storeName=" + query;
                                 window.location = value + query;
                             }
