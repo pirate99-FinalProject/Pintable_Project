@@ -19,7 +19,6 @@ import com.example.pirate99_final.user.repository.UserRepository;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -43,11 +42,11 @@ public class StoreService {
 
     private final UserRepository userRepository;                        // user repo connect
 
-    private final StoreRepositoryImpl naverRepositoryImpl;                                                              // query Dsl Repository 의존성 주입
+    private final StoreRepositoryImpl storeRepositoryImpl;                                                              // query Dsl Repository 의존성 주입
     private final JavaMailSender emailSender;                                 // email sender
 
     // Store Create function
-    public MsgResponseDto createStore(StoreRequestDto requestDto){
+    public MsgResponseDto createStore(StoreRequestDto requestDto) {
         // 1. create store and storeStatus Object, insert DB
         Store store = new Store(requestDto);                                                                // DTO -> Entity
         StoreStatus storestatus = new StoreStatus(store);
@@ -67,15 +66,15 @@ public class StoreService {
 
         List<StoreStatusResponseDto> ListResponseDto = new ArrayList<>();
 
-        for(StoreStatus storeStatus : ListStoreStatus){
+        for (StoreStatus storeStatus : ListStoreStatus) {
             ListResponseDto.add(new StoreStatusResponseDto(storeStatus));
         }
         return ListResponseDto;
     }
 
     // Get store from DB (one)
-    public StoreStatusResponseDto getStore(long storeId){
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+    public StoreStatusResponseDto getStore(long storeId) {
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
@@ -90,22 +89,22 @@ public class StoreService {
 
     public MsgResponseDto deleteStore(Long storeId) {
 
-        Store store  = storeRepository.findById(storeId).orElseThrow(                                             // find store
+        Store store = storeRepository.findById(storeId).orElseThrow(                                             // find store
                 () -> new CustomException(ErrorCode.NOT_FOUND_ID_ERROR)
         );
 
         storeStatusRepository.deleteByStore(store);                                     // 상점 상태 테이블 삭제
         storeRepository.deleteById(storeId);                                                          // 해당 상점 삭제
 
-        return  new MsgResponseDto(DELETE_STORE);
+        return new MsgResponseDto(DELETE_STORE);
     }
 
     @Transactional
     public MsgResponseDto enterStore(Long storeId, int people) {
-        int availableCnt   =   0;                                                       // 이용 가능 좌석
+        int availableCnt = 0;                                                       // 이용 가능 좌석
 
         // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
@@ -113,19 +112,17 @@ public class StoreService {
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
         // 3. counting availableCnt
-        if((storeStatus.getAvailableTableCnt() - people) > 0){
+        if ((storeStatus.getAvailableTableCnt() - people) > 0) {
             availableCnt = storeStatus.getAvailableTableCnt() - people;
-        }
-        else if(storeStatus.getAvailableTableCnt() == 0){
+        } else if (storeStatus.getAvailableTableCnt() == 0) {
             throw new CustomException(ErrorCode.NOT_ENOUGH_TABLE);
-        }
-        else if((storeStatus.getAvailableTableCnt() - people) < 0){
-            String message  = Integer.toString(Math.abs(storeStatus.getAvailableTableCnt() - people));
-            availableCnt    = 0;
+        } else if ((storeStatus.getAvailableTableCnt() - people) < 0) {
+            String message = Integer.toString(Math.abs(storeStatus.getAvailableTableCnt() - people));
+            availableCnt = 0;
 
             storeStatus.update(availableCnt);
 
-            return new MsgResponseDto(HttpStatus.OK.value(),"빈 자석이 없습니다. " + message + "분은 예약 등록 부탁드립니다.");
+            return new MsgResponseDto(HttpStatus.OK.value(), "빈 자석이 없습니다. " + message + "분은 예약 등록 부탁드립니다.");
         }
 
         // 4. update storeStatus
@@ -137,10 +134,10 @@ public class StoreService {
     // Leave people from store
     @Transactional
     public MsgResponseDto leaveStore(Long storeId, int people) {
-        int availableCnt   =   0;                                                       // 이용 가능 좌석
+        int availableCnt = 0;                                                       // 이용 가능 좌석
 
         // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
@@ -158,7 +155,7 @@ public class StoreService {
     @Transactional
     public MsgResponseDto confirmStore(Long storeId, ConfirmRequestDto requestDto) {
         // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
@@ -166,24 +163,23 @@ public class StoreService {
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
         // 3. User find
-        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(()->
+        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
         );
 
         Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
 
-        if(requestDto.getWaitingStatus() == 1){
+        if (requestDto.getWaitingStatus() == 1) {
             waiting.update(2);
             int waitingCnt = storeStatus.getWaitingCnt() - 1;
             int availableCnt = storeStatus.getAvailableTableCnt();
 
-            if(availableCnt > 0){
+            if (availableCnt > 0) {
                 availableCnt = availableCnt - 1;
             }
 
             storeStatus.update_waitingCnt(waitingCnt, availableCnt);
-        }
-        else if(requestDto.getWaitingStatus() == 3){
+        } else if (requestDto.getWaitingStatus() == 3) {
             waiting.update(3);
             int waitingCnt = storeStatus.getWaitingCnt() - 1;
             int availableCnt = storeStatus.getAvailableTableCnt();
@@ -198,7 +194,7 @@ public class StoreService {
     @Transactional
     public MsgResponseDto callpeople(Long storeId, ConfirmRequestDto requestDto) {
         // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
@@ -206,7 +202,7 @@ public class StoreService {
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
         // 3. User find
-        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(()->
+        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
         );
 
@@ -227,46 +223,48 @@ public class StoreService {
     @Transactional
     public MsgResponseDto limitWaitingCnt(Long storeId, LimitWaitingCntRequestDto requestDto) {
 
-        int totalWaitingCnt, limitWaitingCnt =0;
+        int totalWaitingCnt, limitWaitingCnt = 0;
 
 
         // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
         // 2. storeStatus check
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
+        // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
         List<Waiting> waitingList = waitingRepository.
-                findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0,1);
+                findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0, 1);
 
-
+        // 점포에서 설정한 대기 인원 제한한 값을 점포 상태에 업데이트 함
         storeStatus.update_limitWaitingCnt(requestDto.getLimitWaitingCnt());
+
         limitWaitingCnt = storeStatus.getLimitWaitingCnt();
 
 
         totalWaitingCnt = waitingList.size();
 
-
+        // 대기인원 제한이 '0'인 경우 'default' 값인 무한으로 설정
         if (limitWaitingCnt == 0) {
 
-            return new MsgResponseDto(SuccessCode.LIMIT_DEFAULT);
-
+            return new MsgResponseDto(LIMIT_DEFAULT);
+            // 대기인원 제한이 총 대기인원 수 보다 큰 경우, 설정이 완료되었다는 메세지 반환
         } else if (limitWaitingCnt >= totalWaitingCnt) {
 
             return new MsgResponseDto(SuccessCode.LIMIT_SETTING);
-
+            // 대기인원 제한이 총 대기인원 수 보다 적은 경우, 제한을 초과한 현재 대기인원들에게 이메일을 보내고 대기취소 처리한다.
         } else if (limitWaitingCnt < totalWaitingCnt) {
 
             for (int i = limitWaitingCnt; i < totalWaitingCnt; i++) {
 
-                    SimpleMailMessage message = new SimpleMailMessage();
-                    message.setFrom("pintable99@gmail.com");
-                    message.setTo(waitingList.get(i).getUser().getAddress());
-                    message.setSubject(store.getStoreName() + " 안내 이메일");
-                    message.setText(store.getStoreName() + "에 대기해주신 고객님 감사합니다. 금일 점포 사정으로 서비스를 제공해드리기가 어렵습니다.");
-                    emailSender.send(message);
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setFrom("pintable99@gmail.com");
+                message.setTo(waitingList.get(i).getUser().getAddress());
+                message.setSubject(store.getStoreName() + " 안내 이메일");
+                message.setText(store.getStoreName() + "에 대기해주신 고객님 감사합니다. 금일 점포 사정으로 서비스를 제공해드리기가 어렵습니다.");
+                emailSender.send(message);
 
             }
 
@@ -275,21 +273,25 @@ public class StoreService {
         return null;
     }
 
-    // 기능 : 현재 위치에서 검색 기능
     public void searchCurrentMap(Model model, String latitude, String longitude, String storeName) {
 
         List<Store> naverList = storeRepository.searchCurrent(latitude, longitude, storeName);                           // 1. 입력받은 위도, 경도, 가게 이름으로 DB에 검사한다.
         model.addAttribute("searchList", naverList);                                                         // 2. index.html에 검색한 결과 전달
     }
-    // 기능 : 지도 검색 기능
-    public void searchMap(Model model, String storeName) {
-        String storeNameTrim = storeName.replaceAll(" ", "");                                            // 1. 검색 시 키워드 검색을 위한 문자 치환(" ", "")
-        List<Store> naverList = storeRepository.findByStoreNameContaining(storeNameTrim);                                // 2. %Like% 로 장소 검색
-        model.addAttribute("searchList", naverList);                                                         // 3. index.html에 검색한 결과 전달
-    }
+//    // 기능 : 지도 검색 기능
+//    public void searchMap(Model model, String storeName) {
+//        String storeNameTrim = storeName.replaceAll(" ", "");                                            // 1. 검색 시 키워드 검색을 위한 문자 치환(" ", "")
+//        List<Store> naverList = storeRepository.findByStoreNameContaining(storeNameTrim);                                // 2. %Like% 로 장소 검색
+//        model.addAttribute("searchList", naverList);                                                         // 3. index.html에 검색한 결과 전달
+//}
+
 
     public void DynamicSQL(Model model, SearchCondition condition, String select) {
-        List<Store> DynamicSQL = naverRepositoryImpl.DynamicSQL(condition, select);
+
+        List<QuerydslDto> DynamicSQL = storeRepositoryImpl.DynamicSQL(condition, select);
+
+
         model.addAttribute("searchList", DynamicSQL);
+
     }
 }

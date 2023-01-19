@@ -1,9 +1,11 @@
 package com.example.pirate99_final.store.repository;
 
 import com.example.pirate99_final.store.config.SearchCondition;
+import com.example.pirate99_final.store.dto.QuerydslDto;
 import com.example.pirate99_final.store.entity.QStore;
-import com.example.pirate99_final.store.entity.Store;
+import com.example.pirate99_final.store.entity.QStoreStatus;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -17,33 +19,38 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     QStore store = QStore.store;                                                            // query dsl의 QEntity 선언
 
-    public List<Store> DynamicSQL(SearchCondition condition, String select) {
-        return queryFactory
-                .selectFrom(store)
+    QStoreStatus storeStatus = QStoreStatus.storeStatus;
+
+    public List<QuerydslDto> DynamicSQL(SearchCondition condition, String select) {
+        List<QuerydslDto> DynamicSQL = queryFactory
+                .select(Projections.constructor(QuerydslDto.class, store.address, store.roadNameAddress, store.postNumber, store.storeName, store.typeOfBusiness, store.xCoordinate, store.yCoordinate, storeStatus.waitingCnt, storeStatus.limitWaitingCnt))
+                .from(store)
+                .join(storeStatus).on(store.storeId.eq(storeStatus.store.storeId))
                 .limit(10)
-                .where( eqstoreName(condition.getStoreName(), select),
-                        eqstoreNameInclude(condition.getStoreName(), select),
+                .where(
+                        eqstoreName(condition.getStoreName()),
+                        eqstoreNameInclude(condition.getStoreName()),
                         eqroadNameAddress(condition.getRoadNameAddress()),
                         eqtypeOfBusiness(condition.getTypeOfBusiness()),
                         eqbetweenStarScore(condition.getStarScore(), select),
-                        eqbetweenReview(condition.getReviewCnt(), select),
-                        eqnotNull(select)
+                        eqbetweenReview(condition.getReviewCnt(), select)
                 )
                 .orderBy(eqSort(select))
                 .fetch();
+        return DynamicSQL;
     }
 
-    private BooleanExpression eqstoreName(String storeName, String select) {                 // 가게이름일치 관련 동적쿼리
-        if (select.equals("storeName")) {
-            return store.storeName.eq(storeName);
+    private BooleanExpression eqstoreName(String storeName) {                                // 가게이름 관련 동적쿼리
+        if (StringUtils.isEmpty(storeName)) {
+            return null;
         }
-        return null;
+        return store.storeName.eq(storeName);
     }
-    private BooleanExpression eqstoreNameInclude(String storeName, String select) {          // 가게이름포함 관련 동적쿼리
-        if (select.equals("storeNameInclude")) {
-            return store.storeName.contains(storeName);
+    private BooleanExpression eqstoreNameInclude(String storeName) {                         // 가게 이름 관련 동적쿼리
+        if (StringUtils.isEmpty(storeName)) {
+            return null;
         }
-        return null;
+        return store.storeName.contains(storeName);
     }
     private BooleanExpression eqroadNameAddress(String roadNameAddress) {                    // 도로명 주소 관련 동적쿼리
         if (StringUtils.isEmpty(roadNameAddress)) {

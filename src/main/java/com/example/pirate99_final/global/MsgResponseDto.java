@@ -38,4 +38,5 @@ public class MsgResponseDto {
         this.statusCode = errorCode.getHttpStatus().value();
         this.msg = errorCode.getMessage();
     }
+
 }
