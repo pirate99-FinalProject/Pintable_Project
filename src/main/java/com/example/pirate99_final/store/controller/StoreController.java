@@ -37,9 +37,9 @@ public class StoreController {
         return storeService.deleteStore(storeId);
     }
 
-    @PutMapping("/storeStatus/enter/{storeId}/{people}")
-    public MsgResponseDto enterStore(@PathVariable Long storeId, @PathVariable int people){
-        return storeService.enterStore(storeId, people);
+    @PutMapping("/storeStatus/enter/{storeId}")
+    public MsgResponseDto enterStore(@PathVariable Long storeId){
+        return storeService.enterStore(storeId);
     }
 
     @PutMapping("/storeStatus/leave/{storeId}/{people}")
