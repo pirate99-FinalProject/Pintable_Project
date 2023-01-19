@@ -30,12 +30,12 @@ public class MapController {
         return "index";
     }
 
-    // 지도 검색
-    @GetMapping("/api/searchLocation")
-    public String searchMap(Model model, @RequestParam String storeName) {
-        storeService.searchMap(model, storeName);                                                                       // 1. 검색한 위도, 경도, 가게이름 전달
-        return "index";
-    }
+//    // 지도 검색
+//    @GetMapping("/api/searchLocation")
+//    public String searchMap(Model model, @RequestParam String storeName) {
+//        storeService.searchMap(model, storeName);                                                                       // 1. 검색한 위도, 경도, 가게이름 전달
+//        return "index";
+//    }
 
     // 동적 쿼리
     @GetMapping("/api/search/{ }")
