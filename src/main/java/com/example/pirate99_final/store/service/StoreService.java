@@ -1,5 +1,6 @@
 package com.example.pirate99_final.store.service;
 
+import com.example.pirate99_final.global.ExeTimer;
 import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.global.exception.CustomException;
 import com.example.pirate99_final.global.exception.ErrorCode;
@@ -20,6 +21,8 @@ import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.pirate99_final.global.exception.SuccessCode.*;
 
@@ -44,6 +48,10 @@ public class StoreService {
 
     private final StoreRepositoryImpl storeRepositoryImpl;                                                              // query Dsl Repository 의존성 주입
     private final JavaMailSender emailSender;                                 // email sender
+
+    private final RedissonClient redissonClient;
+
+
 
     // Store Create function
     public MsgResponseDto createStore(StoreRequestDto requestDto) {
@@ -99,36 +107,55 @@ public class StoreService {
         return new MsgResponseDto(DELETE_STORE);
     }
 
-    @Transactional
-    public MsgResponseDto enterStore(Long storeId, int people) {
-        int availableCnt = 0;                                                       // 이용 가능 좌석
 
-        // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
 
-        // 2. storeStatus check
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+    public MsgResponseDto enterStore(Long storeId) {        // need to update
+        RLock lock = redissonClient.getLock("key 이름");
+        int availableCnt   =   0;                                                       // 이용 가능 좌석
 
-        // 3. counting availableCnt
-        if ((storeStatus.getAvailableTableCnt() - people) > 0) {
-            availableCnt = storeStatus.getAvailableTableCnt() - people;
-        } else if (storeStatus.getAvailableTableCnt() == 0) {
-            throw new CustomException(ErrorCode.NOT_ENOUGH_TABLE);
-        } else if ((storeStatus.getAvailableTableCnt() - people) < 0) {
-            String message = Integer.toString(Math.abs(storeStatus.getAvailableTableCnt() - people));
-            availableCnt = 0;
+        try{
+            boolean isLocked = lock.tryLock(10000,1000, TimeUnit.MILLISECONDS);
 
-            storeStatus.update(availableCnt);
 
-            return new MsgResponseDto(HttpStatus.OK.value(), "빈 자석이 없습니다. " + message + "분은 예약 등록 부탁드립니다.");
+            if(isLocked) {
+                try {
+                    // 1. find store
+                    Store store = storeRepository.findById(storeId).orElseThrow(()->
+                            new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                    );
+
+
+                    // 2. storeStatus check
+                    StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+
+
+                    // 3. counting availableCnt
+                    if((storeStatus.getAvailableTableCnt() - 1) > 0){
+                        availableCnt = storeStatus.getAvailableTableCnt() - 1;
+                    }
+                    else if(storeStatus.getAvailableTableCnt() == 0){
+                        return new MsgResponseDto(SuccessCode.NOT_ENOUGH_TABLE);          // 해당 부분 수정 필요
+                    }
+
+
+                    // 4. update storeStatus
+                    storeStatus.update(availableCnt);
+                    storeStatusRepository.save(storeStatus);
+
+
+                    return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
+                }catch(Exception e){
+
+                }finally{
+                    lock.unlock();
+                }
+
+            }
+        }catch(Exception e){
+            Thread.currentThread().interrupt();
         }
 
-        // 4. update storeStatus
-        storeStatus.update(availableCnt);
-
-        return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
+        return null;
     }
 
     // Leave people from store
@@ -278,6 +305,7 @@ public class StoreService {
         List<Store> naverList = storeRepository.searchCurrent(latitude, longitude, storeName);                           // 1. 입력받은 위도, 경도, 가게 이름으로 DB에 검사한다.
         model.addAttribute("searchList", naverList);                                                         // 2. index.html에 검색한 결과 전달
     }
+
 //    // 기능 : 지도 검색 기능
 //    public void searchMap(Model model, String storeName) {
 //        String storeNameTrim = storeName.replaceAll(" ", "");                                            // 1. 검색 시 키워드 검색을 위한 문자 치환(" ", "")
