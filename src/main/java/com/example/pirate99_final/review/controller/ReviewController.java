@@ -4,10 +4,7 @@ import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.review.dto.ReviewRequestDto;
 import com.example.pirate99_final.review.dto.ReviewResponseDto;
 import com.example.pirate99_final.review.service.ReviewService;
-import com.example.pirate99_final.store.dto.StoreRequestDto;
-import com.example.pirate99_final.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +22,6 @@ public class ReviewController {
     @PostMapping("/review/{stordId}")
     public MsgResponseDto createReview(@PathVariable Long stordId, @RequestBody ReviewRequestDto requestDto){
         return reviewService.createReview(stordId, requestDto);
-
-
     }
 
     // DB select all
