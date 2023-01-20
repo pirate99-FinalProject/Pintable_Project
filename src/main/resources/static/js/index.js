@@ -1,5 +1,5 @@
-const baseUrl = "https://pintable.co.kr";
-// const baseUrl = "http://localhost:8080";
+// const baseUrl = "https://pintable.co.kr";
+const baseUrl = "http://localhost:8080";
 let code = "";
 var isCertification = false;
 
@@ -136,7 +136,6 @@ function mystatus() {
             const transferStatus = JSON.stringify(response.data);                                                        // response값을 가져와서 transferStatus에 저장
             var status = JSON.parse(transferStatus);                                                                     // string 객체를 json 객체로 변환
 
-            document.getElementById("storeStatusShow").innerHTML = "대기 현황 : " + status.totalWaitingCnt;       // 대기 현황 출력
             document.getElementById("myStatusShow").innerHTML = "내 웨이팅 현황 : " + status.myTurn;               // 웨이팅 현황 출력
 
             const storeStatusShow = document.getElementById('statusConfirm');

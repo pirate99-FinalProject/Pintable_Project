@@ -153,12 +153,8 @@
                     </li>
                     <li class="store-posting">
                         <div id="storeStatus">
-                            <div id="storeStatusShow">
-                                <p> 대기 현황 : </p>
-                            </div>
-                            <div id="myStatusShow">
-                                <p> 내 웨이팅 현황 : </p>
-                            </div>
+                            <div id="storeStatusShow"><span> 대기 현황 : </span><span id="waitingStatus"></span></div>
+                            <div id="myStatusShow"><p> 내 웨이팅 현황 : </p></div>
                             <P></P>
                             <button type="button" class="btn1" id="requestwaiting" onclick="waiting()"> 대기 요청</button>
                             <button type="button" class="btn1" id="Confirmstatus" onclick="status()"> 상태 조회</button>
@@ -242,7 +238,7 @@
                                     <input type="hidden" name="username" value="..." id="username"/>
                                     <script th:inline="javascript">
                                         const searchList = [[${searchList}]];
-
+                                        console.log(searchList);
 
                                         // 예외처리 : 검색결과 없음
                                         if (!searchList) {
@@ -286,7 +282,9 @@
                                                     roadNameAddress,
                                                     storeId,
                                                     starScore,
-                                                    reviewCnt
+                                                    reviewCnt,
+                                                    waitingCnt,
+                                                    limitWaitingCnt
                                                 } = searchList[i];
                                                 // 마커 생성
 
@@ -333,6 +331,7 @@
                                                         document.getElementById("id").innerHTML = storeId;
                                                         document.getElementById("storeStar").innerHTML = starScore;
                                                         document.getElementById("storeReview").innerHTML = reviewCnt;
+                                                        document.getElementById("waitingStatus").innerHTML = waitingCnt + " " + "/" + " " + limitWaitingCnt;
                                                         storeReview(storeId);
                                                     }
                                                 });
