@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class QuerydslDto {
+    private Long storeId;
     private String address;                                         // 주소
     private String roadNameAddress;                                 // 도로명주소
     private int postNumber;                                         // 우편주소
@@ -11,12 +12,15 @@ public class QuerydslDto {
     private String typeOfBusiness;                                  // 업종명
     private double xcoordinate;                                     // X좌표
     private double ycoordinate;                                     // Y좌표
+    private double starScore;
+    private int reviewCnt;
 
     private int waitingCnt;
 
     private String limitWaitingCnt;
 
-    public QuerydslDto(String address, String roadNameAddress, int postNumber, String storeName, String typeOfBusiness, double xcoordinate, double ycoordinate, int waitingCnt, int limitWaitingCnt){
+    public QuerydslDto(Long stordId, String address, String roadNameAddress, int postNumber, String storeName, String typeOfBusiness, double xcoordinate, double ycoordinate, int waitingCnt, int limitWaitingCnt, double starScore, int reviewCnt){
+        this.storeId = stordId;
         this.address = address;
         this.roadNameAddress = roadNameAddress;
         this.postNumber = postNumber;
@@ -25,6 +29,8 @@ public class QuerydslDto {
         this.xcoordinate = xcoordinate;
         this.ycoordinate = ycoordinate;
         this.waitingCnt = waitingCnt;
+        this.starScore = starScore;
+        this.reviewCnt = reviewCnt;
 
         if(limitWaitingCnt == 0){
             this.limitWaitingCnt = "-";
