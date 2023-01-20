@@ -237,7 +237,7 @@ public class StoreService {
         waiting.update(1);
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("developjisung@gmail.com");
+        message.setFrom("pintable99@gmail.com");
         message.setTo(user.getAddress());
         message.setSubject(store.getStoreName() + " 대기 호출");
         message.setText(store.getStoreName() + "에 대기해주신 고객님 감사합니다. 입장 부탁드립니다.");
