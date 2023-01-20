@@ -5,19 +5,19 @@ import com.example.pirate99_final.global.exception.CustomException;
 import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.review.dto.ReviewRequestDto;
 import com.example.pirate99_final.review.dto.ReviewResponseDto;
-import com.example.pirate99_final.review.entity.Review;
 import com.example.pirate99_final.review.repository.ReviewRepository;
 import com.example.pirate99_final.store.entity.Store;
 import com.example.pirate99_final.store.repository.StoreRepository;
 import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.pirate99_final.global.exception.SuccessCode.CREATE_REVIEW;
 import static com.example.pirate99_final.global.exception.SuccessCode.DELETE_REVIEW;
@@ -25,25 +25,30 @@ import static com.example.pirate99_final.global.exception.SuccessCode.DELETE_REV
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
+
     private final StoreRepository storeRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
+    private final RedisTemplate<String, ReviewRequestDto> redisTemplate;
 
-    // Store Create function
-    public MsgResponseDto createReview(long id, ReviewRequestDto requestDto){
-        //1. create store Object and insert DB
+    // Review Insert (Insert to Redis)
+    @Transactional
+    public MsgResponseDto createReview(long id, ReviewRequestDto requestDto) {
+
+        SetOperations<String, ReviewRequestDto> setOperations = redisTemplate.opsForSet();
 
         Store store = storeRepository.findById(id).orElseThrow(()->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
         User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(()->
                 new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
         );
 
-        Review review = new Review(requestDto, store, user);
+        ReviewRequestDto savedData = ReviewRequestDto.createReviewMessageSaveDto(requestDto, store, user);
 
-        reviewRepository.save(review);
+        setOperations.add("reviewIdx",savedData);
+
         return new MsgResponseDto(CREATE_REVIEW);
     }
 
@@ -55,11 +60,11 @@ public class ReviewService {
         );
 
         // 1. Select All Memo
-        List<Review> ListReview = reviewRepository.findTop10ByStoreOrderByIdDesc(store);
+        List<com.example.pirate99_final.review.entity.Review> ListReview = reviewRepository.findTop10ByStoreOrderByIdDesc(store);
 
         List<ReviewResponseDto> ListResponseDto = new ArrayList<>();
 
-        for(Review review : ListReview){
+        for(com.example.pirate99_final.review.entity.Review review : ListReview){
             ListResponseDto.add(new ReviewResponseDto(review));
         }
         return ListResponseDto;
@@ -67,7 +72,7 @@ public class ReviewService {
 
     // Get store from DB (one)
     public ReviewResponseDto getReview(long storeId, long reviewId){
-        Review review = reviewRepository.findById(storeId).orElseThrow(()->
+        com.example.pirate99_final.review.entity.Review review = reviewRepository.findById(storeId).orElseThrow(()->
                 new CustomException(ErrorCode.NOT_FOUND_REVIEW_ERROR)
         );
 
@@ -83,7 +88,7 @@ public class ReviewService {
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
-        Review review = reviewRepository.findByStoreAndId(store, reviewid).orElseThrow(                                             // find memo
+        com.example.pirate99_final.review.entity.Review review = reviewRepository.findByStoreAndId(store, reviewid).orElseThrow(                                             // find memo
                 () -> new CustomException(ErrorCode.NOT_FOUND_REVIEW_ERROR)
         );
 
@@ -95,7 +100,7 @@ public class ReviewService {
     // DB delete function (data delete)
     public MsgResponseDto deleteReview(Long storeId, Long reviewid) {
 
-        Review review  = reviewRepository.findById(storeId).orElseThrow(                                             // find memo
+        com.example.pirate99_final.review.entity.Review review  = reviewRepository.findById(storeId).orElseThrow(                                             // find memo
                 () -> new CustomException(ErrorCode.NOT_FOUND_ID_ERROR)
         );
         reviewRepository.deleteById(storeId);                                                          // 해당 게시물 삭제
