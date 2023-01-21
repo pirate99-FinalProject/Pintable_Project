@@ -4,6 +4,7 @@ import com.example.pirate99_final.store.config.SearchCondition;
 import com.example.pirate99_final.store.dto.QuerydslDto;
 import com.example.pirate99_final.store.entity.QStore;
 import com.example.pirate99_final.store.entity.QStoreStatus;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -23,21 +24,53 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
     public List<QuerydslDto> DynamicSQL(SearchCondition condition, String select) {
         List<QuerydslDto> DynamicSQL = queryFactory
-                .select(Projections.constructor(QuerydslDto.class, store.address, store.roadNameAddress, store.postNumber, store.storeName, store.typeOfBusiness, store.xCoordinate, store.yCoordinate, storeStatus.waitingCnt, storeStatus.limitWaitingCnt))
+                .select(Projections.constructor(QuerydslDto.class, store.storeId,store.address, store.roadNameAddress, store.postNumber, store.storeName, store.typeOfBusiness, store.xCoordinate, store.yCoordinate, storeStatus.waitingCnt, storeStatus.limitWaitingCnt, store.starScore, store.reviewCnt))
                 .from(store)
                 .join(storeStatus).on(store.storeId.eq(storeStatus.store.storeId))
                 .limit(10)
                 .where(
-                        eqstoreName(condition.getStoreName()),
-                        eqstoreNameInclude(condition.getStoreName()),
-                        eqroadNameAddress(condition.getRoadNameAddress()),
-                        eqtypeOfBusiness(condition.getTypeOfBusiness()),
-                        eqbetweenStarScore(condition.getStarScore(), select),
-                        eqbetweenReview(condition.getReviewCnt(), select)
+                        searchCondition(condition.getAddress(), condition.getRoadNameAddress(), condition.getStoreName(), condition.getTypeOfBusiness(), condition.getStarScore(), condition.getReviewCnt(), select)
+//                        eqstoreName(condition.getStoreName()),
+//                        eqstoreNameInclude(condition.getStoreName()),
+//                        eqroadNameAddress(condition.getRoadNameAddress()),
+//                        eqtypeOfBusiness(condition.getTypeOfBusiness()),
+//                        eqbetweenStarScore(condition.getStarScore(), select),
+//                        eqbetweenReview(condition.getReviewCnt(), select)
                 )
                 .orderBy(eqSort(select))
                 .fetch();
         return DynamicSQL;
+    }
+
+    private BooleanBuilder searchCondition(String address, String roadNameAddress,  String storeName, String typeofBusiness, double starScore, int reviewCnt, String select){
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        if(org.springframework.util.StringUtils.hasText(address)){
+            booleanBuilder.or(store.storeName.eq(storeName));
+        }
+
+        if(org.springframework.util.StringUtils.hasText(storeName)){
+            booleanBuilder.or(store.storeName.contains(storeName));
+        }
+
+        if(org.springframework.util.StringUtils.hasText(roadNameAddress)){
+            booleanBuilder.or(store.roadNameAddress.contains(roadNameAddress));
+        }
+
+        if(org.springframework.util.StringUtils.hasText(typeofBusiness)){
+            booleanBuilder.or(store.typeOfBusiness.eq(typeofBusiness));
+        }
+
+        if(select.equals("StarScoreLow")){
+            booleanBuilder.or(store.starScore.between(0, starScore));
+        }
+
+        if(select.equals("ReviewLow")){
+            booleanBuilder.or(store.reviewCnt.between(0, reviewCnt));
+        }
+
+        return booleanBuilder;
     }
 
     private BooleanExpression eqstoreName(String storeName) {                                // 가게이름 관련 동적쿼리
