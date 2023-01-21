@@ -28,7 +28,7 @@ public class ReviewWriteBackScheduling {
     private final UserRepository userRepository;
 
     // 10분 마다 Chatting data Redis -> MySQL
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0/10 * * * ?")
     @Transactional
     public void writeBack() {
         log.info("Scheduling start");
