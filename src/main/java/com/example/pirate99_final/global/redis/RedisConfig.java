@@ -33,9 +33,6 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Value("${spring.redis.port}")
     private int redisPort;
 
-    @Value("${spring.redis.password}")
-    private String redisPassword;
-
     // jackson LocalDateTime mapper
     @Bean public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
@@ -44,19 +41,10 @@ public class RedisConfig extends CachingConfigurerSupport {
         return mapper;
     }
 
-//    @Bean
-//    public RedisConnectionFactory lettuceConnectionFactory() {
-//        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisHost, redisPort);
-//        return lettuceConnectionFactory;
-//    }
-
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(redisHost);
-        redisStandaloneConfiguration.setPort(redisPort);
-        redisStandaloneConfiguration.setPassword(redisPassword);
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
+    public RedisConnectionFactory lettuceConnectionFactory() {
+        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisHost, redisPort);
+        return lettuceConnectionFactory;
     }
 
     @Bean
@@ -69,12 +57,12 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public RedisTemplate<String, ReviewRequestDto> chatRedisTemplate(RedisConnectionFactory connectionFactory){
-        RedisTemplate<String, ReviewRequestDto> chatRedisTemplate = new RedisTemplate<>();
-        chatRedisTemplate.setConnectionFactory(connectionFactory);
-        chatRedisTemplate.setKeySerializer(new StringRedisSerializer());
-        chatRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ReviewRequestDto.class));
-        return chatRedisTemplate;
+    public RedisTemplate<String, ReviewRequestDto> reviewRedisTemplate(RedisConnectionFactory connectionFactory){
+        RedisTemplate<String, ReviewRequestDto> reviewRedisTemplate = new RedisTemplate<>();
+        reviewRedisTemplate.setConnectionFactory(connectionFactory);
+        reviewRedisTemplate.setKeySerializer(new StringRedisSerializer());
+        reviewRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ReviewRequestDto.class));
+        return reviewRedisTemplate;
     }
 
     @Bean
