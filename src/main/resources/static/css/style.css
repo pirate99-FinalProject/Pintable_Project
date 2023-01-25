@@ -353,6 +353,15 @@ select.form-control:not([size]):not([multiple]) {
   background: red;
 }
 
+.PostReviewes{
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
+  padding-right: 10px;
+  color: black;
+  font-family: 'Nanum Gothic', sans-serif;
+}
+
 /*.btn{*/
 /*  background: white;*/
 /*  box-shadow: black;*/
@@ -1683,7 +1692,7 @@ pre {
   position: fixed;
   top: 0;
   height: 100%;
-  width: 300px;
+  width: 350px;
   background-color: #fff;
   z-index: 880;
   left: 0; }

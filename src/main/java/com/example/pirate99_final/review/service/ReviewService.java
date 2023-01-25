@@ -3,8 +3,10 @@ package com.example.pirate99_final.review.service;
 import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.global.exception.CustomException;
 import com.example.pirate99_final.global.exception.ErrorCode;
+import com.example.pirate99_final.review.dto.RedisRequestDto;
 import com.example.pirate99_final.review.dto.ReviewRequestDto;
 import com.example.pirate99_final.review.dto.ReviewResponseDto;
+import com.example.pirate99_final.review.entity.Review;
 import com.example.pirate99_final.review.repository.ReviewRepository;
 import com.example.pirate99_final.store.entity.Store;
 import com.example.pirate99_final.store.repository.StoreRepository;
@@ -29,13 +31,12 @@ public class ReviewService {
     private final StoreRepository storeRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
-    private final RedisTemplate<String, ReviewRequestDto> redisTemplate;
+    private final RedisTemplate<String, RedisRequestDto> redisTemplate;
 
     // Review Insert (Insert to Redis)
-    @Transactional
     public MsgResponseDto createReview(long id, ReviewRequestDto requestDto) {
 
-        SetOperations<String, ReviewRequestDto> setOperations = redisTemplate.opsForSet();
+        SetOperations<String, RedisRequestDto> setOperations = redisTemplate.opsForSet();
 
         Store store = storeRepository.findById(id).orElseThrow(()->
         new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
@@ -45,9 +46,13 @@ public class ReviewService {
                 new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
         );
 
-        ReviewRequestDto savedData = ReviewRequestDto.createReviewMessageSaveDto(requestDto, store, user);
+        Review review = new Review(requestDto, store, user);
 
-        setOperations.add("reviewIdx",savedData);
+        reviewRepository.save(review);
+
+        RedisRequestDto saveId = new RedisRequestDto(store.getStoreId());
+
+        setOperations.add("reviewIdx",saveId);
 
         return new MsgResponseDto(CREATE_REVIEW);
     }
