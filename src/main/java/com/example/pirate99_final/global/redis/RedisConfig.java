@@ -1,7 +1,7 @@
 package com.example.pirate99_final.global.redis;
 
 
-import com.example.pirate99_final.review.dto.ReviewRequestDto;
+import com.example.pirate99_final.review.dto.RedisRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -57,11 +56,11 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public RedisTemplate<String, ReviewRequestDto> reviewRedisTemplate(RedisConnectionFactory connectionFactory){
-        RedisTemplate<String, ReviewRequestDto> reviewRedisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, RedisRequestDto> reviewRedisTemplate(RedisConnectionFactory connectionFactory){
+        RedisTemplate<String, RedisRequestDto> reviewRedisTemplate = new RedisTemplate<>();
         reviewRedisTemplate.setConnectionFactory(connectionFactory);
         reviewRedisTemplate.setKeySerializer(new StringRedisSerializer());
-        reviewRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ReviewRequestDto.class));
+        reviewRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(RedisRequestDto.class));
         return reviewRedisTemplate;
     }
 
