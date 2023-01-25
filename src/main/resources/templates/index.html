@@ -33,7 +33,7 @@
     <link rel="icon" href="/css/images/pinTable_Logo.png">
 
 </head>
-
+    <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
 <body>
 <div id="app">
     <div class="main-wrapper main-wrapper-1">
@@ -52,7 +52,8 @@
                         <select id="category">
                             <optgroup label="=== 검색어 지정 ===">
                                 <option name="url" value="/api/search/storeName/?storeName=">가게 이름 일치</option>
-                                <option name="url" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소</option>
+                                <option name="url" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소
+                                </option>
                                 <option name="url" value="/api/search/storeNameInclude/?storeName=">가게 이름
                                 </option>
                                 <option name="url" value="/api/search/Business/?typeOfBusiness=">업종</option>
@@ -143,10 +144,12 @@
                                 style="border-radius:50%"><span id="storeadrress"></span></p>
                         <p></p>
                         <p>
-<!--                            <img alt="image" src="/css/images/star.png" width="32" style="border-radius:50%; align-content: center"><span id="storeStar"></span> 4.45-->
+                            <!--                            <img alt="image" src="/css/images/star.png" width="32" style="border-radius:50%; align-content: center"><span id="storeStar"></span> 4.45-->
                         <p>
-                        <img alt="image" src="/css/images/star.png" width="32" style="border-radius:50%"><span> 별점 : </span><span id="storeStar"></span>
-                        <img alt="image" src="/css/images/line.png" width="32" style="border-radius:50%"><span> 방문자 리뷰 : </span><span id="storeReview"></span>
+                            <img alt="image" src="/css/images/star.png" width="32"
+                                 style="border-radius:50%"><span> 별점 : </span><span id="storeStar"></span>
+                            <img alt="image" src="/css/images/line.png" width="32" style="border-radius:50%"><span> 방문자 리뷰 : </span><span
+                                id="storeReview"></span>
                         </p>
                         <img alt="image" src="/css/images/1.png" width="32" style="border-radius:50%">
                         <p></p>
@@ -158,6 +161,7 @@
                             <P></P>
                             <button type="button" class="btn1" id="requestwaiting" onclick="waiting()"> 대기 요청</button>
                             <button type="button" class="btn1" id="Confirmstatus" onclick="status()"> 상태 조회</button>
+                            <button type="button" class="btn1" id="postReview" onclick="review()"> 리뷰 작성</button>
                             <P></P>
                             <p>
                                 <img alt="image" src="/css/images/1.png" width="32" style="border-radius:50%">
@@ -177,16 +181,22 @@
                                 <input class="password" type="password" placeholder="password" style="height: 30px">
                             </div>
                             <div class="input-box">
-                                <input class="email" type="email" placeholder="email" style="height: 30px; width: 90px">
-                                <button type="button" id="emailsend" style="color: white; background: black; padding: 5px; height: 25px; width: 40px" onclick="sendMail();"> 요청 </button>
+                                <input class="email" type="email" placeholder="email" id="email1" style="height: 30px; width: 90px">
+                                <button type="button" id="emailsend"
+                                        style="color: white; background: black; padding: 5px; height: 25px; width: 40px"
+                                        onclick="sendMail();"> 요청
+                                </button>
                             </div>
                             <div class="input-box">
                                 <input class="code" type="code" placeholder="code" style="height: 30px; width: 90px">
-                                <button type="button" id="emailcheck" style="color: white; background: black; padding: 5px; height: 25px; width: 40px" onclick="checkCode();"> 확인 </button>
+                                <button type="button" id="emailcheck"
+                                        style="color: white; background: black; padding: 5px; height: 25px; width: 40px"
+                                        onclick="checkCode();"> 확인
+                                </button>
                             </div>
                             <p></p>
-                            <button type="button" class="btn2" id="loginbtn" onclick="signIn()"> join </button>
-                            <button type="button" class="btn2" id="confirmbtn" onclick="callWaiting()"> cofirm </button>
+                            <button type="button" class="btn2" id="loginbtn" onclick="signIn()"> join</button>
+                            <button type="button" class="btn2" id="confirmbtn" onclick="callWaiting()"> cofirm</button>
                             <p></p>
                             <p>
                                 <img alt="image" src="/css/images/1.png" width="32" style="border-radius:50%">
@@ -200,17 +210,53 @@
                             <div class="input-box">
                                 <input class="userId1" type="username" placeholder="id" style="height: 30px">
                             </div>
-                            <button type="button" id="statusbtn" style="color: white; background: black;"
+                            <button type="button" id="statusbtn" style="color: white; background: black; margin-bottom: 30px"
                                     onclick="mystatus()"> Confirm
                             </button>
+                            <p>
+                                <img alt="image" src="/css/images/1.png" width="32" style="border-radius:50%">
+                            </p>
+                        </div>
+                    </li>
+                    <li class="PostReviewes">
+                        <div class="postReview" id="postStoreReview">
+                            <div class="postReview" style="text-align:center; color:darkslategray;">
+                                <p></p>
+                                <a><span>방문자 리뷰 작성</span></a>
+                                <p></p>
+                                <input class="postReviewUserId" type="id" placeholder="id" style="height: 30px; width: 90px">
+                                <select id="selectStarScore">
+                                    <optgroup label="별점">
+                                        <option name="starScore" value=1>⭐️</option>
+                                        <option name="starScore" value=1.5>⭐️.5</option>
+                                        <option name="starScore" value=2>⭐️⭐️</option>
+                                        <option name="starScore" value=2.5>⭐️⭐️.5</option>
+                                        <option name="starScore" value=3>⭐️⭐️⭐️</option>
+                                        <option name="starScore" value=3.5>⭐️⭐️⭐️.5</option>
+                                        <option name="starScore" value=4>⭐⭐️⭐️⭐️️</option>
+                                        <option name="starScore" value=4.5>⭐⭐️⭐️⭐️️.5</option>
+                                        <option name="starScore" value=5>⭐️⭐️⭐️⭐️⭐️</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div>
+                                <input class="reviewComment" type="text" placeholder="Comment"
+                                       style="height: 100px; width: 215px; margin-top: 20px; margin-bottom: 20px">
+                            </div>
+                            <div>
+                                <button type="button" id="reviewSend"
+                                        style="color: white; background: black; padding: 5px; height: 25px; width: 40px"
+                                        onclick="postReview();"> 등록
+                                </button>
+                            </div>
+                            <p>
+                                <img alt="image" src="/css/images/1.png" width="32" style="border-radius:50%">
+                            </p>
                         </div>
                     </li>
                     <li class="storeReviewes">
                         <div class="reviewList" id="storeReviewes" style="text-align:center; color:darkslategray;">
-                            <a><span>방문자 리뷰</span></a>
-<!--                            <div class="review">-->
-<!--                                <img alt="image" src="/css/images/blogger.png" style="border-radius:50%"><p id="blogReview0"></p>-->
-<!--                            </div>-->
+                            <a><span style="margin-bottom: 20px;">방문자 리뷰</span></a>
                         </div>
                     </li>
                 </ul>
@@ -324,6 +370,7 @@
                                                 naver.maps.Event.addListener(marker, "click", function (e) {
                                                     if (infowindow.getMap()) {
                                                         infowindow.close();
+                                                        reloadDivArea();
                                                     } else {
                                                         infowindow.open(map, marker);
                                                         document.getElementById("storename").innerHTML = storeName;

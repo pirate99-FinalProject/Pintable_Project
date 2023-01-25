@@ -1,5 +1,5 @@
-const baseUrl = "https://pintable.co.kr";
-// const baseUrl = "http://localhost:8080";
+// const baseUrl = "https://pintable.co.kr";
+const baseUrl = "http://localhost:8080";
 let code = "";
 var isCertification = false;
 
@@ -9,8 +9,21 @@ window.onload = function () {
 
     const statusConfirm = document.getElementById('statusConfirm');
     statusConfirm.style.display = 'none';
+
+    const postReview = document.getElementById('postStoreReview');
+    postReview.style.display = 'none';
 }
 
+function clearMenu(){
+    const requestWaiting = document.getElementById('signin');
+    requestWaiting.style.display = 'none';
+
+    const statusConfirm = document.getElementById('statusConfirm');
+    statusConfirm.style.display = 'none';
+
+    const postReview = document.getElementById('postStoreReview');
+    postReview.style.display = 'none';
+}
 
 function handleSearch() {
     const query = document.querySelector('.form-control').value;
@@ -36,6 +49,7 @@ function waiting() {
     if (requestWaiting.style.display !== 'none') {
         requestWaiting.style.display = 'none';
     } else {
+        clearMenu();
         requestWaiting.style.display = 'block';
     }
 }
@@ -47,7 +61,20 @@ function status() {
     if (statusConfirm.style.display !== 'none') {
         statusConfirm.style.display = 'none';
     } else {
+        clearMenu();
         statusConfirm.style.display = 'block';
+    }
+}
+
+// 리뷰 작성 기능 입력 박스 숨기기 기능
+function review() {
+    const postReview = document.getElementById('postStoreReview');
+
+    if (postReview.style.display !== 'none') {
+        postReview.style.display = 'none';
+    } else {
+        clearMenu();
+        postReview.style.display = 'block';
     }
 }
 
@@ -108,6 +135,8 @@ function callWaiting() {
             const requestWaiting = document.getElementById('signin');                                           // 입력받은 회원정보로 회원가입을 하고,
             requestWaiting.style.display = 'none';                                                                       // 해당 Form을 숨김처리한다.
             alert("웨이팅 등록 성공!")
+            document.querySelector('.userId').value ='';
+            location.reload();
         })
         .catch(function (error) {
             console.log("");
@@ -141,12 +170,49 @@ function mystatus() {
             const storeStatusShow = document.getElementById('statusConfirm');
             storeStatusShow.style.display = 'none';
             alert("상태 조회 완료!")
+            document.querySelector('.userId1').value = '';
         })
         .catch(function (error) {
             console.log("");
             console.log("ERROR : " + JSON.stringify(error));
             console.log("");
         });
+}
+
+// 방문자 리뷰 작성 기능
+function postReview() {
+    let id = document.getElementById("id").innerHTML                                                        // 선택한 점포의 Store Id값을 받아온다.
+    let username = document.querySelector('.postReviewUserId').value;
+    let comment = document.querySelector('.reviewComment').value;
+    let starScore = document.querySelector('select#selectStarScore option:checked').value;
+    const api = '/api/review/';
+
+        axios({
+            method: "post",
+            url: baseUrl + api + id,
+            data: JSON.stringify(
+                { username:username , content:comment, starScore:starScore }
+            ),
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+        })
+            .then(function (response) {
+                console.log("");
+                console.log("RESPONSE : " + JSON.stringify(response.data));
+                alert("리뷰 등록 성공!")
+                document.querySelector('.postReviewUserId').value = '';
+                document.querySelector('.reviewComment').value = '';
+                document.querySelector('select#selectStarScore option:checked').value = '';
+
+                const postReview = document.getElementById('postStoreReview');
+                postReview.style.display = 'none';
+            })
+            .catch(function (error) {
+                console.log("");
+                console.log("ERROR : " + JSON.stringify(error));
+                console.log("");
+            });
 }
 
 // 점포상태 확인 기능
@@ -181,7 +247,9 @@ function storeStatus() {
 
 // 인증메일 전송 기능
 function sendMail() {
-    let email = document.querySelector('.email').value;                                                         // 사용자가 입력한 이메일 주소 값 저장
+    console.log("send메일 시작")
+    let email = document.querySelector('.email').value;                                                        // 사용자가 입력한 이메일 주소 값 저장
+    console.log(email)
     const api = '/api/login/mailConfirm/';                                                                              // 요청 API
 
 
@@ -244,7 +312,6 @@ function storeReview(storeId) {
         .then(function (response) {
             console.log("");
             console.log("RESPONSE : " + JSON.stringify(response.data));
-
             const transeBlog = JSON.stringify(response.data);
             var blogList = JSON.parse(transeBlog);
             const blogNum = blogList.length;
@@ -278,5 +345,8 @@ function storeReview(storeId) {
         });
 }
 
-
+// 마커 재 클릭시 댓글 리스트 초기화
+function reloadDivArea() {
+    $('#storeReviewes').load(window.location.href + ' #storeReviewes');
+}
 
