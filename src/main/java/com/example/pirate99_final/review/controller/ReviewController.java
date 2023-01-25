@@ -34,8 +34,6 @@ public class ReviewController {
     public ReviewResponseDto getReview(@PathVariable Long stordId, @PathVariable Long reviewId){return reviewService.getReview(stordId, reviewId);}
 
 
-
-
     // DB delete
     @DeleteMapping("/review/{storeId}/{reviewId}")
     public MsgResponseDto deleteReview(@PathVariable Long storeId, @PathVariable Long reviewId) {
