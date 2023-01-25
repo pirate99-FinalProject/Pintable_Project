@@ -18,8 +18,8 @@ public class ReviewJdbcRepository {
 
     public void batchUpdateReviewStarScore(List<RedisRequestDto> reviewList) {
 
-        String sql = "UPDATE store a SET a.review_cnt = (SELECT review_cnt FROM reviewCntView2 WHERE storeid=(?)),"+
-                     "a.star_score = (SELECT star_score FROM starStoreViewe WHERE storeid=(?))"+
+        String sql = "UPDATE store a SET a.review_cnt = (SELECT review_cnt FROM reviewCntView WHERE storeid=(?)),"+
+                     "a.star_score = (SELECT star_score FROM starStoreView WHERE storeid=(?))"+
                      "WHERE store_id=(?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
