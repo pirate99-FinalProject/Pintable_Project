@@ -13,6 +13,8 @@ import com.example.pirate99_final.store.repository.StoreRepository;
 import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.example.pirate99_final.global.exception.SuccessCode.CREATE_REVIEW;
 import static com.example.pirate99_final.global.exception.SuccessCode.DELETE_REVIEW;
@@ -32,30 +37,50 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final RedisTemplate<String, RedisRequestDto> redisTemplate;
+    private final RedissonClient redissonClient;
+
 
     // Review Insert (Insert to Redis)
     public MsgResponseDto createReview(long id, ReviewRequestDto requestDto) {
 
+        RLock lock = redissonClient.getLock("post_review_lock");
+
         SetOperations<String, RedisRequestDto> setOperations = redisTemplate.opsForSet();
 
-        Store store = storeRepository.findById(id).orElseThrow(()->
-        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
+        try {
+            boolean isLocked = lock.tryLock(10000,1000, TimeUnit.MILLISECONDS);
 
-        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(()->
-                new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
-        );
+            if (isLocked) {
+                try {
+                    System.out.println("lock");
+                    Store store = storeRepository.findById(id).orElseThrow(() ->
+                            new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                    );
 
-        Review review = new Review(requestDto, store, user);
+                    User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
+                            new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
+                    );
 
-        reviewRepository.save(review);
+                    Review review = new Review(requestDto, store, user);
+                    reviewRepository.save(review);
 
-        RedisRequestDto saveId = new RedisRequestDto(store.getStoreId());
+                    RedisRequestDto saveId = new RedisRequestDto(store.getStoreId());
+                    setOperations.add("reviewIdx", saveId);
 
-        setOperations.add("reviewIdx",saveId);
-
-        return new MsgResponseDto(CREATE_REVIEW);
+                    return new MsgResponseDto(CREATE_REVIEW);
+                } catch (Exception e) {
+                    System.out.println("처리 중 오류가 발생했습니다.");
+                } finally {
+                    System.out.println("unLock");
+                    lock.unlock();
+                }
+            }
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
+        }
+        return null;
     }
+
 
     // Get memos from DB (all)
     public List<ReviewResponseDto> getReviews(long id) {
@@ -69,15 +94,15 @@ public class ReviewService {
 
         List<ReviewResponseDto> ListResponseDto = new ArrayList<>();
 
-        for(com.example.pirate99_final.review.entity.Review review : ListReview){
+        for (com.example.pirate99_final.review.entity.Review review : ListReview) {
             ListResponseDto.add(new ReviewResponseDto(review));
         }
         return ListResponseDto;
     }
 
     // Get store from DB (one)
-    public ReviewResponseDto getReview(long storeId, long reviewId){
-        com.example.pirate99_final.review.entity.Review review = reviewRepository.findById(storeId).orElseThrow(()->
+    public ReviewResponseDto getReview(long storeId, long reviewId) {
+        com.example.pirate99_final.review.entity.Review review = reviewRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_REVIEW_ERROR)
         );
 
@@ -89,7 +114,7 @@ public class ReviewService {
     @Transactional
     public ReviewResponseDto update(Long storeId, Long reviewid, ReviewRequestDto requestDto) {
 
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
@@ -105,11 +130,11 @@ public class ReviewService {
     // DB delete function (data delete)
     public MsgResponseDto deleteReview(Long storeId, Long reviewid) {
 
-        com.example.pirate99_final.review.entity.Review review  = reviewRepository.findById(storeId).orElseThrow(                                             // find memo
+        com.example.pirate99_final.review.entity.Review review = reviewRepository.findById(storeId).orElseThrow(                                             // find memo
                 () -> new CustomException(ErrorCode.NOT_FOUND_ID_ERROR)
         );
         reviewRepository.deleteById(storeId);                                                          // 해당 게시물 삭제
 
-        return  new MsgResponseDto(DELETE_REVIEW);
+        return new MsgResponseDto(DELETE_REVIEW);
     }
 }
