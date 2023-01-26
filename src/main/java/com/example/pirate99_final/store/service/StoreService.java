@@ -109,53 +109,79 @@ public class StoreService {
 
 
 
-    public MsgResponseDto enterStore(Long storeId) {        // need to update
-        RLock lock = redissonClient.getLock("key 이름");
+//    public MsgResponseDto enterStore(Long storeId) {        // need to update
+//        RLock lock = redissonClient.getLock("key 이름");
+//        int availableCnt   =   0;                                                       // 이용 가능 좌석
+//
+//        try{
+//            boolean isLocked = lock.tryLock(10000,1000, TimeUnit.MILLISECONDS);
+//
+//
+//            if(isLocked) {
+//                try {
+//                    // 1. find store
+//                    Store store = storeRepository.findById(storeId).orElseThrow(()->
+//                            new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+//                    );
+//
+//
+//                    // 2. storeStatus check
+//                    StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+//
+//
+//                    // 3. counting availableCnt
+//                    if((storeStatus.getAvailableTableCnt() - 1) > 0){
+//                        availableCnt = storeStatus.getAvailableTableCnt() - 1;
+//                    }
+//                    else if(storeStatus.getAvailableTableCnt() == 0){
+//                        return new MsgResponseDto(SuccessCode.NOT_ENOUGH_TABLE);          // 해당 부분 수정 필요
+//                    }
+//
+//
+//                    // 4. update storeStatus
+//                    storeStatus.update(availableCnt);
+//                    storeStatusRepository.save(storeStatus);
+//
+//
+//                    return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
+//                }catch(Exception e){
+//
+//                }finally{
+//                    lock.unlock();
+//                }
+//
+//            }
+//        }catch(Exception e){
+//            Thread.currentThread().interrupt();
+//        }
+//
+//        return null;
+//    }
+
+    synchronized public MsgResponseDto enterStore(Long storeId) {        // need to update
         int availableCnt   =   0;                                                       // 이용 가능 좌석
 
-        try{
-            boolean isLocked = lock.tryLock(10000,1000, TimeUnit.MILLISECONDS);
+        // 1. find store
+        Store store = storeRepository.findById(storeId).orElseThrow(()->
+                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+        );
 
+        // 2. storeStatus check
+        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-            if(isLocked) {
-                try {
-                    // 1. find store
-                    Store store = storeRepository.findById(storeId).orElseThrow(()->
-                            new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                    );
-
-
-                    // 2. storeStatus check
-                    StoreStatus storeStatus = storeStatusRepository.findByStore(store);
-
-
-                    // 3. counting availableCnt
-                    if((storeStatus.getAvailableTableCnt() - 1) > 0){
-                        availableCnt = storeStatus.getAvailableTableCnt() - 1;
-                    }
-                    else if(storeStatus.getAvailableTableCnt() == 0){
-                        return new MsgResponseDto(SuccessCode.NOT_ENOUGH_TABLE);          // 해당 부분 수정 필요
-                    }
-
-
-                    // 4. update storeStatus
-                    storeStatus.update(availableCnt);
-                    storeStatusRepository.save(storeStatus);
-
-
-                    return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
-                }catch(Exception e){
-
-                }finally{
-                    lock.unlock();
-                }
-
-            }
-        }catch(Exception e){
-            Thread.currentThread().interrupt();
+        // 3. counting availableCnt
+        if((storeStatus.getAvailableTableCnt() - 1) > 0){
+            availableCnt = storeStatus.getAvailableTableCnt() - 1;
+        }
+        else if(storeStatus.getAvailableTableCnt() == 0){
+            return new MsgResponseDto(SuccessCode.NOT_ENOUGH_TABLE);          // 해당 부분 수정 필요
         }
 
-        return null;
+        // 4. update storeStatus
+        storeStatus.update(availableCnt);
+        storeStatusRepository.save(storeStatus);
+
+        return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
     }
 
     // Leave people from store
