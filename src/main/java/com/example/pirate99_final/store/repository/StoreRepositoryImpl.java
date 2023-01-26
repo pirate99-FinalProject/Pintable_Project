@@ -6,9 +6,13 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.thymeleaf.util.StringUtils;
+
 import java.util.List;
 
 import static com.example.pirate99_final.store.entity.QStore.*;         // Qentity 선언
@@ -29,20 +33,34 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         searchCondition(condition.getRoadNameAddress(), condition.getStoreName(), condition.getTypeOfBusiness(), condition.getStarScore(), condition.getReviewCnt(), select),
                         eqnotNull(select)
                 )
+//                .where(searchCondition(condition.getStoreName()))
                 .orderBy(eqSort(select))
                 .fetch();
     }
+
+//    private BooleanExpression searchCondition(String storeName) {
+//        if (StringUtils.isEmpty(storeName)) {
+//            return null;
+//        }
+//        NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,
+//                "function('match',{0},{1})", store.storeName, "+" + storeName + "*");
+//        return booleanTemplate.gt(0);
+//    }
 
     private BooleanBuilder searchCondition(String roadNameAddress,  String storeName, String typeofBusiness, double starScore, int reviewCnt, String select){
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
         if(org.springframework.util.StringUtils.hasText(storeName)){
-            booleanBuilder.or(store.storeName.contains(storeName));
+            NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,
+                    "function('fullTextSearch',{0},{1})", store.storeName, "+" + storeName + "*");
+            booleanBuilder.or(booleanTemplate.gt(0));
         }
 
         if(org.springframework.util.StringUtils.hasText(roadNameAddress)){
-            booleanBuilder.or(store.roadNameAddress.contains(roadNameAddress));
+            NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,
+                    "function('fullTextSearch',{0},{1})", store.roadNameAddress, "+" + roadNameAddress + "*");
+            booleanBuilder.or(booleanTemplate.gt(0));
         }
 
         if(org.springframework.util.StringUtils.hasText(typeofBusiness)){
