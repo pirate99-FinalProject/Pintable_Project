@@ -20,7 +20,7 @@ public class ReviewController {
     // DB save
 
     @PostMapping("/review/{stordId}")
-    public MsgResponseDto createReview(@PathVariable Long stordId, @RequestBody ReviewRequestDto requestDto){
+    public MsgResponseDto createReview(@PathVariable Long stordId, @RequestBody ReviewRequestDto requestDto) throws InterruptedException {
         return reviewService.createReview(stordId, requestDto);
     }
 
