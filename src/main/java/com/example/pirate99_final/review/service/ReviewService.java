@@ -13,6 +13,8 @@ import com.example.pirate99_final.store.repository.StoreRepository;
 import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
@@ -35,17 +37,18 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final RedisTemplate<String, RedisRequestDto> redisTemplate;
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private final Lock writeLock = lock.writeLock();
+    private final RedissonClient redissonClient;
 
 
     // Review Insert (Insert to Redis)
-    public MsgResponseDto createReview(long id, ReviewRequestDto requestDto) throws InterruptedException {
+    public MsgResponseDto createReview(long id, ReviewRequestDto requestDto) {
+
+        RLock lock = redissonClient.getLock("post_review_lock");
 
         SetOperations<String, RedisRequestDto> setOperations = redisTemplate.opsForSet();
 
         try {
-            boolean isLocked = writeLock.tryLock(1,TimeUnit.MINUTES);
+            boolean isLocked = lock.tryLock(10000,1000, TimeUnit.MILLISECONDS);
 
             if (isLocked) {
                 try {
@@ -69,7 +72,7 @@ public class ReviewService {
                     System.out.println("처리 중 오류가 발생했습니다.");
                 } finally {
                     System.out.println("unLock");
-                    writeLock.unlock();
+                    lock.unlock();
                 }
             }
         } catch (Exception e) {
