@@ -20,7 +20,7 @@ public class Waiting extends TimeStamped {
     private Long waitingId;
 
     @ManyToOne
-    @JoinColumn(name = "username")
+    @JoinColumn(name = "userId")
     private User user;
 
     @ManyToOne

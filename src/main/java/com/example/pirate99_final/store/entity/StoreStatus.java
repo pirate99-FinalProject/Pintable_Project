@@ -42,7 +42,7 @@ public class StoreStatus {
         this.availableTableCnt  =   40;
         this.waitingCnt         =   0;
         this.store              =   store;
-        this.limitWaitingCnt    =   0;
+        this.limitWaitingCnt    =   1000;
     }
     public void update(int availableTableCnt){
         this.availableTableCnt  =   availableTableCnt;

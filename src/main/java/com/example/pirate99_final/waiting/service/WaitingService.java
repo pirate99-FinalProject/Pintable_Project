@@ -15,12 +15,14 @@ import com.example.pirate99_final.waiting.dto.WaitingRequestDto;
 import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
+import io.lettuce.core.dynamic.annotation.Param;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -35,7 +37,7 @@ public class WaitingService {
     private final StoreRepository storeRepository;
 
 
-    @Transactional
+
     public MsgResponseDto createWaiter(Long storeId, WaitingRequestDto requestDto) {                                    // 대기자 등록 시스템
 
         // 스토어 찾기 (storeId)
@@ -50,12 +52,24 @@ public class WaitingService {
 
                 () -> new IllegalArgumentException("유저를 찾을 수 없습니다.")
         );
+        // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
+        Optional<Waiting> alreadyQueue = waitingRepository.alreadyQueue(0, 1, user.getUserId(), store.getStoreId());
 
-        // 웨이팅(대기자) 등록
-        Waiting waiting = waitingRepository.save(new Waiting(user, storeStatus));
+        // 종업원이 설정한 대기인원 제한설정 값 보다 현재 대기인원이 적은 경우만 대기자 등록이 가능하게끔 설정
+        if (storeStatus.getWaitingCnt() < storeStatus.getLimitWaitingCnt()) {
+            if (alreadyQueue.isEmpty()) {
+                // 웨이팅(대기자) 등록
+                Waiting waiting = waitingRepository.save(new Waiting(user, storeStatus));
+            }else{
+                return new MsgResponseDto(ErrorCode.ALREADY_IN_QUEUE);
+            }
+        }else{
+            return new MsgResponseDto(ErrorCode.LIMIT_QUEUE_EXCEEDED);
+        }
 
         // 해당 점포 웨이팅 현황 수에 업데이트
         storeStatus.update_waitingCnt(storeStatus.getWaitingCnt() + 1, storeStatus.getAvailableTableCnt());
+        storeStatusRepository.save(storeStatus);
 
         return new MsgResponseDto(SuccessCode.CREATE_WAITING);
     }
