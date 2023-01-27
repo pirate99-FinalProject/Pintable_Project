@@ -271,20 +271,18 @@ public class StoreService {
         limitWaitingCnt = storeStatus.getLimitWaitingCnt();
 
 
-        totalWaitingCnt = waitingList.size();
-
         // 대기인원 제한이 '0'인 경우 'default' 값인 무한으로 설정
-        if (limitWaitingCnt == 0) {
+        if (limitWaitingCnt == 1000) {
 
             return new MsgResponseDto(LIMIT_DEFAULT);
             // 대기인원 제한이 총 대기인원 수 보다 큰 경우, 설정이 완료되었다는 메세지 반환
-        } else if (limitWaitingCnt >= totalWaitingCnt) {
+        } else if (limitWaitingCnt >= storeStatus.getWaitingCnt()) {
 
             return new MsgResponseDto(SuccessCode.LIMIT_SETTING);
             // 대기인원 제한이 총 대기인원 수 보다 적은 경우, 제한을 초과한 현재 대기인원들에게 이메일을 보내고 대기취소 처리한다.
-        } else if (limitWaitingCnt < totalWaitingCnt) {
+        } else if (limitWaitingCnt < storeStatus.getWaitingCnt()) {
 
-            for (int i = limitWaitingCnt; i < totalWaitingCnt; i++) {
+            for (int i = limitWaitingCnt; i < storeStatus.getWaitingCnt(); i++) {
 
                 SimpleMailMessage message = new SimpleMailMessage();
                 message.setFrom("pintable99@gmail.com");
@@ -292,6 +290,8 @@ public class StoreService {
                 message.setSubject(store.getStoreName() + " 안내 이메일");
                 message.setText(store.getStoreName() + "에 대기해주신 고객님 감사합니다. 금일 점포 사정으로 서비스를 제공해드리기가 어렵습니다.");
                 emailSender.send(message);
+            return new MsgResponseDto(CONFIRM_ENTER);
+
 
             }
 

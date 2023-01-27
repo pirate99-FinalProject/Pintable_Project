@@ -32,7 +32,7 @@ public class QuerydslDto {
         this.starScore = starScore;
         this.reviewCnt = reviewCnt;
 
-        if(limitWaitingCnt == 0){
+        if(limitWaitingCnt == 1000){
             this.limitWaitingCnt = "-";
         } else
             this.limitWaitingCnt = Integer.toString(limitWaitingCnt);
