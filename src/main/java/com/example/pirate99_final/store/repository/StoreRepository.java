@@ -17,17 +17,4 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
             ,nativeQuery = true)
     List<Store> searchCurrent(String latitude, String longitude, String storeName);
 
-//    Store findByStoreName(String storeName);
-
-    List<Store> findByRoadNameAddress(String roadNameAddress);
-
-    List<Store> findByPostNumber(int postNumber);
-
-    List<Store> findByTypeOfBusiness(String typeOfBusiness);
-
-    List<Store> findByStarScore(double starScore);
-
-    List<Store> findByReviewCnt(int reviewCnt);
-
-    List<Store> findByStoreName(String storeName);
 }
