@@ -11,12 +11,11 @@ import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 
-import static com.example.pirate99_final.store.entity.QStore.*;         // Qentity 선언
-import static com.example.pirate99_final.store.entity.QStoreStatus.*;   // Qentity 선언
+import static com.example.pirate99_final.store.entity.QStore.*;                                          // Qentity 선언
+import static com.example.pirate99_final.store.entity.QStoreStatus.*;                                    // Qentity 선언
 
 @Repository
 @RequiredArgsConstructor
@@ -25,86 +24,106 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
     public List<QuerydslDto> DynamicSQL(SearchCondition condition, String select) {
         return queryFactory
-                .select(Projections.constructor(QuerydslDto.class, store.storeId,store.address, store.roadNameAddress, store.postNumber, store.storeName, store.typeOfBusiness, store.xCoordinate, store.yCoordinate, storeStatus.waitingCnt, storeStatus.limitWaitingCnt, store.starScore, store.reviewCnt))
+                .selectDistinct(Projections.constructor(                                                // select 조건 중에서 중복 발생시 제거
+                        QuerydslDto.class,                                                              // dto방식으로 반환 받도록 수정
+                        store.address,
+                        store.roadNameAddress,
+                        store.postNumber,
+                        store.storeName,
+                        store.typeOfBusiness,
+                        store.xCoordinate,
+                        store.yCoordinate,
+                        storeStatus.waitingCnt,                                                         // 예약 시스템 로직상 추가
+                        storeStatus.limitWaitingCnt,                                                    // 예약 시스템 로직상 추가
+                        store.starScore,
+                        store.reviewCnt))
                 .from(store)
-                .join(storeStatus).on(store.storeId.eq(storeStatus.store.storeId))
+                .join(storeStatus).on(store.storeId.eq(storeStatus.store.storeId))                      // 예약 시스템 로직상 추가
                 .limit(10)
                 .where(
-                        searchCondition(condition.getRoadNameAddress(), condition.getStoreName(), condition.getTypeOfBusiness(), condition.getStarScore(), condition.getReviewCnt(), select),
-                        eqnotNull(select)
+                        searchCondition(
+                                condition,                                                              // 가게이름, 도로명주소, 업종, 별점, 리뷰
+                                select),                                                                // url
+                        eqnotNull(select)                                                               // notNull 처리
                 )
-//                .where(searchCondition(condition.getStoreName()))
-                .orderBy(eqSort(select))
+                .orderBy(
+                        OrderSearchCondition(                                                           // 정렬처리
+                                condition,                                                              // 가게이름, 도로명주소, 업종
+                                select))                                                                // 별점, 리뷰
                 .fetch();
     }
 
-//    private BooleanExpression searchCondition(String storeName) {
-//        if (StringUtils.isEmpty(storeName)) {
-//            return null;
-//        }
-//        NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,
-//                "function('match',{0},{1})", store.storeName, "+" + storeName + "*");
-//        return booleanTemplate.gt(0);
-//    }
+    private BooleanBuilder searchCondition(SearchCondition condition, String select) {                  // where절 booleanbuilder를 통한 동적쿼리 처리
 
-    private BooleanBuilder searchCondition(String roadNameAddress,  String storeName, String typeofBusiness, double starScore, int reviewCnt, String select){
+        BooleanBuilder booleanBuilder = new BooleanBuilder();                                           // booleanbuilder 선언
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        if(org.springframework.util.StringUtils.hasText(storeName)){
-            NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,
-                    "function('fullTextSearch',{0},{1})", store.storeName, "+" + storeName + "*");
+        if (org.springframework.util.StringUtils.hasText(condition.getStoreName())) {                   // StringUtils 라이브러리를 이용해 매개변수가 가게이름을 가졌을때 if문에서 잡아줌
+            NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,                   // full-text index 적용
+                    "function('fullTextSearch',{0},{1})", store.storeName,
+                    "+" + condition.getStoreName() + "*");                                              // config의 Dialect를 활용해 Full-text index 쿼리문 동작, in boolean mode
             booleanBuilder.or(booleanTemplate.gt(0));
         }
 
-        if(org.springframework.util.StringUtils.hasText(roadNameAddress)){
-            NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,
-                    "function('fullTextSearch',{0},{1})", store.roadNameAddress, "+" + roadNameAddress + "*");
+        if (org.springframework.util.StringUtils.hasText(condition.getRoadNameAddress())) {             // StringUtils 라이브러리를 이용해 매개변수가 도로명 주소를 가졌을때 if문에서 잡아줌
+            NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,                   // full-text index 적용
+                    "function('fullTextSearch',{0},{1})", store.roadNameAddress,
+                    "+" + condition.getRoadNameAddress() + "*");                                        // config의 Dialect를 활용해 Full-text index 쿼리문 동작, in boolean mode
             booleanBuilder.or(booleanTemplate.gt(0));
         }
 
-        if(org.springframework.util.StringUtils.hasText(typeofBusiness)){
-            booleanBuilder.or(store.typeOfBusiness.eq(typeofBusiness));
+        if (org.springframework.util.StringUtils.hasText(condition.getTypeOfBusiness())) {              // 업종관련 검색 조건
+            booleanBuilder.or(store.typeOfBusiness.eq(condition.getTypeOfBusiness()));
         }
 
-        if(select.equals("StarScoreLow")){
-            booleanBuilder.or(store.starScore.between(0, starScore));
-        } else if (select.equals("StarScoreHigh")) {
-            booleanBuilder.or(store.starScore.between(starScore, 5));
+        if (select.equals("StarScoreLow")) {                                                            // 별점 관련 검색 조건
+            booleanBuilder.or(store.starScore.between(0, condition.getStarScore()));                    // n점 이하
+        }else if (select.equals("StarScoreHigh")) {
+            booleanBuilder.or(store.starScore.between(condition.getStarScore(), 5));                    // n점 이상
         }
 
-        if(select.equals("ReviewLow")){
-            booleanBuilder.or(store.reviewCnt.between(0, reviewCnt));
-        } else if (select.equals("ReviewHigh")) {
-            booleanBuilder.or(store.reviewCnt.between(reviewCnt, 100000));
+        if (select.equals("ReviewLow")) {                                                               // 리뷰 관련 검색 조건
+            booleanBuilder.or(store.reviewCnt.between(0, condition.getReviewCnt()));                    // n개 이하
+        }else if (select.equals("ReviewHigh")) {
+            booleanBuilder.or(store.reviewCnt.between(condition.getReviewCnt(), 100000));               // n개 이상
         }
 
         return booleanBuilder;
     }
 
-    private BooleanExpression eqnotNull(String select) {
-        if (select.equals("ReviewASC") || select.equals("StarScoreASC")) {
-            return store.reviewCnt.isNotNull().or(store.starScore.isNotNull());
+    private BooleanExpression eqnotNull(String select) {                                                // not null처리
+        if (select.equals("ReviewASC") || select.equals("StarScoreASC")) {                              // 평점 혹은 리뷰 낮은순으로 했을시 null값이 가장 먼저 나오기 때문에
+            return store.reviewCnt.isNotNull().or(store.starScore.isNotNull());                         // null값에 대한 예외처리
         } else {
             return null;
         }
     }
-    private OrderSpecifier<?> eqSort(String select) {
-        if (select.equals( "StarScoreASC")) {
-            return store.starScore.asc();
-        } else if (select.equals("ReviewASC")) {
-            return store.reviewCnt.asc();
-        } else if (select.contains("StarScore")) {
-            return store.starScore.desc();
-        } else if (select.contains("Review")) {
-            return store.reviewCnt.desc();
-        } else if (select.contains("Business")) {
-            return store.typeOfBusiness.asc();
-        } else if (select.equals("roadAddressInclude")) {
-            return store.roadNameAddress.asc();
-        } else if (select.equals("storeNameInclude")) {
+
+    private OrderSpecifier<?> OrderSearchCondition(SearchCondition condition, String select) {          // 정렬 관련 동적쿼리
+
+        if (org.springframework.util.StringUtils.hasText(condition.getStoreName())) {                   // 가게이름 관련 정렬
             return store.storeName.asc();
         }
-        return store.storeId.asc();
+
+        if (org.springframework.util.StringUtils.hasText(condition.getRoadNameAddress())) {             // 도로명주소 관련 정렬
+            return store.roadNameAddress.asc();
+        }
+
+        if (org.springframework.util.StringUtils.hasText(condition.getTypeOfBusiness())) {              // 업종 관련 정렬
+            return store.typeOfBusiness.asc();
+        }
+
+        if (select.equals("StarScoreASC")) {                                                            // 별점 관련 정렬
+            return store.starScore.asc();                                                               // 오름차순 내림차순
+        }else if (select.contains("StarScore")) {                                                       // 정렬
+            return store.starScore.desc();
+        }
+
+        if (select.equals("ReviewASC")) {                                                               // 리뷰 관련 정렬
+            return store.reviewCnt.asc();                                                               // 오름차순 내림차순
+        }else if (select.contains("Review")) {                                                          // 정렬
+            return store.reviewCnt.desc();
+        }
+
+        return null;
     }
 }
