@@ -1,72 +1,64 @@
 <!DOCTYPE html>
-<html lang="ko">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Pin-Table Admin Page</title>
+
+    <!-- Template CSS -->
     <link rel="stylesheet" href="/css/style-admin.css">
 
-    <title>Document</title>
+    <!-- Js Files -->
+    <script src="/js/admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!--head 태그 내 추가-->
+    <link rel="icon" href="/css/images/pinTable_Logo.png">
 
 </head>
-
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <body>
+<div class="nameContainer" style="height: 50px">
+    <img id="logo" src="/css/images/pinTable_Logo.png" width="50" onclick="">
+</div>
 <div class="container">
     <div class="item1">
-        <h2>상훈이네 국밥집</h2>
     </div>
     <div class="item2">
-        <p>총 방문자 수 : </p>
-        <p>총 대기팀 수 : </p>
-        <p>이용중인 고객수 : </p>
+        <h1 style="align-content: center" id="storeName"></h1>
+    </div>
+    <div class="item3" style="margin-right:200px;">
+        <p><span id="totalWaiting"></span></p>
+        <p><span id="useCustomer"></span></p>
     </div>
 </div>
-<hr>
-<table class="tg">
-    <thead>
-    <tr>
-        <th class="tg-09md">Num</th>
-        <th class="tg-09md">UserName</th>
-        <th class="tg-09md">입장완료여부</th>
-        <th class="tg-09md">고객호출</th>
-        <th class="tg-09md">입장확인</th>
-        <th class="tg-09md">퇴장확인</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr>
-        <td class="tg-09md"></td>
-        <td class="tg-09md"></td>
-        <td class="tg-09md"></td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-    </tr>
-    <tr>
-        <td class="tg-09md"></td>
-        <td class="tg-09md"></td>
-        <td class="tg-09md"></td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
+<div class="limitWaiting">
+    <div class="null-box"></div>
+    <div class="null-box"></div>
+    <div class="waiting">
+        <input class="waiting-inputbox" id="waitingLimitCnt" placeholder="대기 제한 인원 수">
+        <button class="btn-hover color-9" onclick="LimitSetup()">대기 마감</button>
+    </div>
+</div>
+<div class="container">
+    <table class="tg">
+        <thead>
+        <tr>
+            <th class="tg-09md">번호</th>
+            <th class="tg-09md">이름</th>
+            <th class="tg-09md">입장 여부</th>
+            <th class="tg-09md">고객 호출</th>
+            <th class="tg-09md">입장 확인</th>
+            <th class="tg-09md">퇴장 확인</th>
+        </tr>
+        </thead>
+        <tbody id="waitingList">
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
