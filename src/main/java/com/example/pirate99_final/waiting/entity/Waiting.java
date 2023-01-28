@@ -24,7 +24,7 @@ public class Waiting extends TimeStamped {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "storeStatus")
+    @JoinColumn(name = "storeStatusId")
     private StoreStatus storeStatus;
 
     @Column
