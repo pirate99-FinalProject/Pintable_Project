@@ -22,11 +22,6 @@ public class MapController {
         return "index";
     }
 
-    @GetMapping("/test")
-    public String admin() {
-        return "index-admin";
-    }
-
     // 기능 : 현재 페이지
     @GetMapping("/api/currentLocation")
     public String currentLocation(Model model, @RequestParam String latitude, @RequestParam String longitude,
@@ -50,5 +45,15 @@ public class MapController {
         select = select.replace("/", "");                                                             // url 정보 저장
         storeService.DynamicSQL(model, condition, select);
         return "index";
+    }
+
+    @GetMapping("/adminLogin")
+    public String adminLogin() {
+        return "index-adminLogin";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "index-admin";
     }
 }

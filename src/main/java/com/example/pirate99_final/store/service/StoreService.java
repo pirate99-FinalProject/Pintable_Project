@@ -186,7 +186,7 @@ public class StoreService {
 
     // Leave people from store
     @Transactional
-    public MsgResponseDto leaveStore(Long storeId, int people) {
+    public MsgResponseDto leaveStore(Long storeId) {
         int availableCnt = 0;                                                       // 이용 가능 좌석
 
         // 1. find store
@@ -197,7 +197,7 @@ public class StoreService {
         // 2. storeStatus check
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-        availableCnt = storeStatus.getAvailableTableCnt() + people;
+        availableCnt = storeStatus.getAvailableTableCnt() + 1;
 
         // Leaving people check
         storeStatus.update(availableCnt);

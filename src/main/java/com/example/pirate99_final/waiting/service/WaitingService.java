@@ -4,12 +4,14 @@ import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.global.exception.CustomException;
 import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.global.exception.SuccessCode;
+import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
 import com.example.pirate99_final.store.entity.Store;
 import com.example.pirate99_final.store.entity.StoreStatus;
 import com.example.pirate99_final.store.repository.StoreRepository;
 import com.example.pirate99_final.store.repository.StoreStatusRepository;
 import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.user.repository.UserRepository;
+import com.example.pirate99_final.waiting.dto.EnterStatusResponseDto;
 import com.example.pirate99_final.waiting.dto.MyTurnResponseDto;
 import com.example.pirate99_final.waiting.dto.WaitingRequestDto;
 import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
@@ -176,5 +178,26 @@ public class WaitingService {
         // 대기자 명단에서 상태값을 '3' (대기 취소)으로 변경함
         waiting.update(3);
         return new MsgResponseDto(SuccessCode.DELETE_WAITING);
+    }
+
+    public List<EnterStatusResponseDto> getEnterStatus(Long storeId) {
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+        );
+
+        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+
+        StoreStatusResponseDto responseDto = new StoreStatusResponseDto(storeStatus);
+
+        // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
+        List<Waiting> waitingList = waitingRepository.findAllByStoreStatusOrderByWaitingIdAsc(storeStatus);
+
+        List<EnterStatusResponseDto> waitingResponseDto = new ArrayList<>();
+
+        // 위에서 만든 리스트에 값을 담는 작업
+        for (Waiting waiting : waitingList) {
+            waitingResponseDto.add(new EnterStatusResponseDto(waiting));
+        }
+        return waitingResponseDto;
     }
 }

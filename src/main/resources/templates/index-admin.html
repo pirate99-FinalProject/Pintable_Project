@@ -1,72 +1,90 @@
 <!DOCTYPE html>
-<html lang="ko">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Pin-table Admin</title>
+
+    <!-- General CSS Files -->
     <link rel="stylesheet" href="/css/style-admin.css">
 
-    <title>Document</title>
-
+    <!-- Js Files -->
+    <script src="/js/admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
+<div class="nameContainer" style="height: 50px">
+    <img id="logo" src="/css/images/pinTable_Logo.png" width="50" onclick="">
+</div>
 <div class="container">
     <div class="item1">
-        <h2>상훈이네 국밥집</h2>
     </div>
     <div class="item2">
+        <h1 style="align-content: center">상훈이네 국밥집 🍚</h1>
+    </div>
+    <div class="item3" style="margin-right:200px;">
         <p>총 방문자 수 : </p>
         <p>총 대기팀 수 : </p>
         <p>이용중인 고객수 : </p>
     </div>
 </div>
-<hr>
-<table class="tg">
-    <thead>
-    <tr>
-        <th class="tg-09md">Num</th>
-        <th class="tg-09md">UserName</th>
-        <th class="tg-09md">입장완료여부</th>
-        <th class="tg-09md">고객호출</th>
-        <th class="tg-09md">입장확인</th>
-        <th class="tg-09md">퇴장확인</th>
-    </tr>
-    </thead>
+<div class="limitWaiting">
+    <div class="null-box"></div>
+    <div class="null-box"></div>
+    <div class="waiting">
+        <input class="waiting-inputbox" id="waitingLimitCnt" placeholder="대기 제한 인원 수">
+        <button class="btn-hover color-9" onclick="LimitSetup()">대기 마감</button>
+    </div>
+</div>
+<div class="container">
+    <table class="tg">
+        <thead>
+        <tr>
+            <th class="tg-09md">번호</th>
+            <th class="tg-09md">이름</th>
+            <th class="tg-09md">입장 여부</th>
+            <th class="tg-09md">고객 호출</th>
+            <th class="tg-09md">입장 확인</th>
+            <th class="tg-09md">퇴장 확인</th>
+        </tr>
+        </thead>
 
-    <tbody>
-    <tr>
-        <td class="tg-09md"></td>
-        <td class="tg-09md"></td>
-        <td class="tg-09md"></td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-    </tr>
-    <tr>
-        <td class="tg-09md"></td>
-        <td class="tg-09md"></td>
-        <td class="tg-09md"></td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-        <td class="tg-09md">
-            <button>클릭</button>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
+        <tbody>
+        <tr>
+            <td class="tg-09md" id="idx">1</td>
+            <td class="tg-09md" id="username">kyuu</td>
+            <td class="tg-09md" id="waitingStatus">대기</td>
+            <td class="tg-09md">
+                <img id="callUser" src="/css/images/bell.png" width="48" onclick="callpeople()">
+            </td>
+            <td class="tg-09md">
+                <img id="entranceUserCheck" src="/css/images/bell1.png" width="48" onclick="EnterConfirm()">
+            </td>
+            <td class="tg-09md">
+                <img id="workoutUserCheck" src="/css/images/okButton.png" width="48" onclick="ExitConfirm()">
+            </td>
+        </tr>
+        <tr>
+            <td class="tg-09md">2</td>
+            <td class="tg-09md">sanghoon</td>
+            <td class="tg-09md">대기</td>
+            <td class="tg-09md">
+                <img id="callUser1" src="/css/images/bell.png" width="48" onclick="callpeople()">
+            </td>
+            <td class="tg-09md">
+                <img id="entranceUserCheck1" src="/css/images/bell1.png" width="48" onclick="EnterConfirm()">
+            </td>
+            <td class="tg-09md">
+                <img id="workoutUserCheck1" src="/css/images/okButton.png" width="48" onclick="ExitConfirm()">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

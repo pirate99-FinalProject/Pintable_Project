@@ -1,6 +1,7 @@
 package com.example.pirate99_final.waiting.controller;
 
 import com.example.pirate99_final.global.MsgResponseDto;
+import com.example.pirate99_final.waiting.dto.EnterStatusResponseDto;
 import com.example.pirate99_final.waiting.dto.MyTurnResponseDto;
 import com.example.pirate99_final.waiting.dto.WaitingRequestDto;
 import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
@@ -45,4 +46,9 @@ public class WaitingController {
     public MsgResponseDto deleteWaiter(@PathVariable Long storeId, @PathVariable Long waitingId) {
         return waitingService.deleteWaiter(storeId, waitingId);
     }
+
+    // DB select all (User Info)
+    @GetMapping("/enterStatus/{storeId}")
+    public List<EnterStatusResponseDto> getEnterStatus(@PathVariable Long storeId){
+        return waitingService.getEnterStatus(storeId);}
 }

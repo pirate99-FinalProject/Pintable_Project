@@ -42,9 +42,10 @@ public class StoreController {
         return storeService.enterStore(storeId);
     }
 
-    @PutMapping("/storeStatus/leave/{storeId}/{people}")
-    public MsgResponseDto leaveStore(@PathVariable Long storeId, @PathVariable int people){
-        return storeService.leaveStore(storeId, people);
+
+    @PutMapping("/storeStatus/leave/{storeId}")
+    public MsgResponseDto leaveStore(@PathVariable Long storeId){
+        return storeService.leaveStore(storeId);
     }
 
     @PutMapping("/storeStatus/call/{storeId}")
