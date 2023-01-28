@@ -1,5 +1,5 @@
-// const baseUrl = "https://pintable.co.kr";
-const baseUrl = "http://localhost:8080";
+const baseUrl = "https://pintable.co.kr";
+// const baseUrl = "http://localhost:8080";
 let code = "";
 var isCertification = false;
 
@@ -370,36 +370,6 @@ function getStoreName() {
             const transferStoreName = JSON.stringify(response.data);
             var storeName = JSON.parse(transferStoreName);
             document.getElementById("myStoreName").innerHTML = storeName.storeName;
-
-        })
-        .catch(function (error) {
-            console.log("");
-            console.log("ERROR : " + JSON.stringify(error));
-            console.log("");
-        });
-}
-function getStoreAdminInfo() {
-    // let id = document.getElementById("id").innerHTML
-    let id = 1
-    const api = '/api/storeAdmin/';
-
-    axios({
-        method: "get",
-        url: baseUrl + api + id,
-        data: JSON.stringify(
-        ),
-        headers: {
-            "Content-Type": "application/json; charset=utf-8"                                                           // responseType: "json" // [응답 데이터 : stream , json]
-        },
-    })
-        .then(function (response) {
-            console.log("");
-            console.log("RESPONSE : " + JSON.stringify(response.data));
-            const transferStoreAdmin = JSON.stringify(response.data);
-            var storeAdmin = JSON.parse(transferStoreAdmin);
-            document.getElementById("가게이름").innerHTML = storeAdmin.storeName;
-            document.getElementById("대기 중인 팀의 수").innerHTML = storeAdmin.numberOfTeamsWaiting;
-            document.getElementById("이용 중인 팀의 수").innerHTML = storeAdmin.numberOfCustomersInUse;
 
         })
         .catch(function (error) {

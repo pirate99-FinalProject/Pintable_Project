@@ -7,16 +7,20 @@
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Pin-table Admin</title>
+    <title>Pin-Table Admin Page</title>
 
-    <!-- General CSS Files -->
+    <!-- Template CSS -->
     <link rel="stylesheet" href="/css/style-admin.css">
 
     <!-- Js Files -->
     <script src="/js/admin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
 
+    <!--head 태그 내 추가-->
+    <link rel="icon" href="/css/images/pinTable_Logo.png">
+
+</head>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <body>
 <div class="nameContainer" style="height: 50px">
     <img id="logo" src="/css/images/pinTable_Logo.png" width="50" onclick="">
@@ -25,12 +29,11 @@
     <div class="item1">
     </div>
     <div class="item2">
-        <h1 style="align-content: center">상훈이네 국밥집 🍚</h1>
+        <h1 style="align-content: center" id="storeName"></h1>
     </div>
     <div class="item3" style="margin-right:200px;">
-        <p>총 방문자 수 : </p>
-        <p>총 대기팀 수 : </p>
-        <p>이용중인 고객수 : </p>
+        <p><span id="totalWaiting"></span></p>
+        <p><span id="useCustomer"></span></p>
     </div>
 </div>
 <div class="limitWaiting">
@@ -53,36 +56,7 @@
             <th class="tg-09md">퇴장 확인</th>
         </tr>
         </thead>
-
-        <tbody>
-        <tr>
-            <td class="tg-09md" id="idx">1</td>
-            <td class="tg-09md" id="username">kyuu</td>
-            <td class="tg-09md" id="waitingStatus">대기</td>
-            <td class="tg-09md">
-                <img id="callUser" src="/css/images/bell.png" width="48" onclick="callpeople()">
-            </td>
-            <td class="tg-09md">
-                <img id="entranceUserCheck" src="/css/images/bell1.png" width="48" onclick="EnterConfirm()">
-            </td>
-            <td class="tg-09md">
-                <img id="workoutUserCheck" src="/css/images/okButton.png" width="48" onclick="ExitConfirm()">
-            </td>
-        </tr>
-        <tr>
-            <td class="tg-09md">2</td>
-            <td class="tg-09md">sanghoon</td>
-            <td class="tg-09md">대기</td>
-            <td class="tg-09md">
-                <img id="callUser1" src="/css/images/bell.png" width="48" onclick="callpeople()">
-            </td>
-            <td class="tg-09md">
-                <img id="entranceUserCheck1" src="/css/images/bell1.png" width="48" onclick="EnterConfirm()">
-            </td>
-            <td class="tg-09md">
-                <img id="workoutUserCheck1" src="/css/images/okButton.png" width="48" onclick="ExitConfirm()">
-            </td>
-        </tr>
+        <tbody id="waitingList">
         </tbody>
     </table>
 </div>

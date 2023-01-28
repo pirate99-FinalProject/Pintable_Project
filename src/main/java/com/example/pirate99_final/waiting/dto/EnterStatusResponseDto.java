@@ -1,21 +1,18 @@
 package com.example.pirate99_final.waiting.dto;
 
-import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class EnterStatusResponseDto {
     private Long waitingId;
-    private int waitingStatus;
+    private String waitingStatus;
 
     private String username;
 
-    public EnterStatusResponseDto(Waiting waiting) {
+    public EnterStatusResponseDto(Waiting waiting, String waitingStatus) {
         this.waitingId = waiting.getWaitingId();
-        this.waitingStatus = waiting.getWaitingStatus();
+        this.waitingStatus = waitingStatus;
         this.username = waiting.getUser().getUsername();
     }
 }

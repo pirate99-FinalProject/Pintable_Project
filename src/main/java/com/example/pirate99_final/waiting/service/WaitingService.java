@@ -44,7 +44,6 @@ public class WaitingService {
     private final RedissonClient redissonClient;
 
 
-
     public MsgResponseDto createWaiter(Long storeId, WaitingRequestDto requestDto) {                                    // 대기자 등록 시스템
         RLock lock = redissonClient.getLock("key 이름");
 
@@ -93,7 +92,7 @@ public class WaitingService {
                     System.out.println("언락");
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             Thread.currentThread().interrupt();
         }
         return null;
@@ -102,7 +101,7 @@ public class WaitingService {
     @Transactional
     public List<WaitingResponseDto> getListWaiters(Long storeId) {                                                      // 대기 인원 리스트 불러오기
         // 스토어 찾기 (storeId)
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
@@ -110,7 +109,7 @@ public class WaitingService {
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
         // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
-        List<Waiting> waitingList = waitingRepository.findAllByWaitingStatusOrWaitingStatus(0,1);
+        List<Waiting> waitingList = waitingRepository.findAllByWaitingStatusOrWaitingStatus(0, 1);
 
         List<WaitingResponseDto> waitingResponseDto = new ArrayList<>();
 
@@ -127,13 +126,13 @@ public class WaitingService {
         int myTurn = 0;
         int totalWaitingCnt = 0;
         // 스토어 찾기 (storeId)
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
         // 스토어 스테이터스 찾기
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
         // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
-        List<Waiting> waitingList = waitingRepository.findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0,1);
+        List<Waiting> waitingList = waitingRepository.findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0, 1);
         // 유저 찾기
         User getUser = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
@@ -151,11 +150,10 @@ public class WaitingService {
     }
 
 
-
     @Transactional
     public WaitingResponseDto getWaiter(Long storeId, Long waitingId) {                                                 // 대기인원 중 특정 사용자의 정보 불러오기
 
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
@@ -167,7 +165,7 @@ public class WaitingService {
 
     @Transactional
     public MsgResponseDto deleteWaiter(Long storeId, Long waitingId) {                                                  // 대기인원 중 대기취소 등의 사유로 상태값을 변경하는 작업
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
@@ -187,8 +185,6 @@ public class WaitingService {
 
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-        StoreStatusResponseDto responseDto = new StoreStatusResponseDto(storeStatus);
-
         // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
         List<Waiting> waitingList = waitingRepository.findAllByStoreStatusOrderByWaitingIdAsc(storeStatus);
 
@@ -196,7 +192,20 @@ public class WaitingService {
 
         // 위에서 만든 리스트에 값을 담는 작업
         for (Waiting waiting : waitingList) {
-            waitingResponseDto.add(new EnterStatusResponseDto(waiting));
+            String waitingStatus = "";
+            if(waiting.getWaitingStatus() == 0){
+                waitingStatus = "대기";
+            }
+            else if(waiting.getWaitingStatus() == 1){
+                waitingStatus = "입장 가능";
+            }
+            else if(waiting.getWaitingStatus() == 2){
+                waitingStatus = "입장 완료";
+            }
+            else{
+                waitingStatus = "대기 취소";
+            }
+            waitingResponseDto.add(new EnterStatusResponseDto(waiting,waitingStatus));
         }
         return waitingResponseDto;
     }
