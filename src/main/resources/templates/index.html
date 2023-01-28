@@ -33,7 +33,7 @@
     <link rel="icon" href="/css/images/pinTable_Logo.png">
 
 </head>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <body>
 <div id="app">
     <div class="main-wrapper main-wrapper-1">
@@ -52,7 +52,8 @@
                         <select id="category">
                             <optgroup label="=== 검색어 지정 ===">
                                 <option name="url" value="/api/search/storeNameInclude/?storeName=">가게 이름</option>
-                                <option name="url" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소</option>
+                                <option name="url" value="/api/search/roadAddressInclude/?roadNameAddress=">도로명 주소
+                                </option>
                                 <option name="url" value="/api/search/Business/?typeOfBusiness=">업종</option>
                                 <option name="url" value="/api/search/StarScoreHigh/?starScore=">평점 n점이상</option>
                                 <option name="url" value="/api/search/StarScoreLow/?starScore=">평점 n점이하</option>
@@ -95,10 +96,12 @@
                 </div>
             </form>
             <ul class="navbar-nav navbar-right">
-                <li class="dropdown"><a href="#" data-toggle="dropdown"
-                                        class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                    <img alt="image" src="/css/images/avatar.png" class="rounded-circle mr-1">
-                </a>
+<!--                <li class="dropdown"><a href="#" data-toggle="dropdown"-->
+<!--                                        class="nav-link dropdown-toggle nav-link-lg nav-link-user">-->
+                    <a href="/admin">
+                        <img alt="image" src="/css/images/avatar.png" class="rounded-circle mr-1" style="height: 35px;">
+                    </a>
+<!--                </a>-->
                     <div class="dropdown-menu dropdown-menu-right">
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item has-icon text-danger">
@@ -178,7 +181,8 @@
                                 <input class="password" type="password" placeholder="password" style="height: 30px">
                             </div>
                             <div class="input-box">
-                                <input class="email" type="email" placeholder="email" id="email1" style="height: 30px; width: 90px">
+                                <input class="email" type="email" placeholder="email" id="email1"
+                                       style="height: 30px; width: 90px">
                                 <button type="button" id="emailsend"
                                         style="color: white; background: black; padding: 5px; height: 25px; width: 40px"
                                         onclick="sendMail();"> 요청
@@ -207,7 +211,8 @@
                             <div class="input-box">
                                 <input class="userId1" type="username" placeholder="id" style="height: 30px">
                             </div>
-                            <button type="button" id="statusbtn" style="color: white; background: black; margin-bottom: 30px"
+                            <button type="button" id="statusbtn"
+                                    style="color: white; background: black; margin-bottom: 30px"
                                     onclick="mystatus()"> Confirm
                             </button>
                             <p>
@@ -221,7 +226,8 @@
                                 <p></p>
                                 <a><span>방문자 리뷰 작성</span></a>
                                 <p></p>
-                                <input class="postReviewUserId" type="id" placeholder="id" style="height: 30px; width: 90px">
+                                <input class="postReviewUserId" type="id" placeholder="id"
+                                       style="height: 30px; width: 90px">
                                 <select id="selectStarScore">
                                     <optgroup label="별점">
                                         <option name="starScore" value=1>⭐️</option>
