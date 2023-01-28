@@ -31,6 +31,7 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.example.pirate99_final.global.exception.SuccessCode.*;
@@ -347,5 +348,21 @@ public class StoreService {
 
         model.addAttribute("searchList", DynamicSQL);
 
+    }
+
+    public StoreResponseDto getStoreAdminInfo(Long storeId) {
+
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR));
+
+        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+
+        List<Waiting> waitingTeams = waitingRepository.findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0, 1);
+
+        int numberOfTeamsWaiting = waitingTeams.size();
+
+        int numberOfCustomersInUse = storeStatus.getTotalTableCnt() - storeStatus.getAvailableTableCnt();
+
+        return new StoreResponseDto(store, numberOfTeamsWaiting, numberOfCustomersInUse);
     }
 }

@@ -16,13 +16,14 @@ public class WaitingResponseDto {
     private Long waitingId;
     private int waitingStatus;
 
-    private User user;
+    private String username;
     private LocalDateTime createdAt;
 
 
     public WaitingResponseDto(Waiting waiting) {
         this.waitingId = waiting.getWaitingId();
         this.waitingStatus = waiting.getWaitingStatus();
+        this.username = waiting.getUser().getUsername();
         this.createdAt = waiting.getModifiedAt();
     }
 }

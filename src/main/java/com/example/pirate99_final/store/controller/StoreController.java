@@ -62,4 +62,10 @@ public class StoreController {
     public MsgResponseDto limitWaitingCnt(@PathVariable Long storeId, @RequestBody LimitWaitingCntRequestDto requestDto){
         return storeService.limitWaitingCnt(storeId, requestDto);
     }
+
+
+    @GetMapping("/storeAdmin/{storeId}")
+    public StoreResponseDto getStoreAdminInfo(@PathVariable Long storeId) {
+        return storeService.getStoreAdminInfo(storeId);
+    }
 }
