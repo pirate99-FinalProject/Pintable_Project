@@ -1,5 +1,6 @@
 package com.example.pirate99_final.store.entity;
 
+import com.example.pirate99_final.global.entity.TimeStamped;
 import com.example.pirate99_final.store.dto.StoreRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Store {
+public class Store extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
