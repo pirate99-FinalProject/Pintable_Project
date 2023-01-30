@@ -26,6 +26,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         return queryFactory
                 .selectDistinct(Projections.constructor(                                                // select 조건 중에서 중복 발생시 제거
                         QuerydslDto.class,                                                              // dto방식으로 반환 받도록 수정
+                        store.storeId,
                         store.address,
                         store.roadNameAddress,
                         store.postNumber,
