@@ -40,7 +40,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         store.reviewCnt))
                 .from(store)
                 .join(storeStatus).on(store.storeId.eq(storeStatus.store.storeId))                      // 예약 시스템 로직상 추가
-                .limit(10)
+                .limit(limitCnt(condition))
                 .where(
                         searchCondition(
                                 condition,                                                              // 가게이름, 도로명주소, 업종, 별점, 리뷰
@@ -60,35 +60,55 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         if (org.springframework.util.StringUtils.hasText(condition.getStoreName())) {                   // StringUtils 라이브러리를 이용해 매개변수가 가게이름을 가졌을때 if문에서 잡아줌
             NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,                   // full-text index 적용
-                    "function('fullTextSearch',{0},{1})", store.storeName,
-                    "+" + condition.getStoreName() + "*");                                              // config의 Dialect를 활용해 Full-text index 쿼리문 동작, in boolean mode
-            booleanBuilder.or(booleanTemplate.gt(0));
+                    "function('fullTextSearch',{0},{1})", store.storeName, "+" + condition.getStoreName() + "*"); // config의 Dialect를 활용해 Full-text index 쿼리문 동작, in boolean mode
+            if (select.equals("StarScore")) {
+                booleanBuilder.or(booleanTemplate.gt(0)).and(store.starScore.between(4, 5));
+            }else if (select.equals("Review")) {
+                booleanBuilder.or(booleanTemplate.gt(0)).and(store.reviewCnt.between(1000, 100000));
+            }else {
+                booleanBuilder.or(booleanTemplate.gt(0));
+            }
         }
 
         if (org.springframework.util.StringUtils.hasText(condition.getRoadNameAddress())) {             // StringUtils 라이브러리를 이용해 매개변수가 도로명 주소를 가졌을때 if문에서 잡아줌
             NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,                   // full-text index 적용
-                    "function('fullTextSearch',{0},{1})", store.roadNameAddress,
-                    "+" + condition.getRoadNameAddress() + "*");                                        // config의 Dialect를 활용해 Full-text index 쿼리문 동작, in boolean mode
-            booleanBuilder.or(booleanTemplate.gt(0));
+                    "function('fullTextSearch',{0},{1})", store.roadNameAddress, "+" + condition.getRoadNameAddress() + "*"); // config의 Dialect를 활용해 Full-text index 쿼리문 동작, in boolean mode
+            if (select.equals("StarScore")) {
+                booleanBuilder.or(booleanTemplate.gt(0)).and(store.starScore.between(4, 5));
+            }else if (select.equals("Review")) {
+                booleanBuilder.or(booleanTemplate.gt(0)).and(store.reviewCnt.between(1000, 100000));
+            }else {
+                booleanBuilder.or(booleanTemplate.gt(0));
+            }
         }
 
         if (org.springframework.util.StringUtils.hasText(condition.getTypeOfBusiness())) {              // 업종관련 검색 조건
-            booleanBuilder.or(store.typeOfBusiness.eq(condition.getTypeOfBusiness()));
-        }
+            if (select.equals("StarScore")) {
+                booleanBuilder.or(store.typeOfBusiness.eq(condition.getTypeOfBusiness())).and(store.starScore.between(4, 5));
+            }else if (select.equals("Review")) {
+                booleanBuilder.or(store.typeOfBusiness.eq(condition.getTypeOfBusiness())).and(store.reviewCnt.between(1000, 100000));
+            }else {
+                booleanBuilder.or(store.typeOfBusiness.eq(condition.getTypeOfBusiness()));
+            }
 
-        if (select.equals("StarScoreLow")) {                                                            // 별점 관련 검색 조건
-            booleanBuilder.or(store.starScore.between(0, condition.getStarScore()));                    // n점 이하
-        }else if (select.equals("StarScoreHigh")) {
-            booleanBuilder.or(store.starScore.between(condition.getStarScore(), 5));                    // n점 이상
         }
-
-        if (select.equals("ReviewLow")) {                                                               // 리뷰 관련 검색 조건
-            booleanBuilder.or(store.reviewCnt.between(0, condition.getReviewCnt()));                    // n개 이하
-        }else if (select.equals("ReviewHigh")) {
-            booleanBuilder.or(store.reviewCnt.between(condition.getReviewCnt(), 100000));               // n개 이상
-        }
-
         return booleanBuilder;
+    }
+
+    private int limitCnt(SearchCondition condition) {
+        if (!(org.apache.commons.lang3.StringUtils.isEmpty(condition.getStoreName()))) {
+            return 10;
+        }
+        if (!(org.apache.commons.lang3.StringUtils.isEmpty(condition.getRoadNameAddress()))) {
+            return 10;
+        }
+        if (!(org.apache.commons.lang3.StringUtils.isEmpty(condition.getTypeOfBusiness()))) {
+            return 10;
+        }
+        if (condition.getStarScore() > 0) {
+            return 100;
+        }
+        return 1000;
     }
 
     private BooleanExpression eqnotNull(String select) {                                                // not null처리
@@ -102,29 +122,38 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     private OrderSpecifier<?> OrderSearchCondition(SearchCondition condition, String select) {          // 정렬 관련 동적쿼리
 
         if (org.springframework.util.StringUtils.hasText(condition.getStoreName())) {                   // 가게이름 관련 정렬
+            if (select.contains("StarScore") || select.contains("Review")) {
+                return OrderScoreAndCnt(condition,select);
+            }
             return store.storeName.asc();
         }
 
         if (org.springframework.util.StringUtils.hasText(condition.getRoadNameAddress())) {             // 도로명주소 관련 정렬
+            if (select.contains("StarScore") || select.contains("Review")) {
+                return OrderScoreAndCnt(condition,select);
+            }
             return store.roadNameAddress.asc();
         }
 
         if (org.springframework.util.StringUtils.hasText(condition.getTypeOfBusiness())) {              // 업종 관련 정렬
+            if (select.contains("StarScore") || select.contains("Review")) {
+                return OrderScoreAndCnt(condition,select);
+            }
             return store.typeOfBusiness.asc();
         }
+        return null;
+    }
 
-        if (select.equals("StarScoreASC")) {                                                            // 별점 관련 정렬
-            return store.starScore.asc();                                                               // 오름차순 내림차순
-        }else if (select.contains("StarScore")) {                                                       // 정렬
-            return store.starScore.desc();
+    private OrderSpecifier<?> OrderScoreAndCnt(SearchCondition condition, String select) {
+        if (org.springframework.util.StringUtils.hasText(condition.getStoreName())) {                   // 가게이름 관련 정렬
+            return select.equals("StarScoreDESC") ? store.starScore.desc() : store.reviewCnt.desc();
         }
-
-        if (select.equals("ReviewASC")) {                                                               // 리뷰 관련 정렬
-            return store.reviewCnt.asc();                                                               // 오름차순 내림차순
-        }else if (select.contains("Review")) {                                                          // 정렬
-            return store.reviewCnt.desc();
+        if (org.springframework.util.StringUtils.hasText(condition.getRoadNameAddress())) {             // 도로명주소 관련 정렬
+            return select.equals("StarScoreDESC") ? store.starScore.desc() : store.reviewCnt.desc();
         }
-
+        if (org.springframework.util.StringUtils.hasText(condition.getTypeOfBusiness())) {              // 업종 관련 정렬
+            return select.equals("StarScoreDESC") ? store.starScore.desc() : store.reviewCnt.desc();
+        }
         return null;
     }
 }
