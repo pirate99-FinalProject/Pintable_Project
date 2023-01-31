@@ -84,7 +84,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         if (org.springframework.util.StringUtils.hasText(condition.getTypeOfBusiness())) {              // 업종관련 검색 조건
             NumberTemplate booleanTemplate = Expressions.numberTemplate(Double.class,                   // full-text index 적용
-                    "function('fullTextSearch',{0},{1})", store.roadNameAddress, "+" + condition.getTypeOfBusiness() + "*"); // config의 Dialect를 활용해 Full-text index 쿼리문 동작, in boolean mode
+                    "function('fullTextSearch',{0},{1})", store.typeOfBusiness, "+" + condition.getTypeOfBusiness() + "*"); // config의 Dialect를 활용해 Full-text index 쿼리문 동작, in boolean mode
             if (select.equals("StarScore")) {
                 booleanBuilder.or(booleanTemplate.gt(0)).and(store.starScore.between(4, 5));
             }else if (select.equals("Review")) {
