@@ -358,9 +358,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -373,9 +371,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -388,9 +384,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -408,9 +402,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -424,9 +416,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -440,9 +430,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -460,9 +448,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -476,9 +462,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -492,9 +476,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -509,9 +491,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -525,12 +505,9 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
-
             model.addAttribute("searchList", listESStoreResponseDto);
         }
 
@@ -541,9 +518,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -558,9 +533,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -574,9 +547,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
@@ -590,9 +561,7 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
-                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                );
+                StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeDocumentObject.getStore_id());
                 listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
