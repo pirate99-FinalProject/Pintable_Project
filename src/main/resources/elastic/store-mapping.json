@@ -1,0 +1,17 @@
+{
+  "properties" : {
+    "post_number" : {"type" : "keyword"},
+    "store_id" : {"type" : "keyword"},
+    "x_coordinate" : {"type" : "keyword"},
+    "y_coordinate" : {"type" : "text"},
+    "address" : {"type" : "keyword"},
+    "road_name_address" : {"type" : "keyword"},
+    "review_cnt" : {"type" : "keyword"},
+    "store_name" : {
+      "type" : "text",
+      "analyzer" : "korean"
+    },
+    "type_of_business" : {"type" : "keyword"},
+    "star_score" : {"type" : "keyword"}
+  }
+}

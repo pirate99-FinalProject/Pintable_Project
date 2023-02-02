@@ -12,4 +12,6 @@ public class StoreRequestDto{
     private String typeOfBusiness;                                  // 업종명
     private double xcoordinate;                                     // X좌표
     private double ycoordinate;                                     // Y좌표
+    private double starScore;
+    private int reviewCnt;
 }
