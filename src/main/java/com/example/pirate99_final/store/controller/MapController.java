@@ -52,14 +52,14 @@ public class MapController {
     public String ElasticSearch(Model model, HttpServletRequest request, SearchCondition condition) {
         String uri = request.getRequestURI();
         String select = uri.substring(12);
-        select = select.replace("/", "");                                                             // url 정보 저장
+        select = select.replace("/", "");                                           // url 정보 저장
 
-        if (select.equals("StarScore") || select.equals("ReviewCnt")) {
-            storeService.elasticSearchBetween(model, condition, select);
-        } else if (select.equals("StarScoreDESC") || select.equals("ReviewCntDESC")) {
-            storeService.elasticSearchDESC(model, condition, select);
-        } else {
-            storeService.elasticSearch(model, condition);
+        switch (select) {
+            case "StarScoreDESC"  -> storeService.elasticSearchStarScoreDESC(model, condition);     // 별점 높은순
+            case "ReviewDESC"     -> storeService.elasticSearchReviewDESC(model, condition);        // 리뷰 많은순
+            case "StarScore"      -> storeService.elasticSearchStarScore(model, condition);         // 별점 4점 이상
+            case "Review"         -> storeService.elasticSearchReview(model, condition);            // 리뷰 1000개 이상
+            default               -> storeService.elasticSearch(model, condition);                  // 검색어로만 검색할때
         }
         return "index";
     }
