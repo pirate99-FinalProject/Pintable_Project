@@ -30,12 +30,6 @@ public class WaitingController {
         return waitingService.getMyTurn(storeId, requestDto);
     }
 
-    @GetMapping("/waitingList/{storeId}")
-    public List<WaitingResponseDto> getListWaiters(@PathVariable Long storeId) {
-
-        return waitingService.getListWaiters(storeId);
-    }
-
     @GetMapping("/waitingList/{storeId}/{waitingId}")
     public WaitingResponseDto getWaiter(@PathVariable Long storeId, @PathVariable Long waitingId) {
 
