@@ -71,6 +71,10 @@ dependencies {
 
     // Spring Batch
     implementation 'org.springframework.boot:spring-boot-starter-batch'
+
+    // Elastic Search
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
 }
 
 tasks.named('test') {

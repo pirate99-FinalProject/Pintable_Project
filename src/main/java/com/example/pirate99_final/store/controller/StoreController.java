@@ -3,9 +3,11 @@ package com.example.pirate99_final.store.controller;
 
 import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.review.dto.ReviewRequestDto;
+import com.example.pirate99_final.store.config.SearchCondition;
 import com.example.pirate99_final.store.dto.*;
 import com.example.pirate99_final.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,9 +65,15 @@ public class StoreController {
         return storeService.limitWaitingCnt(storeId, requestDto);
     }
 
-
     @GetMapping("/storeAdmin/{storeId}")
     public StoreResponseDto getStoreAdminInfo(@PathVariable Long storeId) {
         return storeService.getStoreAdminInfo(storeId);
     }
+
+//    // DB select all
+//    @GetMapping("/testStatus")
+//    public List<ESStoreResponseDto> getTest(SearchCondition condition) {
+//        return storeService.elasticSearch(condition);
+//    }
+
 }

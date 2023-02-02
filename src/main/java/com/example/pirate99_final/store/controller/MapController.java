@@ -37,13 +37,30 @@ public class MapController {
 //        return "index";
 //    }
 
-    // 동적 쿼리
-    @GetMapping("/api/search/{ }")
-    public String DynamicSQL(Model model, HttpServletRequest request, SearchCondition condition) {
+//    // DynamicSQL + full-text index
+//    @GetMapping("/api/search/{condition}")
+//    public String DynamicSQL(Model model, HttpServletRequest request, SearchCondition condition) {
+//        String uri = request.getRequestURI();
+//        String select = uri.substring(12);
+//        select = select.replace("/", "");                                                             // url 정보 저장
+//        storeService.DynamicSQL(model, condition, select);
+//        return "index";
+//    }
+
+    // ElasticSearch
+    @GetMapping("/api/search/{condition}")
+    public String ElasticSearch(Model model, HttpServletRequest request, SearchCondition condition) {
         String uri = request.getRequestURI();
         String select = uri.substring(12);
         select = select.replace("/", "");                                                             // url 정보 저장
-        storeService.DynamicSQL(model, condition, select);
+
+        if (select.equals("StarScore") || select.equals("ReviewCnt")) {
+            storeService.elasticSearchBetween(model, condition, select);
+        } else if (select.equals("StarScoreDESC") || select.equals("ReviewCntDESC")) {
+            storeService.elasticSearchDESC(model, condition, select);
+        } else {
+            storeService.elasticSearch(model, condition);
+        }
         return "index";
     }
 
