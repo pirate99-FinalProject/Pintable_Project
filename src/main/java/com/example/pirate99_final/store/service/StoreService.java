@@ -350,9 +350,7 @@ public class StoreService {
         model.addAttribute("searchList", DynamicSQL);
     }
 
-
     public void elasticSearch(Model model, SearchCondition condition) {
-
         if (!(StringUtils.isEmpty(condition.getStoreName()))) {
             List<StoreDocument> storeDocument =
                     storeSearchRepository.findTop10ByStoreName(condition.getStoreName());
@@ -360,7 +358,10 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
             model.addAttribute("searchList", listESStoreResponseDto);
@@ -372,7 +373,10 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
             model.addAttribute("searchList", listESStoreResponseDto);
@@ -384,190 +388,215 @@ public class StoreService {
             List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
             for (StoreDocument storeDocumentObject : storeDocument) {
-                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
             model.addAttribute("searchList", listESStoreResponseDto);
         }
     }
-    public void elasticSearchBetween(Model model, SearchCondition condition, String select) {
+    public void elasticSearchStarScore(Model model, SearchCondition condition) {
+        double min = 4;
+        double max = 5;
 
         if (!(StringUtils.isEmpty(condition.getStoreName()))) {
-            if (select.equals("StarScore")) {
-                double min = 4;
-                double max = 5;
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByStoreNameAndStarScoreBetween(condition.getStoreName(), min, max);
 
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByStoreNameAndStarScoreBetween(condition.getStoreName(),min, max);
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
-
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
-            }else {
-                int min = 1000;
-                int max = 100000;
-
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByStoreNameAndReviewCntBetween(condition.getStoreName(),min, max);
-
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
-
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
+            model.addAttribute("searchList", listESStoreResponseDto);
         }
 
         if (!(StringUtils.isEmpty(condition.getRoadNameAddress()))) {
-            if (select.equals("StarScore")) {
-                double min = 4;
-                double max = 5;
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByRoadNameAddressAndStarScoreBetween(condition.getRoadNameAddress(), min, max);
 
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByRoadNameAddressAndStarScoreBetween(condition.getStoreName(),min, max);
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
-
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
-            }else {
-                int min = 1000;
-                int max = 100000;
-
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByRoadNameAddressAndReviewCntBetween(condition.getStoreName(),min, max);
-
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
-
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
         }
 
         if (!(StringUtils.isEmpty(condition.getTypeOfBusiness()))) {
-            if (select.equals("StarScore")) {
-                double min = 4;
-                double max = 5;
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByTypeOfBusinessAndStarScoreBetween(condition.getTypeOfBusiness(), min, max);
 
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByTypeOfBusinessAndStarScoreBetween(condition.getStoreName(),min, max);
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
-
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
-            }else {
-                int min = 1000;
-                int max = 100000;
-
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByTypeOfBusinessAndReviewCntBetween(condition.getStoreName(),min, max);
-
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
-
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
         }
     }
-    public void elasticSearchDESC(Model model, SearchCondition condition, String select) {
+    public void elasticSearchReview(Model model, SearchCondition condition) {
+        int min = 4;
+        int max = 5;
+
         if (!(StringUtils.isEmpty(condition.getStoreName()))) {
-            if (select.equals("StarScoreDESC")) {
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByStoreNameOrderByStarScoreDesc(condition.getStoreName());
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByStoreNameAndReviewCntBetween(condition.getStoreName(), min, max);
 
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
-            }else {
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByStoreNameOrderByReviewCntDesc(condition.getStoreName());
-
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
-
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
         }
 
         if (!(StringUtils.isEmpty(condition.getRoadNameAddress()))) {
-            if (select.equals("StarScoreDESC")) {
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByRoadNameAddressOrderByStarScoreDesc(condition.getRoadNameAddress());
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByRoadNameAddressAndReviewCntBetween(condition.getRoadNameAddress(), min, max);
 
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
-            }else {
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByRoadNameAddressOrderByReviewCntDesc(condition.getRoadNameAddress());
-
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
-
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
+            model.addAttribute("searchList", listESStoreResponseDto);
         }
 
         if (!(StringUtils.isEmpty(condition.getTypeOfBusiness()))) {
-            if (select.equals("StarScoreDESC")) {
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByTypeOfBusinessOrderByStarScoreDesc(condition.getTypeOfBusiness());
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByTypeOfBusinessAndReviewCntBetween(condition.getTypeOfBusiness(), min, max);
 
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
 
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
-            }else {
-                List<StoreDocument> storeDocument =
-                        storeSearchRepository.findTop10ByTypeOfBusinessOrderByReviewCntDesc(condition.getTypeOfBusiness());
-
-                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
-
-                for (StoreDocument storeDocumentObject : storeDocument) {
-                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
-                }
-
-                model.addAttribute("searchList", listESStoreResponseDto);
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
             }
 
+            model.addAttribute("searchList", listESStoreResponseDto);
+        }
+    }
+    public void elasticSearchStarScoreDESC(Model model, SearchCondition condition) {
+        if (!(StringUtils.isEmpty(condition.getStoreName()))) {
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByStoreNameOrderByStarScoreDesc(condition.getStoreName());
+
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
+            }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
+        }
+
+        if (!(StringUtils.isEmpty(condition.getRoadNameAddress()))) {
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByRoadNameAddressOrderByStarScoreDesc(condition.getRoadNameAddress());
+
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
+            }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
+        }
+
+        if (!(StringUtils.isEmpty(condition.getTypeOfBusiness()))) {
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByTypeOfBusinessOrderByStarScoreDesc(condition.getTypeOfBusiness());
+
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
+            }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
+        }
+    }
+    public void elasticSearchReviewDESC(Model model, SearchCondition condition) {
+        if (!(StringUtils.isEmpty(condition.getStoreName()))) {
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByStoreNameOrderByReviewCntDesc(condition.getStoreName());
+
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
+            }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
+        }
+
+        if (!(StringUtils.isEmpty(condition.getRoadNameAddress()))) {
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByRoadNameAddressOrderByReviewCntDesc(condition.getRoadNameAddress());
+
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
+            }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
+        }
+
+        if (!(StringUtils.isEmpty(condition.getTypeOfBusiness()))) {
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByTypeOfBusinessOrderByReviewCntDesc(condition.getTypeOfBusiness());
+
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                StoreStatus storeStatus = storeStatusRepository.findById(storeDocumentObject.getStore_id()).orElseThrow(() ->
+                        new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+                );
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject, storeStatus));
+            }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
         }
     }
 

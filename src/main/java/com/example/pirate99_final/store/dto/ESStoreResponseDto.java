@@ -1,6 +1,7 @@
 package com.example.pirate99_final.store.dto;
 
 import com.example.pirate99_final.store.entity.StoreDocument;
+import com.example.pirate99_final.store.entity.StoreStatus;
 import lombok.Getter;
 
 @Getter
@@ -18,7 +19,7 @@ public class ESStoreResponseDto {
     private int     waitingCnt;         // 웨이팅 숫자
     private String  limitWaitingCnt;    // 웨이팅 제한
 
-    public ESStoreResponseDto(StoreDocument storeDocument) {
+    public ESStoreResponseDto(StoreDocument storeDocument, StoreStatus storeStatus) {
         this.storeId         = storeDocument.getStore_id();
         this.address         = storeDocument.getAddress();
         this.roadNameAddress = storeDocument.getRoadNameAddress();
@@ -29,7 +30,10 @@ public class ESStoreResponseDto {
         this.ycoordinate     = storeDocument.getY_coordinate();
         this.starScore       = storeDocument.getStarScore();
         this.reviewCnt       = storeDocument.getReviewCnt();
-        this.waitingCnt      = 0;
-        this.limitWaitingCnt = "test";
+        this.waitingCnt      = storeStatus.getWaitingCnt();
+        if (storeStatus.getLimitWaitingCnt() == 1000) {
+            this.limitWaitingCnt = "-";
+        } else
+            this.limitWaitingCnt = Integer.toString(storeStatus.getLimitWaitingCnt());
     }
 }
