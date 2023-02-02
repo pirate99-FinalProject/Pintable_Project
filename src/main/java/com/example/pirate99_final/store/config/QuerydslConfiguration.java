@@ -1,5 +1,6 @@
 package com.example.pirate99_final.store.config;
 
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,4 +17,5 @@ public class QuerydslConfiguration {
     public JPAQueryFactory jpaQueryFactory() {
         return new JPAQueryFactory(entityManager);
     }
+
 }

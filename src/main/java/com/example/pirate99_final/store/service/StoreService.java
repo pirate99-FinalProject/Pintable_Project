@@ -11,14 +11,14 @@ import com.example.pirate99_final.store.dto.StoreRequestDto;
 import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
 import com.example.pirate99_final.store.dto.*;
 import com.example.pirate99_final.store.entity.Store;
+import com.example.pirate99_final.store.entity.StoreDocument;
 import com.example.pirate99_final.store.entity.StoreStatus;
-import com.example.pirate99_final.store.repository.StoreRepositoryImpl;
-import com.example.pirate99_final.store.repository.StoreRepository;
-import com.example.pirate99_final.store.repository.StoreStatusRepository;
+import com.example.pirate99_final.store.repository.*;
 import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.user.repository.UserRepository;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
+import io.micrometer.core.instrument.search.Search;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.redisson.api.RLock;
@@ -28,6 +28,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,9 @@ public class StoreService {
     private final JavaMailSender emailSender;                                 // email sender
 
     private final RedissonClient redissonClient;
+
+//    private final StoreSearchRepositoryImpl storeSearchRepositoryImpl;
+    private final StoreSearchRepository storeSearchRepository;
 
 
 
@@ -342,13 +346,231 @@ public class StoreService {
 
 
     public void DynamicSQL(Model model, SearchCondition condition, String select) {
-
         List<QuerydslDto> DynamicSQL = storeRepositoryImpl.DynamicSQL(condition, select);
-
-
         model.addAttribute("searchList", DynamicSQL);
-
     }
+
+
+    public void elasticSearch(Model model, SearchCondition condition) {
+
+        if (!(StringUtils.isEmpty(condition.getStoreName()))) {
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByStoreName(condition.getStoreName());
+
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+            }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
+        }
+        if (!(StringUtils.isEmpty(condition.getRoadNameAddress()))) {
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByRoadNameAddress(condition.getRoadNameAddress());
+
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+            }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
+        }
+        if (!(StringUtils.isEmpty(condition.getTypeOfBusiness()))) {
+            List<StoreDocument> storeDocument =
+                    storeSearchRepository.findTop10ByTypeOfBusiness(condition.getTypeOfBusiness());
+
+            List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+            for (StoreDocument storeDocumentObject : storeDocument) {
+                listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+            }
+
+            model.addAttribute("searchList", listESStoreResponseDto);
+        }
+    }
+    public void elasticSearchBetween(Model model, SearchCondition condition, String select) {
+
+        if (!(StringUtils.isEmpty(condition.getStoreName()))) {
+            if (select.equals("StarScore")) {
+                double min = 4;
+                double max = 5;
+
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByStoreNameAndStarScoreBetween(condition.getStoreName(),min, max);
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }else {
+                int min = 1000;
+                int max = 100000;
+
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByStoreNameAndReviewCntBetween(condition.getStoreName(),min, max);
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }
+
+        }
+
+        if (!(StringUtils.isEmpty(condition.getRoadNameAddress()))) {
+            if (select.equals("StarScore")) {
+                double min = 4;
+                double max = 5;
+
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByRoadNameAddressAndStarScoreBetween(condition.getStoreName(),min, max);
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }else {
+                int min = 1000;
+                int max = 100000;
+
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByRoadNameAddressAndReviewCntBetween(condition.getStoreName(),min, max);
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }
+        }
+
+        if (!(StringUtils.isEmpty(condition.getTypeOfBusiness()))) {
+            if (select.equals("StarScore")) {
+                double min = 4;
+                double max = 5;
+
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByTypeOfBusinessAndStarScoreBetween(condition.getStoreName(),min, max);
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }else {
+                int min = 1000;
+                int max = 100000;
+
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByTypeOfBusinessAndReviewCntBetween(condition.getStoreName(),min, max);
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }
+        }
+    }
+    public void elasticSearchDESC(Model model, SearchCondition condition, String select) {
+        if (!(StringUtils.isEmpty(condition.getStoreName()))) {
+            if (select.equals("StarScoreDESC")) {
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByStoreNameOrderByStarScoreDesc(condition.getStoreName());
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }else {
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByStoreNameOrderByReviewCntDesc(condition.getStoreName());
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }
+        }
+
+        if (!(StringUtils.isEmpty(condition.getRoadNameAddress()))) {
+            if (select.equals("StarScoreDESC")) {
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByRoadNameAddressOrderByStarScoreDesc(condition.getRoadNameAddress());
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }else {
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByRoadNameAddressOrderByReviewCntDesc(condition.getRoadNameAddress());
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }
+
+        }
+
+        if (!(StringUtils.isEmpty(condition.getTypeOfBusiness()))) {
+            if (select.equals("StarScoreDESC")) {
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByTypeOfBusinessOrderByStarScoreDesc(condition.getTypeOfBusiness());
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }else {
+                List<StoreDocument> storeDocument =
+                        storeSearchRepository.findTop10ByTypeOfBusinessOrderByReviewCntDesc(condition.getTypeOfBusiness());
+
+                List<ESStoreResponseDto> listESStoreResponseDto = new ArrayList<>();
+
+                for (StoreDocument storeDocumentObject : storeDocument) {
+                    listESStoreResponseDto.add(new ESStoreResponseDto(storeDocumentObject));
+                }
+
+                model.addAttribute("searchList", listESStoreResponseDto);
+            }
+
+        }
+    }
+
 
     public StoreResponseDto getStoreAdminInfo(Long storeId) {
 
