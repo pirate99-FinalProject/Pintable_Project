@@ -58,7 +58,7 @@ public class WaitingService {
                             new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
                     );
                     // 스토어 스테이터스 찾기
-                    StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+                    StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeId);
 
                     // 유저 찾기
                     User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
@@ -66,7 +66,7 @@ public class WaitingService {
                             () -> new IllegalArgumentException("유저를 찾을 수 없습니다.")
                     );
                     // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
-                    Optional<Waiting> alreadyQueue = waitingRepository.alreadyQueue(0, 1, user.getUserId(), store.getStoreId());
+                    Optional<Waiting> alreadyQueue = waitingRepository.alreadyQueue(0, 1, user.getUserId(), storeStatus.getStoreStatusId());
 
                     // 종업원이 설정한 대기인원 제한설정 값 보다 현재 대기인원이 적은 경우만 대기자 등록이 가능하게끔 설정
                     if (storeStatus.getWaitingCnt() < storeStatus.getLimitWaitingCnt()) {
@@ -98,27 +98,6 @@ public class WaitingService {
         return null;
     }
 
-    @Transactional
-    public List<WaitingResponseDto> getListWaiters(Long storeId) {                                                      // 대기 인원 리스트 불러오기
-        // 스토어 찾기 (storeId)
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
-
-        // 스토어 스테이터스 찾기
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
-
-        // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
-        List<Waiting> waitingList = waitingRepository.findAllByWaitingStatusOrWaitingStatus(0, 1);
-
-        List<WaitingResponseDto> waitingResponseDto = new ArrayList<>();
-
-        // 위에서 만든 리스트에 값을 담는 작업
-        for (Waiting waiting : waitingList) {
-            waitingResponseDto.add(new WaitingResponseDto(waiting));
-        }
-        return waitingResponseDto;
-    }
 
     @Transactional
     public MyTurnResponseDto getMyTurn(Long storeId, WaitingRequestDto requestDto) {                                    // 대기 인원 중 자신의 차례 조회
@@ -184,6 +163,7 @@ public class WaitingService {
         );
 
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+
 
         // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
         List<Waiting> waitingList = waitingRepository.findAllByStoreStatusOrderByWaitingIdAsc(storeStatus);
