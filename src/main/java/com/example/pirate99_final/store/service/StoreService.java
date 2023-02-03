@@ -28,8 +28,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.util.StringUtils;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +60,7 @@ public class StoreService {
 //    private final StoreSearchRepositoryImpl storeSearchRepositoryImpl;
     private final StoreSearchRepository storeSearchRepository;
 
+    private final SpringTemplateEngine templateEngine;
 
 
     // Store Create function
@@ -250,7 +255,7 @@ public class StoreService {
 
     // call people
     @Transactional
-    public MsgResponseDto callpeople(Long storeId, ConfirmRequestDto requestDto) {
+    public MsgResponseDto callpeople(Long storeId, ConfirmRequestDto requestDto) throws MessagingException {
         // 1. find store
         Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
@@ -267,19 +272,39 @@ public class StoreService {
         Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
         waiting.update(1);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("pintable99@gmail.com");
-        message.setTo(user.getAddress());
-        message.setSubject(store.getStoreName() + " 대기 호출");
-        message.setText(store.getStoreName() + "에 대기해주신 고객님 감사합니다. 입장 부탁드립니다.");
-        emailSender.send(message);
+        String toEmail = user.getAddress();
+        String storeName = store.getStoreName();
+        String title = "Pin Table 입장안내 [" + storeName + "] 대기 호출";
+        String mailForm = "mailForm_call";
 
+        MimeMessage emailForm = createEmailForm(toEmail, title, mailForm);
+        emailSender.send(emailForm);
         return new MsgResponseDto(SuccessCode.CALL_PEOPLE);
+    }
+
+    private MimeMessage createEmailForm(String sendmail, String mailTitle, String mailForm) throws MessagingException {
+
+        String setFrom = "pintable99@gmail.com";                                                                        // application-properties에 설정된 보내는 메일 주소 이름
+        String toEmail = sendmail;                                                                                      // 수신인
+        String title = mailTitle;                                                                                       // 제목
+
+        MimeMessage message = emailSender.createMimeMessage();                                                          // JavaMailSender를 이용한 이메일 작성
+        message.addRecipients(MimeMessage.RecipientType.TO, toEmail); //보낼 이메일 설정
+        message.setSubject(title);
+        message.setFrom(setFrom);
+        message.setText(setContext(mailForm), "utf-8", "html");
+
+        return message;
+    }
+
+    private String setContext(String mailform) {
+        Context context = new Context();
+        return templateEngine.process(mailform, context); //mail.html
     }
 
     //Limit Waiting Count 최대 예약팀 설정
     @Transactional
-    public MsgResponseDto limitWaitingCnt(Long storeId, LimitWaitingCntRequestDto requestDto) {
+    public MsgResponseDto limitWaitingCnt(Long storeId, LimitWaitingCntRequestDto requestDto) throws MessagingException {
 
         int totalWaitingCnt, limitWaitingCnt = 0;
 
@@ -315,12 +340,14 @@ public class StoreService {
 
             for (int i = limitWaitingCnt; i < storeStatus.getWaitingCnt(); i++) {
 
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setFrom("pintable99@gmail.com");
-                message.setTo(waitingList.get(i).getUser().getAddress());
-                message.setSubject(store.getStoreName() + " 안내 이메일");
-                message.setText(store.getStoreName() + "에 대기해주신 고객님 감사합니다. 금일 점포 사정으로 서비스를 제공해드리기가 어렵습니다.");
-                emailSender.send(message);
+                String toEmail = waitingList.get(i).getUser().getAddress();
+                String storeName = store.getStoreName();
+                String title = "Pin Table [" + storeName + "] 웨이팅 취소 안내";
+                String mailForm = "mailForm_cancle";
+
+                MimeMessage emailForm = createEmailForm(toEmail, title, mailForm);
+                emailSender.send(emailForm);
+
             return new MsgResponseDto(CONFIRM_ENTER);
 
 

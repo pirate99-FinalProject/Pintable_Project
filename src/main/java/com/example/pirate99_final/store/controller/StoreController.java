@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @RestController
@@ -51,7 +52,7 @@ public class StoreController {
     }
 
     @PutMapping("/storeStatus/call/{storeId}")
-    public MsgResponseDto callpeople(@PathVariable Long storeId, @RequestBody ConfirmRequestDto requestDto){
+    public MsgResponseDto callpeople(@PathVariable Long storeId, @RequestBody ConfirmRequestDto requestDto) throws MessagingException {
         return storeService.callpeople(storeId, requestDto);
     }
 
@@ -61,7 +62,7 @@ public class StoreController {
     }
 
     @PutMapping("/storeStatus/limitWaitingCnt/{storeId}")
-    public MsgResponseDto limitWaitingCnt(@PathVariable Long storeId, @RequestBody LimitWaitingCntRequestDto requestDto){
+    public MsgResponseDto limitWaitingCnt(@PathVariable Long storeId, @RequestBody LimitWaitingCntRequestDto requestDto) throws MessagingException {
         return storeService.limitWaitingCnt(storeId, requestDto);
     }
 
