@@ -20,7 +20,7 @@ public class ESStoreResponseDto {
     private String  limitWaitingCnt;    // 웨이팅 제한
 
     public ESStoreResponseDto(StoreDocument storeDocument, StoreStatus storeStatus) {
-        this.storeId         = storeDocument.getStore_id();
+        this.storeId         = storeDocument.getId();
         this.address         = storeDocument.getAddress();
         this.roadNameAddress = storeDocument.getRoadNameAddress();
         this.postNumber      = storeDocument.getPost_number();
