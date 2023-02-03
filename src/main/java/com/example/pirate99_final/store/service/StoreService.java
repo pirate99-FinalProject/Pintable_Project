@@ -438,8 +438,8 @@ public class StoreService {
         }
     }
     public void elasticSearchReview(Model model, SearchCondition condition) {
-        int min = 4;
-        int max = 5;
+        int min = 1000;
+        int max = 100000;
 
         if (!(StringUtils.isEmpty(condition.getStoreName()))) {
             List<StoreDocument> storeDocument =
