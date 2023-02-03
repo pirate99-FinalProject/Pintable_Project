@@ -17,17 +17,17 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 //@Entity
-@Document(indexName = "es-test-store-v2")
+@Document(indexName = "es-test-store-v3.0.2")
 @Mapping(mappingPath = "elastic/store-mapping.json")
 @Setting(settingPath = "elastic/store-setting.json")
 public class StoreDocument extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    private String id;
+    @Column(name = "store_id", nullable = false)
+    private Long id;
 
-    private Long store_id;                                              // 가게 ID
+//    private Long store_id;                                              // 가게 ID
 
     private String address;                                             // 주소
 
