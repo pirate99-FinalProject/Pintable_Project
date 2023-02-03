@@ -49,7 +49,6 @@ public class WaitingService {
 
         try {
             boolean isLocked = lock.tryLock(60000, 60000, TimeUnit.MILLISECONDS);
-            System.out.println("락건다");
 
             if (isLocked) {
                 try {
@@ -89,7 +88,6 @@ public class WaitingService {
 
                 } finally {
                     lock.unlock();
-                    System.out.println("언락");
                 }
             }
         } catch (Exception e) {

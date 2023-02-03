@@ -5,17 +5,19 @@ import lombok.Getter;
 @Getter
 public class CustomException extends RuntimeException{
 
-    private int statusCode;
-    private String msg;
+    private String msg;                                             // 안내 문구
+    private int statusCode;                                         // 상태 코드
 
+
+    //Constructor
     public CustomException(ErrorCode errorCode) {
-        this.statusCode = errorCode.getHttpStatus().value();
-        this.msg = errorCode.getMessage();
+        this.msg            =   errorCode.getMessage();             // 안내 문구
+        this.statusCode     =   errorCode.getHttpStatus().value();  // 상태 코드
     }
 
     public CustomException(int statusCode, String msg) {
-        this.statusCode = statusCode;
-        this.msg = msg;
+        this.msg            =   msg;                                // 안내 문구
+        this.statusCode     =   statusCode;                         // 상태 코드
     }
 
 }
