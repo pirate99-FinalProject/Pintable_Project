@@ -15,7 +15,6 @@ public class StoreResponseDto {
 
 
     public StoreResponseDto(Store store, int numberOfTeamsWaiting, int numberOfCustomersInUse) {
-
         this.storeName = store.getStoreName();
         this.numberOfTeamsWaiting = numberOfTeamsWaiting;
         this.numberOfCustomersInUse = numberOfCustomersInUse;

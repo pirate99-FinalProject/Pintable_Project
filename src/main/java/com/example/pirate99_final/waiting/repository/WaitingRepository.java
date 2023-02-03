@@ -16,15 +16,12 @@ import java.util.Optional;
 public interface WaitingRepository  extends JpaRepository<Waiting, Long> {
 
     Waiting findByWaitingId(Long waitingId);
-
-    List<Waiting> findAllByWaitingStatusOrWaitingStatus(int waitingStatus, int waitingStatus2);
-
     List<Waiting> findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(StoreStatus storeStatus, int waitingStatus, int waitingStatus2 );
 
     Waiting findByStoreStatusAndUser(StoreStatus storestatus, User user);
 
-    @Query(value = "select *from waiting where (waiting_status = :waitingStatus1 or waiting_status = :waitingStatus2) and store_status_id = :storeId and user_id = :userId", nativeQuery = true)
-    Optional<Waiting> alreadyQueue(int waitingStatus1, int waitingStatus2, Long userId, Long storeId);
+    @Query(value = "select *from waiting where (waiting_status = :waitingStatus1 or waiting_status = :waitingStatus2) and store_status_id = :storeStatusId and user_id = :userId", nativeQuery = true)
+    Optional<Waiting> alreadyQueue(int waitingStatus1, int waitingStatus2, Long userId, Long storeStatusId);
 
     List<Waiting> findAllByStoreStatusOrderByWaitingIdAsc(StoreStatus storeStatus);
 }

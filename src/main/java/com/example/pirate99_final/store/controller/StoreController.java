@@ -70,11 +70,4 @@ public class StoreController {
     public StoreResponseDto getStoreAdminInfo(@PathVariable Long storeId) {
         return storeService.getStoreAdminInfo(storeId);
     }
-
-//    // DB select all
-//    @GetMapping("/testStatus")
-//    public List<ESStoreResponseDto> getTest(SearchCondition condition) {
-//        return storeService.elasticSearch(condition);
-//    }
-
 }

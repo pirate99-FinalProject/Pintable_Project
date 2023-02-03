@@ -15,28 +15,25 @@ public class MsgResponseDto {
     private String msg;
 
     public MsgResponseDto(SuccessCode successCode) {
-        this.msg = successCode.getMessage();
-        this.statusCode = successCode.getHttpStatus().value();
+        this.msg        =   successCode.getMessage();
+        this.statusCode =   successCode.getHttpStatus().value();
     }
 
     public MsgResponseDto(int statusCode, String msg) {
-        this.msg = msg;
-        this.statusCode = statusCode;
+        this.msg        =   msg;
+        this.statusCode =   statusCode;
     }
 
     public MsgResponseDto(CustomException customException) {
-
-        this.statusCode = customException.getStatusCode();
-
-        this.msg = customException.getMsg();
+        this.msg        =   customException.getMsg();
+        this.statusCode =   customException.getStatusCode();
     }
     public MsgResponseDto(MethodArgumentNotValidException ex) {
-        this.msg = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        this.statusCode = HttpStatus.BAD_REQUEST.value();
+        this.msg        =   ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        this.statusCode =   HttpStatus.BAD_REQUEST.value();
     }
     public MsgResponseDto(ErrorCode errorCode) {
-        this.statusCode = errorCode.getHttpStatus().value();
-        this.msg = errorCode.getMessage();
+        this.msg        =   errorCode.getMessage();
+        this.statusCode =   errorCode.getHttpStatus().value();
     }
-
 }
