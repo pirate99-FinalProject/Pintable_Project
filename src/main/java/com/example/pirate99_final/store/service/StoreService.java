@@ -55,9 +55,6 @@ public class StoreService {
     private final StoreRepositoryImpl storeRepositoryImpl;                                                              // query Dsl Repository 의존성 주입
     private final JavaMailSender emailSender;                                 // email sender
 
-    private final RedissonClient redissonClient;
-
-//    private final StoreSearchRepositoryImpl storeSearchRepositoryImpl;
     private final StoreSearchRepository storeSearchRepository;
 
     private final SpringTemplateEngine templateEngine;
@@ -117,58 +114,7 @@ public class StoreService {
         return new MsgResponseDto(DELETE_STORE);
     }
 
-
-
-//    public MsgResponseDto enterStore(Long storeId) {        // need to update
-//        RLock lock = redissonClient.getLock("key 이름");
-//        int availableCnt   =   0;                                                       // 이용 가능 좌석
-//
-//        try{
-//            boolean isLocked = lock.tryLock(10000,1000, TimeUnit.MILLISECONDS);
-//
-//
-//            if(isLocked) {
-//                try {
-//                    // 1. find store
-//                    Store store = storeRepository.findById(storeId).orElseThrow(()->
-//                            new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-//                    );
-//
-//
-//                    // 2. storeStatus check
-//                    StoreStatus storeStatus = storeStatusRepository.findByStore(store);
-//
-//
-//                    // 3. counting availableCnt
-//                    if((storeStatus.getAvailableTableCnt() - 1) > 0){
-//                        availableCnt = storeStatus.getAvailableTableCnt() - 1;
-//                    }
-//                    else if(storeStatus.getAvailableTableCnt() == 0){
-//                        return new MsgResponseDto(SuccessCode.NOT_ENOUGH_TABLE);          // 해당 부분 수정 필요
-//                    }
-//
-//
-//                    // 4. update storeStatus
-//                    storeStatus.update(availableCnt);
-//                    storeStatusRepository.save(storeStatus);
-//
-//
-//                    return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
-//                }catch(Exception e){
-//
-//                }finally{
-//                    lock.unlock();
-//                }
-//
-//            }
-//        }catch(Exception e){
-//            Thread.currentThread().interrupt();
-//        }
-//
-//        return null;
-//    }
-
-    synchronized public MsgResponseDto enterStore(Long storeId) {        // need to update
+     public MsgResponseDto enterStore(Long storeId) {        // need to update
         int availableCnt   =   0;                                                       // 이용 가능 좌석
 
         // 1. find store
@@ -363,13 +309,6 @@ public class StoreService {
         List<Store> naverList = storeRepository.searchCurrent(latitude, longitude, storeName);                           // 1. 입력받은 위도, 경도, 가게 이름으로 DB에 검사한다.
         model.addAttribute("searchList", naverList);                                                         // 2. index.html에 검색한 결과 전달
     }
-
-//    // 기능 : 지도 검색 기능
-//    public void searchMap(Model model, String storeName) {
-//        String storeNameTrim = storeName.replaceAll(" ", "");                                            // 1. 검색 시 키워드 검색을 위한 문자 치환(" ", "")
-//        List<Store> naverList = storeRepository.findByStoreNameContaining(storeNameTrim);                                // 2. %Like% 로 장소 검색
-//        model.addAttribute("searchList", naverList);                                                         // 3. index.html에 검색한 결과 전달
-//}
 
 
     public void DynamicSQL(Model model, SearchCondition condition, String select) {
