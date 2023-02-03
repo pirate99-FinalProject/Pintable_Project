@@ -26,8 +26,11 @@ function clearMenu(){
 }
 
 function handleSearch() {
-    const query = document.querySelector('.form-control').value;
-    window.location = "/api/searchLocation?storeName=" + query;
+    let query = document.querySelector('.form-control').value;
+    let url = document.getElementById("category");
+    let value = (category.options[url.selectedIndex].value);
+    // window.location = "/api/searchLocation?storeName=" + query;
+    window.location = value + query;
 }
 
 
@@ -45,12 +48,14 @@ function onError() {
 // 웨이팅 요청 기능 숨기기
 function waiting() {
     const requestWaiting = document.getElementById('signin');
+    const emailcheck = document.getElementById('emailcheck');
 
     if (requestWaiting.style.display !== 'none') {
         requestWaiting.style.display = 'none';
     } else {
         clearMenu();
         requestWaiting.style.display = 'block';
+        emailcheck.style.display = 'none';
     }
 }
 
@@ -78,6 +83,14 @@ function review() {
     }
 }
 
+// function code() {
+//     const emailsend = document.getElementById('emailsend');
+//
+//     if (emailsend.style.display !== 'none') {
+//         emailsend.style.display = 'none';
+//     }
+// }
+
 // 회원가입 기능
 function signIn() {
     let username = document.querySelector('.userId').value;
@@ -85,12 +98,11 @@ function signIn() {
     let email = document.querySelector('.email').value;
     const api = '/api/signup';
 
-    if(isCertification == true) {
         axios({
             method: "post",
             url: baseUrl + api,
             data: JSON.stringify(
-                {username: username, password: password, email:email }
+                {username: username, password: password, email: email}
             ),
             headers: {
                 "Content-Type": "application/json; charset=utf-8"
@@ -99,18 +111,11 @@ function signIn() {
             .then(function (response) {
                 console.log("");
                 console.log("RESPONSE : " + JSON.stringify(response.data));
-                alert("로그인 성공, confirm 버튼을 눌러주세요!")
+                alert("로그인 성공, 요청 버튼을 눌러서 이메일 인증을 해주세요!")
             })
             .catch(function (error) {
-                console.log("");
-                console.log("ERROR : " + JSON.stringify(error));
-                console.log("");
+                alert("요청 버튼을 눌러서 이메일 인증을 해주세요!")
             });
-    } else {
-        alert("사용자 이메일 인증이 되지 않았습니다. 인증확인을 눌러주세요!")
-    }
-
-
 }
 
 // 웨이팅 등록 기능
@@ -119,6 +124,7 @@ function callWaiting() {
     let username = document.querySelector('.userId').value;                                                      // 사용자가 Input Box에 입력한 username값(=UserId)를 받아온다
     const api = '/api/waitingList/';
 
+    if(isCertification == true) {
     axios({
         method: "post",
         url: baseUrl + api + id,
@@ -143,6 +149,9 @@ function callWaiting() {
             console.log("ERROR : " + JSON.stringify(error));
             console.log("");
         });
+    } else {
+        alert("사용자 이메일 인증이 되지 않았습니다. 인증확인을 눌러주세요!")
+    }
 }
 
 // 내 웨이팅 현황 확인 기능
@@ -266,7 +275,11 @@ function sendMail() {
                 "Content-Type": "application/json; charset=utf-8"                                                       // responseType: "json" // [응답 데이터 : stream , json]
             },
         })
-            .then(function (response) {                                                                                 // 성공했을 때
+            .then(function (response) {
+                const emailsend = document.getElementById('emailsend');
+                emailsend.style.display = 'none';// 성공했을 때
+                const emailcheck = document.getElementById('emailcheck');
+                emailcheck.style.display = 'block';// 성공했을 때
                 alert("인증번호가 전송되었습니다. 메일을 확인해주세요!")
                 code = JSON.stringify(response.data);                                                                   // 이메일로 전송한 코드 저장
             })

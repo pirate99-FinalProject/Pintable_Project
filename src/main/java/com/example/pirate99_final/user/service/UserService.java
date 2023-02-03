@@ -132,8 +132,4 @@ public class UserService {
 
         return authNum;                                                                                                 //인증 코드 반환
     }
-
-
-
-
 }

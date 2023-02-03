@@ -73,20 +73,19 @@
                                 <option name="url" value="/api/search/ReviewDESC/?typeOfBusiness=">업종별 리뷰 많은순</option>
                             </optgroup>
                         </select>
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search" width="1200"
+                        <input id="searchInput" class="form-control" type="search" placeholder="Search" aria-label="Search" width="1200"
                                name="storeName">
 
-                        <script>
-                            function handleSearch() {
-                                let query = document.querySelector('.form-control').value;
-                                let url = document.getElementById("category");
-                                let value = (category.options[url.selectedIndex].value);
-                                // window.location = "/api/searchLocation?storeName=" + query;
-                                window.location = value + query;
-                            }
+                        <script th:inline="javascript">
+                            $("#searchInput").keydown(function(key) {
+                                if( key.keyCode == 13 ){
+                                    key.preventDefault();
+                                    handleSearch();
+                                }
+                            });
                         </script>
 
-                        <button type="button" class="btn btn-primary" onclick=handleSearch()>Search</button>
+                        <button type="button" class="btn btn-primary" id="searchBtn" onclick=handleSearch()>Search</button>
                         <button class="btn btn-primary" id="btn5" type="button">현위치</button>
                         <script th:inline="javascript">
                             let latitude = "", longitude = "";
@@ -189,20 +188,24 @@
                             <div class="input-box">
                                 <input class="email" type="email" placeholder="email" id="email1"
                                        style="height: 30px; width: 90px">
-                                <button type="button" id="emailsend"
-                                        style="color: white; background: black; padding: 5px; height: 25px; width: 40px"
-                                        onclick="sendMail();"> 요청
+                                <button type="button" class="btn2" id="loginbtn"
+                                        style="color: white; background: black; padding: 5px; height: 25px; width: 45px"
+                                        onclick="signIn()"> 로그인
                                 </button>
                             </div>
                             <div class="input-box">
                                 <input class="code" type="code" placeholder="code" style="height: 30px; width: 90px">
+                                <button type="button" id="emailsend"
+                                        style="color: white; background: black; padding: 5px; height: 25px; width: 40px"
+                                        onclick="sendMail();code()"> 요청
+                                </button>
                                 <button type="button" id="emailcheck"
                                         style="color: white; background: black; padding: 5px; height: 25px; width: 40px"
-                                        onclick="checkCode();"> 확인
+                                        onclick="checkCode()"> 확인
                                 </button>
                             </div>
                             <p></p>
-                            <button type="button" class="btn2" id="loginbtn" onclick="signIn()"> join</button>
+<!--                            <button type="button" class="btn2" id="loginbtn" onclick="signIn()"> join</button>-->
                             <button type="button" class="btn2" id="confirmbtn" onclick="callWaiting()"> cofirm</button>
                             <p></p>
                             <p>
