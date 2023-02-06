@@ -33,6 +33,8 @@ public enum ErrorCode {
     NOT_FOUND_REVIEW_ERROR(HttpStatus.OK, "해당하는 리뷰가 없습니다."),
 
     ALREADY_IN_QUEUE(HttpStatus.OK, "이미 대기열에 존재합니다."),
+
+    ALREADY_LEAVING(HttpStatus.OK, "이미 퇴장한 손님입니다."),
     LIMIT_QUEUE_EXCEEDED(HttpStatus.OK, "제한 대기열 초과");
 
 

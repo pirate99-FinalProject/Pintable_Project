@@ -42,8 +42,8 @@ public class StoreController {
 
 
     @PutMapping("/storeStatus/leave/{storeId}")
-    public MsgResponseDto leaveStore(@PathVariable Long storeId){
-        return storeService.leaveStore(storeId);
+    public MsgResponseDto leaveStore(@PathVariable Long storeId, @RequestBody LeaveRequestDto requestDto){
+        return storeService.leaveStore(storeId, requestDto);
     }
 
     @PutMapping("/storeStatus/call/{storeId}")

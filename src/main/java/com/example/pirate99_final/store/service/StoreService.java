@@ -132,7 +132,7 @@ public class StoreService {
 
     // Leave people from store
     @Transactional
-    public MsgResponseDto leaveStore(Long storeId) {
+    public MsgResponseDto leaveStore(Long storeId, LeaveRequestDto requestDto) {
         int availableCnt = 0;                                                       // 이용 가능 좌석
 
         // 1. find store
@@ -143,10 +143,20 @@ public class StoreService {
         // 2. storeStatus check
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-        availableCnt = storeStatus.getAvailableTableCnt() + 1;
+        // 3. User find
+        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
+        );
+        Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
 
-        // Leaving people check
-        storeStatus.update(availableCnt);
+        if (waiting.getWaitingStatus() == 2) {
+            waiting.update(4);
+
+            availableCnt = storeStatus.getAvailableTableCnt() + 1;
+            storeStatus.update(availableCnt);
+        } else {
+            return new MsgResponseDto(ErrorCode.ALREADY_LEAVING);
+        }
 
         return new MsgResponseDto(SuccessCode.CONFIRM_LEAVE);
     }
