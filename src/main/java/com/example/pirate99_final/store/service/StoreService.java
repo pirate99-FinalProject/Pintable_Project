@@ -264,7 +264,7 @@ public class StoreService {
 
         // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
         List<Waiting> waitingList = waitingRepository.
-                findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0, 1);
+                waitingList(0, 1, storeStatus.getStoreStatusId());
 
         // 점포에서 설정한 대기 인원 제한한 값을 점포 상태에 업데이트 함
         storeStatus.update_limitWaitingCnt(requestDto.getLimitWaitingCnt());
