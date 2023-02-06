@@ -24,12 +24,10 @@ function callpeople() {
         },
     })
         .then(function (response) {
-            // console.log("RESPONSE : " + JSON.stringify(response.data));
             alert("고객 호출 !")
             location.reload();
         })
         .catch(function (error) {
-            // console.log("ERROR : " + JSON.stringify(error));
         });
 }
 
