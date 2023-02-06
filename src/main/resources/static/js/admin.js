@@ -52,7 +52,7 @@ function EnterStatus() {
             const statusData = JSON.stringify(response.data);
             var status = JSON.parse(statusData);
 
-            if(Object.keys(status).length != 0){
+            if (Object.keys(status).length != 0) {
 
                 let rows = status;
 
@@ -66,15 +66,15 @@ function EnterStatus() {
                             <td class="tg-09md" id="idx">${waitingNum}</td>
                             <td class="tg-09md" id="username">${waitingUserName}</td>
                             <td class="tg-09md" id="waitingStatus">${waitingStatus}</td>
-                         <td class="tg-09md">
-                            <img id="callUser" src="/css/images/bell.png" width="48" onclick="callpeople()">
-                         </td>
-                         <td class="tg-09md">
-                            <img id="entranceUserCheck" src="/css/images/bell1.png" width="48" onclick="EnterConfirm()">
-                         </td>
-                         <td class="tg-09md">
-                            <img id="workoutUserCheck" src="/css/images/okButton.png" width="48" onclick="ExitConfirm()">
-                         </td>
+                            <td class="tg-09md">
+                                <img id="callUser" src="/css/images/bell.png" width="48" onclick="callpeople('${waitingUserName}')">
+                             </td>
+                             <td class="tg-09md">
+                                <img id="entranceUserCheck" src="/css/images/bell1.png" width="48" onclick="EnterConfirm('${waitingUserName}')">
+                             </td>
+                             <td class="tg-09md">
+                                <img id="workoutUserCheck" src="/css/images/okButton.png" width="48" onclick="ExitConfirm('${waitingUserName}')">
+                             </td>
                         </tr>`
                     $('#waitingList').append(temp_html)
                 }
@@ -112,18 +112,16 @@ function LimitSetup() {
 }
 
 // 입장 확인
-function EnterConfirm() {
+function EnterConfirm(waitingUserName) {
     var getId = localStorage.getItem("storeId");   //데이터를 key로 꺼냄
     const id = JSON.parse(getId);   //문자열을 객체(json)으로 변환
-    let username = document.querySelector('#username').innerHTML;
-
     const api = '/api/storeStatus/confirmEnter/' + id;
 
     axios({
         method: "put",
         url: baseUrl + api,
         data: JSON.stringify(
-            {username : username, waitingStatus : 1}
+            {username: waitingUserName, waitingStatus: 1}
         ),
         headers: {
             "Content-Type": "application/json; charset=utf-8"
@@ -138,7 +136,7 @@ function EnterConfirm() {
 }
 
 // 퇴장확인 API 연동
-function ExitConfirm(){
+function ExitConfirm(username) {
     var getId = localStorage.getItem("storeId");   //데이터를 key로 꺼냄
     const id = JSON.parse(getId);   //문자열을 객체(json)으로 변환
     const api = '/api/storeStatus/leave/' + id;
@@ -147,6 +145,7 @@ function ExitConfirm(){
         method: "put",
         url: baseUrl + api,
         data: JSON.stringify(
+            {username: username}
         ),
         headers: {
             "Content-Type": "application/json; charset=utf-8"
