@@ -1,5 +1,5 @@
-// const baseUrl = "https://pintable.co.kr";
-const baseUrl = "http://localhost:8080";
+const baseUrl = "https://pintable.co.kr";
+// const baseUrl = "http://localhost:8080";
 
 window.onload = function () {
     EnterStatus();
