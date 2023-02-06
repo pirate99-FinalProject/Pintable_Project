@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--대 소문자는 구분하지 않습니다.-->
+<configuration scan="true" scanPeriod="60 seconds">
+<!--property 는 설정파일에서 사용될 변수 값을 선언합니다.-->
+    <property name="LOGS_ABSOLUTE_PATH" value="./logs"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+
+        <layout class="ch.qos.logback.classic.PatternLayout">
+<!--해당 패턴 네이밍으로 현재 로그가 기록됩니다.-->
+            <Pattern>%gray[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %highlight([%-5level]) %logger{36} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+<!--파일 저장 경로를 설정합니다.-->
+        <file>./logs/info.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+<!--해당 레벨만 기록합니다.-->
+            <onMatch>ACCEPT</onMatch>
+<!--해당 레벨은 기록하지 않습니다. (상위레벨도 기록안함,  상위 수준의 레벨에 대한 기록을 원하면 ACCEPT 로 하면 기록됩니다.)-->
+            <onMismatch>DENY</onMismatch>
+        </filter> <!--레벨별 필터링이 필요없는 경우에는 filter class 를 지워도 됩니다.-->
+
+
+        <encoder>
+            <pattern>%gray[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %highlight([%-5level]) %logger{35} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+<!--해당 패턴 네이밍으로 이전 파일이 기록됩니다. .gz, .zip 등을 넣으면 자동 일자별 로그파일을 압축합니다.-->
+            <fileNamePattern>./was-logs/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+<!--파일의 최대 용량 설정입니다. kb, mb, gb-->
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+<!--파일의 최대 보관기한 설정입니다. 기한이 되면 자동으로 삭제됩니다.-->
+            <maxHistory>180</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="WARN_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+
+        <file>./logs/warn.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%gray[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %highlight([%-5level]) %logger{35} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./was-logs/warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>180</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+<!--root 는 전역 설정입니다.-->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+<!--logger 는 지역 설정입니다. additivity 는 root 값을 상속 여부를 설정합니다.-->
+    <logger name="LogController" additivity="false">
+        <level value = "DEBUG" />
+        <appender-ref ref="INFO_LOG" />
+        <appender-ref ref="WARN_LOG" />
+    </logger>
+
+    <logger name="org.hibernate.SQL" additivity="false">
+        <level value = "DEBUG" />
+        <appender-ref ref="INFO_LOG" />
+    </logger>
+
+</configuration>
