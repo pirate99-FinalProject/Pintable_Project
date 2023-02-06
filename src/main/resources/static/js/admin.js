@@ -7,10 +7,9 @@ window.onload = function () {
 }
 
 // 대기자 호출 기능
-function callpeople() {
+function callpeople(username) {
     var getId = localStorage.getItem("storeId");   //데이터를 key로 꺼냄
     const id = JSON.parse(getId);   //문자열을 객체(json)으로 변환
-    let username = document.querySelector('#username').innerHTML;
     const api = '/api/storeStatus/call/';
 
     axios({
@@ -30,7 +29,6 @@ function callpeople() {
         .catch(function (error) {
         });
 }
-
 // 입장 완료 여부 조회 API 연동 (음식점 대기자 리스트 전체)
 function EnterStatus() {
     var getId = localStorage.getItem("storeId");   //데이터를 key로 꺼냄
