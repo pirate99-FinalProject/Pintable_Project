@@ -215,7 +215,7 @@ public class StoreService {
                 new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
         );
 
-        Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
+        Waiting waiting = waitingRepository.queueing(storeStatus.getStoreStatusId(), user.getUserId());
         waiting.update(1);
 
         String toEmail = user.getAddress();
