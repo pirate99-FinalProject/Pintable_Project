@@ -11,9 +11,7 @@ import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-
 import static com.example.pirate99_final.store.entity.QStore.*;                                          // Qentity 선언
 import static com.example.pirate99_final.store.entity.QStoreStatus.*;                                    // Qentity 선언
 

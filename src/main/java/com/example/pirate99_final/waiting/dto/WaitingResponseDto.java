@@ -1,12 +1,8 @@
 package com.example.pirate99_final.waiting.dto;
 
-import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
-
-
 import java.time.LocalDateTime;
 
 @Getter

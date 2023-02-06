@@ -1,20 +1,14 @@
 package com.example.pirate99_final.user.controller;
 
-
 import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.global.exception.SuccessCode;
 import com.example.pirate99_final.user.dto.LoginRequestDto;
 import com.example.pirate99_final.user.dto.MailConfirmRequestDto;
 import com.example.pirate99_final.user.dto.SignupRequestDto;
 import com.example.pirate99_final.user.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.util.Random;
 
 @RestController
 @RequestMapping("/api")

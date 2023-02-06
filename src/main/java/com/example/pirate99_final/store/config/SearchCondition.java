@@ -2,8 +2,6 @@ package com.example.pirate99_final.store.config;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-
 @Data
 public class SearchCondition {
 

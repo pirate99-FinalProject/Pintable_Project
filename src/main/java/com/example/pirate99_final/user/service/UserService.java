@@ -13,16 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Optional;
 import java.util.Random;
-
 import static com.example.pirate99_final.global.exception.SuccessCode.LOG_IN;
 import static com.example.pirate99_final.global.exception.SuccessCode.SIGN_UP;
-
-
 @Service
 @RequiredArgsConstructor
 public class UserService {

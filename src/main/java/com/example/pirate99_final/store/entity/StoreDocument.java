@@ -2,15 +2,10 @@ package com.example.pirate99_final.store.entity;
 
 import com.example.pirate99_final.global.entity.TimeStamped;
 import com.example.pirate99_final.store.dto.StoreRequestDto;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.elasticsearch.annotations.*;
-
-//import org.springframework.data.annotation.Id;
-
 import javax.persistence.*;
 
 @Getter

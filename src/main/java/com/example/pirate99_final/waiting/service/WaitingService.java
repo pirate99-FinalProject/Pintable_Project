@@ -4,7 +4,6 @@ import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.global.exception.CustomException;
 import com.example.pirate99_final.global.exception.ErrorCode;
 import com.example.pirate99_final.global.exception.SuccessCode;
-import com.example.pirate99_final.store.dto.StoreStatusResponseDto;
 import com.example.pirate99_final.store.entity.Store;
 import com.example.pirate99_final.store.entity.StoreStatus;
 import com.example.pirate99_final.store.repository.StoreRepository;
@@ -17,7 +16,6 @@ import com.example.pirate99_final.waiting.dto.WaitingRequestDto;
 import com.example.pirate99_final.waiting.dto.WaitingResponseDto;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
-import io.lettuce.core.dynamic.annotation.Param;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -28,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-
 
 @Service
 @Slf4j
@@ -115,9 +112,10 @@ public class WaitingService {
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
         // 스토어 스테이터스 찾기
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+        StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeId);
         // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
-        List<Waiting> waitingList = waitingRepository.findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0, 1);
+//        List<Waiting> waitingList = waitingRepository.findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0, 1);
+        List<Waiting> waitingList = waitingRepository.waitingList(0, 1, storeStatus.getStoreStatusId());
         // 유저 찾기
         User getUser = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
@@ -142,7 +140,7 @@ public class WaitingService {
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+        StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeId);
 
         Waiting waiting = waitingRepository.findByWaitingId(waitingId);
         return new WaitingResponseDto(waiting);
@@ -154,7 +152,7 @@ public class WaitingService {
                 new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
         );
 
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+        StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeId);
 
         Waiting waiting = waitingRepository.findByWaitingId(waitingId);
 

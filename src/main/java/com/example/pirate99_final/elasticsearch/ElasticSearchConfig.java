@@ -1,7 +1,6 @@
 package com.example.pirate99_final.elasticsearch;
 
 import com.example.pirate99_final.store.repository.StoreSearchRepository;
-
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
