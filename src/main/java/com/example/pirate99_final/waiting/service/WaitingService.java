@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
@@ -49,33 +50,34 @@ public class WaitingService {
 
             if (isLocked) {
                 try {
-                    // 스토어 찾기 (storeId)
-                    Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                            new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-                    );
+
                     // 스토어 스테이터스 찾기
                     StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeId);
 
                     // 유저 찾기
                     User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
 
-                            () -> new IllegalArgumentException("유저를 찾을 수 없습니다.")
+                            () -> new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
                     );
+                    // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
+                    Optional<Waiting> alreadyQueue = waitingRepository.alreadyQueue(0, 1, user.getUserId(), storeStatus.getStoreStatusId());
 
                     // 잔여 좌석이 있을 때는, waitingRepository에 쌓기
                     if(storeStatus.getAvailableTableCnt() > 0 ){
-                        waitingRepository.save(new Waiting(user, storeStatus, 1));
-                        storeStatus.update_waitingCnt(storeStatus.getWaitingCnt() + 1, storeStatus.getAvailableTableCnt() - 1);
-                    }
-                    else{
-                        // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
-                        Optional<Waiting> alreadyQueue = waitingRepository.alreadyQueue(0, 1, user.getUserId(), storeStatus.getStoreStatusId());
-
+                            // 대기자 명단에 자신의 이름이 없다면
+                            if (alreadyQueue.isEmpty()){
+                                // 웨이팅(입장가능) 등록
+                                waitingRepository.save(new Waiting(user, storeStatus, 2));
+                                storeStatus.update(storeStatus.getAvailableTableCnt() - 1);
+                            }else{
+                                return new MsgResponseDto(ErrorCode.ALREADY_IN_QUEUE);
+                            }
+                    }else{
                         // 종업원이 설정한 대기인원 제한설정 값 보다 현재 대기인원이 적은 경우만 대기자 등록이 가능하게끔 설정
                         if (storeStatus.getWaitingCnt() < storeStatus.getLimitWaitingCnt()) {
                             if (alreadyQueue.isEmpty()) {
                                 // 웨이팅(대기자) 등록
-                                Waiting waiting = waitingRepository.save(new Waiting(user, storeStatus, 0));
+                                waitingRepository.save(new Waiting(user, storeStatus, 0));
                             } else {
                                 return new MsgResponseDto(ErrorCode.ALREADY_IN_QUEUE);
                             }
@@ -88,13 +90,13 @@ public class WaitingService {
 
                     // 해당 점포 웨이팅 현황 수에 업데이트
                     storeStatusRepository.save(storeStatus);
-
+                    lock.unlock();
                     return new MsgResponseDto(SuccessCode.CREATE_WAITING);
                 } catch (Exception e) {
-
-                } finally {
-                    lock.unlock();
+                  lock.unlock();
+                    return new MsgResponseDto(ErrorCode.NOT_FOUND_USER_ERROR);
                 }
+
             }
         } catch (Exception e) {
             Thread.currentThread().interrupt();
@@ -107,57 +109,48 @@ public class WaitingService {
         // 이용자가 자신의 차례를 조회할 때 쓰는 'myTurn'과 해당 점포 총 대기인원 수 'totalWaitingCnt' 를 선언한다.
         int myTurn = 0;
         int totalWaitingCnt = 0;
-        // 스토어 찾기 (storeId)
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
+
         // 스토어 스테이터스 찾기
         StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeId);
         // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
-//        List<Waiting> waitingList = waitingRepository.findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0, 1);
         List<Waiting> waitingList = waitingRepository.waitingList(0, 1, storeStatus.getStoreStatusId());
-        // 유저 찾기
-        User getUser = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-        // 총대기 인원수 = 위에서 담은 웨이팅 리스트의 사이즈
-        totalWaitingCnt = waitingList.size();
+        try {
+            // 유저 찾기
+            User getUser = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
+                    () -> new CustomException(HttpStatus.OK.value(), ErrorCode.NOT_FOUND_USER_ERROR));
+
+            // 총대기 인원수 = 위에서 담은 웨이팅 리스트의 사이즈
+            totalWaitingCnt = waitingList.size();
 
 
-        for (int i = 0; i < waitingList.size(); i++) {
-            // 총 대기인원 수 중에 자신의 차례를 찾는 로직 'waitingList' 중 I번째 순서가 자신의 차례임을 나타냄
-            if (waitingList.get(i).getUser().equals(getUser)) {
-                myTurn = i + 1;
+            for (int i = 0; i < waitingList.size(); i++) {
+                // 총 대기인원 수 중에 자신의 차례를 찾는 로직 'waitingList' 중 I번째 순서가 자신의 차례임을 나타냄
+                if (waitingList.get(i).getUser().equals(getUser)) {
+                    myTurn = i + 1;
+                }
             }
+        }catch (Exception e) {
+            return new MyTurnResponseDto(ErrorCode.NOT_FOUND_USER_ERROR);
         }
         return new MyTurnResponseDto(totalWaitingCnt, myTurn);
     }
 
 
     @Transactional
-    public WaitingResponseDto getWaiter(Long storeId, Long waitingId) {                                                 // 대기인원 중 특정 사용자의 정보 불러오기
-
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
-
-        StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeId);
+    public WaitingResponseDto getWaiter(Long waitingId) {                                                 // 대기인원 중 특정 사용자의 정보 불러오기
 
         Waiting waiting = waitingRepository.findByWaitingId(waitingId);
         return new WaitingResponseDto(waiting);
     }
 
     @Transactional
-    public MsgResponseDto deleteWaiter(Long storeId, Long waitingId) {                                                  // 대기인원 중 대기취소 등의 사유로 상태값을 변경하는 작업
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
-
-        StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeId);
+    public MsgResponseDto deleteWaiter(Long waitingId) {                                                  // 대기인원 중 대기취소 등의 사유로 상태값을 변경하는 작업
 
         Waiting waiting = waitingRepository.findByWaitingId(waitingId);
-
+//        int waitingCnt = store
         // 대기자 명단에서 상태값을 '3' (대기 취소)으로 변경함
         waiting.update(3);
+
         return new MsgResponseDto(SuccessCode.DELETE_WAITING);
     }
 

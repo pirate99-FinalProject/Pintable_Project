@@ -13,7 +13,7 @@ public interface WaitingRepository  extends JpaRepository<Waiting, Long> {
     Waiting findByWaitingId(Long waitingId);
     List<Waiting> findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(StoreStatus storeStatus, int waitingStatus, int waitingStatus2 );
 
-    @Query(value = "select * from waiting as a where (waiting_status = :waitingStatus1 or waiting_status = :waitingStatus2) and store_status_id = :storeStatusId", nativeQuery = true)
+    @Query(value = "select * from waiting where (waiting_status = :waitingStatus1 or waiting_status = :waitingStatus2) and store_status_id = :storeStatusId", nativeQuery = true)
     List<Waiting> waitingList(int waitingStatus1, int waitingStatus2, Long storeStatusId);
 
     Waiting findByStoreStatusAndUser(StoreStatus storestatus, User user);
