@@ -109,7 +109,6 @@ function signIn() {
             },
         })
             .then(function (response) {
-                console.log("");
                 console.log("RESPONSE : " + JSON.stringify(response.data));
                 alert("로그인 성공, 요청 버튼을 눌러서 이메일 인증을 해주세요!")
             })
@@ -136,8 +135,6 @@ function callWaiting() {
         },
     })
         .then(function (response) {
-            console.log("");
-            console.log("RESPONSE : " + JSON.stringify(response.data));
             const requestWaiting = document.getElementById('signin');                                           // 입력받은 회원정보로 회원가입을 하고,
             requestWaiting.style.display = 'none';                                                                       // 해당 Form을 숨김처리한다.
             alert("웨이팅 등록 성공!")
@@ -145,9 +142,6 @@ function callWaiting() {
             location.reload();
         })
         .catch(function (error) {
-            console.log("");
-            console.log("ERROR : " + JSON.stringify(error));
-            console.log("");
         });
     } else {
         alert("사용자 이메일 인증이 되지 않았습니다. 인증확인을 눌러주세요!")
