@@ -19,5 +19,9 @@ public class CustomException extends RuntimeException{
         this.msg            =   msg;                                // 안내 문구
         this.statusCode     =   statusCode;                         // 상태 코드
     }
+    public CustomException(int statusCode, ErrorCode errorCode) {
+        this.msg            =   msg;                                // 안내 문구
+        this.statusCode     =   statusCode;                         // 상태 코드
+    }
 
 }

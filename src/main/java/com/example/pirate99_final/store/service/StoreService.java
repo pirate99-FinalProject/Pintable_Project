@@ -275,8 +275,7 @@ public class StoreService {
     @Transactional
     public MsgResponseDto limitWaitingCnt(Long storeId, LimitWaitingCntRequestDto requestDto) throws MessagingException {
 
-        int totalWaitingCnt, limitWaitingCnt = 0;
-
+        int limitWaitingCnt = 0;
 
         // 1. find store
         Store store = storeRepository.findById(storeId).orElseThrow(() ->
@@ -295,7 +294,7 @@ public class StoreService {
 
         limitWaitingCnt = storeStatus.getLimitWaitingCnt();
 
-
+        int waitingCnt = storeStatus.getWaitingCnt();
         // 대기인원 제한이 '0'인 경우 'default' 값인 무한으로 설정
         if (limitWaitingCnt == 1000) {
 
@@ -318,18 +317,18 @@ public class StoreService {
 
                 // 대기취소 상태로 변경
                 waiting_person.update(3);
+                waitingCnt = storeStatus.getWaitingCnt() - 1;
 
 
                 MimeMessage emailForm = createEmailForm(toEmail, title, mailForm);
                 emailSender.send(emailForm);
 
-            return new MsgResponseDto(CONFIRM_ENTER);
-
-
             }
+            storeStatus.update_waitingCnt(waitingCnt, storeStatus.getAvailableTableCnt());
 
             return new MsgResponseDto(ErrorCode.WRONG_LIMIT_WAITING_ERROR);
         }
+
         return null;
     }
 
@@ -572,7 +571,7 @@ public class StoreService {
 
         StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-        List<Waiting> waitingTeams = waitingRepository.findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0, 1);
+        List<Waiting> waitingTeams = waitingRepository.waitingList(0, 1, storeStatus.getStoreStatusId());
 
         int numberOfTeamsWaiting = waitingTeams.size();
 

@@ -28,15 +28,15 @@ public class WaitingController {
         return waitingService.getMyTurn(storeId, requestDto);
     }
 
-    @GetMapping("/waitingList/{storeId}/{waitingId}")
-    public WaitingResponseDto getWaiter(@PathVariable Long storeId, @PathVariable Long waitingId) {
+    @GetMapping("/waitingList/{waitingId}")
+    public WaitingResponseDto getWaiter(@PathVariable Long waitingId) {
 
-        return waitingService.getWaiter(storeId, waitingId);
+        return waitingService.getWaiter(waitingId);
     }
 
-    @PutMapping("/waitingList/{storeId}/{waitingId}")
-    public MsgResponseDto deleteWaiter(@PathVariable Long storeId, @PathVariable Long waitingId) {
-        return waitingService.deleteWaiter(storeId, waitingId);
+    @PutMapping("/waitingList/{waitingId}")
+    public MsgResponseDto deleteWaiter(@PathVariable Long waitingId) {
+        return waitingService.deleteWaiter(waitingId);
     }
 
     // DB select all (User Info)
