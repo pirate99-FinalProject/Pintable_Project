@@ -50,7 +50,6 @@ public class WaitingService {
 
             if (isLocked) {
                 try {
-
                     // 스토어 스테이터스 찾기
                     StoreStatus storeStatus = storeStatusRepository.findByStoreId(storeId);
 

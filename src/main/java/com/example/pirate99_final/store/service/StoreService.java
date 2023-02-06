@@ -148,39 +148,6 @@ public class StoreService {
         // Leaving people check
         storeStatus.update(availableCnt);
 
-        Waiting waiting = waitingRepository.findFirstByStoreStatusAndWaitingStatusOrderByWaitingIdAsc(storeStatus, 0);
-
-        if(waiting != null){
-            // 1. find store
-            store = storeRepository.findById(storeId).orElseThrow(() ->
-                    new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-            );
-
-            // 2. storeStatus check
-            storeStatus = storeStatusRepository.findByStore(store);
-
-            // 3. User find
-            User user = userRepository.findByUsername(waiting.getUser().getUsername()).orElseThrow(() ->
-                    new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
-            );
-
-            Waiting waiting2 = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
-            waiting.update(2);
-
-            int waitingCnt = 0;
-
-            if(storeStatus.getWaitingCnt() > 0){
-                waitingCnt = storeStatus.getWaitingCnt() - 1;
-            }
-
-            availableCnt = storeStatus.getAvailableTableCnt();
-
-            if (availableCnt > 0) {
-                availableCnt = availableCnt - 1;
-            }
-
-            storeStatus.update_waitingCnt(waitingCnt, availableCnt);
-        }
         return new MsgResponseDto(SuccessCode.CONFIRM_LEAVE);
     }
 
