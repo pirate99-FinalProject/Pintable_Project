@@ -85,13 +85,14 @@
 [시연영상 바로가기](https://www.youtube.com/watch?v=iY3YxFOawYs)
 
 ## 5. 서비스 아키텍처 🎨
-![image](https://user-images.githubusercontent.com/117708164/212272737-a1633c36-db2d-4717-8392-b202a5f30ea7.png)
+![image](https://user-images.githubusercontent.com/117708164/216933029-f5c882eb-daec-4216-a27c-56822226726f.png)
 
 ## 6. ERD 👨🏻‍💻
-![image](https://user-images.githubusercontent.com/117708164/212272837-ef542bf2-e9a1-465a-92d3-767f91868021.png)
+![image](https://user-images.githubusercontent.com/117708164/216933200-78984f6c-6653-46ea-bf1f-ee8900e5c2bf.png)
 
 ## 7. API 💬
 [API명세서 바로가기](https://www.notion.so/2c418627d047416fb8b21c59b49b83d9?v=f17213f3433e45328148b004b36e81e6)
 [Swagger](https://pintable.co.kr/swagger-ui/index.html?urls.primaryName=store#/store-controller/createStoreUsingPOST)
 
+## 8. 트러블슈팅 🐞
 
