@@ -91,8 +91,7 @@
 ![image](https://user-images.githubusercontent.com/117708164/216933200-78984f6c-6653-46ea-bf1f-ee8900e5c2bf.png)
 
 ## 7. API 💬
-[API명세서 바로가기](https://www.notion.so/2c418627d047416fb8b21c59b49b83d9?v=f17213f3433e45328148b004b36e81e6)
-[Swagger](https://pintable.co.kr/swagger-ui/index.html?urls.primaryName=store#/store-controller/createStoreUsingPOST)
+[API명세서 바로가기 Swagger](https://pintable.co.kr/swagger-ui/index.html?urls.primaryName=store#/store-controller/createStoreUsingPOST)
 
 ## 8. 트러블슈팅 🐞
 
