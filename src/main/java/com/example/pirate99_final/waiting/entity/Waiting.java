@@ -30,11 +30,12 @@ public class Waiting extends TimeStamped {
     @Column
     private int waitingStatus;
 
-    public Waiting(User user, StoreStatus storeStatus) {
+    public Waiting(User user, StoreStatus storeStatus, int waitingStatus) {
         this.user = user;
         this.storeStatus = storeStatus;
-        this.waitingStatus = 0;
+        this.waitingStatus = waitingStatus;
     }
+
     public void update(int waitingStatus) {
         this.waitingStatus = waitingStatus;
 
