@@ -19,7 +19,7 @@ permissions:
 env:
   S3_BUCKET_NAME: pirate99
   PROJECT_NAME: BE-pirate99
-  
+
 jobs:
   build:
     # 실행 환경 지정

@@ -69,7 +69,9 @@ function EnterStatus() {
                                 <img id="entranceUserCheck" src="/css/images/bell1.png" width="48" onclick="EnterConfirm('${waitingUserName}')">
                              </td>
                              <td class="tg-09md">
+
                                 <img id="workoutUserCheck" src="/css/images/okButton.png" width="48" onclick="ExitConfirm('${waitingUserName}')">
+
                              </td>
                         </tr>`
                     $('#waitingList').append(temp_html)
@@ -93,7 +95,7 @@ function LimitSetup() {
         method: "put",
         url: baseUrl + api + id,
         data: JSON.stringify(
-            {limitWaitingCnt : limit_number }
+            {limitWaitingCnt: limit_number}
         ),
         headers: {
             "Content-Type": "application/json; charset=utf-8"
@@ -132,7 +134,9 @@ function EnterConfirm(waitingUserName) {
 }
 
 // 퇴장확인 API 연동
+
 function ExitConfirm(username) {
+
     var getId = localStorage.getItem("storeId");   //데이터를 key로 꺼냄
     const id = JSON.parse(getId);   //문자열을 객체(json)으로 변환
     const api = '/api/storeStatus/leave/' + id;
@@ -174,7 +178,7 @@ function getStoreAdminInfo() {
             const storeAdmin = JSON.parse(transferStoreAdmin);
             document.getElementById("storeName").innerHTML = storeAdmin.storeName;
             document.getElementById("totalWaiting").innerHTML = "총 대기팀 수 : " + storeAdmin.numberOfTeamsWaiting + "팀";
-            document.getElementById("useCustomer").innerHTML = "이용중인 고객수 : " + storeAdmin.numberOfCustomersInUse +"팀";
+            document.getElementById("useCustomer").innerHTML = "이용중인 고객수 : " + storeAdmin.numberOfCustomersInUse + "팀";
 
         })
         .catch(function (error) {
