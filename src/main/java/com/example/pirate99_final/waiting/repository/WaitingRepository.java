@@ -23,5 +23,4 @@ public interface WaitingRepository  extends JpaRepository<Waiting, Long> {
 
     List<Waiting> findAllByStoreStatusOrderByWaitingIdAsc(StoreStatus storeStatus);
 
-    Waiting findFirstByStoreStatusAndWaitingStatusOrderByWaitingIdAsc(StoreStatus storeStatus, int waitingStatus);
 }

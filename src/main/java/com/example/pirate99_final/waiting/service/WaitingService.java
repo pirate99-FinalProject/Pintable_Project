@@ -62,7 +62,7 @@ public class WaitingService {
                     Optional<Waiting> alreadyQueue = waitingRepository.alreadyQueue(0, 1, user.getUserId(), storeStatus.getStoreStatusId());
 
                     // 잔여 좌석이 있을 때는, waitingRepository에 쌓기
-                    if(storeStatus.getAvailableTableCnt() > 0 ){
+                    if(storeStatus.getAvailableTableCnt() > 0 && storeStatus.getWaitingCnt() == 0){
                             // 대기자 명단에 자신의 이름이 없다면
                             if (alreadyQueue.isEmpty()){
                                 // 웨이팅(입장가능) 등록

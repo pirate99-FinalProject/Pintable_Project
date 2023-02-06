@@ -54,4 +54,5 @@ public class StoreStatus {
     public void update_limitWaitingCnt(int limitWaitingCnt) {
         this.limitWaitingCnt = limitWaitingCnt;
     }
-}
+
+    }
