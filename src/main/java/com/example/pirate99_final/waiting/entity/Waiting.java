@@ -1,12 +1,10 @@
 package com.example.pirate99_final.waiting.entity;
 
-
 import com.example.pirate99_final.global.entity.TimeStamped;
 import com.example.pirate99_final.store.entity.StoreStatus;
 import com.example.pirate99_final.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Entity

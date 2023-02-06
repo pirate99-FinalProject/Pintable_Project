@@ -1,6 +1,5 @@
 package com.example.pirate99_final.global.redis;
 
-
 import com.example.pirate99_final.review.dto.RedisRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -20,7 +19,6 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
 import java.time.Duration;
 
 @Configuration

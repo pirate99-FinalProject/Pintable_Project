@@ -3,8 +3,6 @@ package com.example.pirate99_final.waiting.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Arrays;
-
 @Getter
 @AllArgsConstructor
 public enum WaitingStatus {

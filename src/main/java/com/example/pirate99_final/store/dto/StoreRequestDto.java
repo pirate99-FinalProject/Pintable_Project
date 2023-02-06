@@ -1,6 +1,5 @@
 package com.example.pirate99_final.store.dto;
 
-import com.example.pirate99_final.store.entity.Store;
 import lombok.Getter;
 
 @Getter

@@ -1,6 +1,5 @@
 package com.example.pirate99_final.store.service;
 
-import com.example.pirate99_final.global.ExeTimer;
 import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.global.exception.CustomException;
 import com.example.pirate99_final.global.exception.ErrorCode;
@@ -18,12 +17,7 @@ import com.example.pirate99_final.user.entity.User;
 import com.example.pirate99_final.user.repository.UserRepository;
 import com.example.pirate99_final.waiting.entity.Waiting;
 import com.example.pirate99_final.waiting.repository.WaitingRepository;
-import io.micrometer.core.instrument.search.Search;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,14 +25,10 @@ import org.springframework.ui.Model;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.util.StringUtils;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
 import static com.example.pirate99_final.global.exception.SuccessCode.*;
 
 @Service

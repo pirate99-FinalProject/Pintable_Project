@@ -1,10 +1,8 @@
 package com.example.pirate99_final.user.dto;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Setter
 @Getter
 @NoArgsConstructor

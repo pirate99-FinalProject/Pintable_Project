@@ -1,6 +1,5 @@
 package com.example.pirate99_final.review.entity;
 
-import com.example.pirate99_final.review.dto.RedisRequestDto;
 import com.example.pirate99_final.review.dto.ReviewRequestDto;
 import com.example.pirate99_final.store.entity.Store;
 import com.example.pirate99_final.user.entity.User;
@@ -8,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Getter

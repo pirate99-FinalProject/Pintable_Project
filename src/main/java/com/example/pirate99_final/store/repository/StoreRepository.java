@@ -3,9 +3,7 @@ package com.example.pirate99_final.store.repository;
 import com.example.pirate99_final.store.entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
-import java.util.Optional;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
     // 1. 현재 위치 반경 20km 이내 검색
