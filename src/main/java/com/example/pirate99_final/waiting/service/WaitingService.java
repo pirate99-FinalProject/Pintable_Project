@@ -103,7 +103,7 @@ public class WaitingService {
         return null;
     }
 
-    @Transactional
+
     public MyTurnResponseDto getMyTurn(Long storeId, WaitingRequestDto requestDto) {                                    // 대기 인원 중 자신의 차례 조회
         // 이용자가 자신의 차례를 조회할 때 쓰는 'myTurn'과 해당 점포 총 대기인원 수 'totalWaitingCnt' 를 선언한다.
         int myTurn = 0;
@@ -178,8 +178,10 @@ public class WaitingService {
             else if(waiting.getWaitingStatus() == 2){
                 waitingStatus = "입장 완료";
             }
-            else{
+            else if(waiting.getWaitingStatus() == 3){
                 waitingStatus = "대기 취소";
+            }else {
+                waitingStatus = "퇴장";
             }
             waitingResponseDto.add(new EnterStatusResponseDto(waiting,waitingStatus));
         }
