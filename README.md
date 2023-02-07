@@ -8,6 +8,7 @@
 5. [서비스 아키텍처](#5-서비스-아키텍처-)
 6. [ERD](#6-erd-)
 7. [API](#7-api-)
+8. [트러블슈팅](#8-트러블슈팅-)
 #
 
 ![image](https://user-images.githubusercontent.com/117708164/216932548-af5766aa-a9a5-4d02-ba3f-49467c3fb956.png)
