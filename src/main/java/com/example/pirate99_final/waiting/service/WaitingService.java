@@ -177,8 +177,10 @@ public class WaitingService {
             else if(waiting.getWaitingStatus() == 2){
                 waitingStatus = "입장 완료";
             }
-            else{
+            else if(waiting.getWaitingStatus() == 3){
                 waitingStatus = "대기 취소";
+            }else {
+                waitingStatus = "퇴장";
             }
             waitingResponseDto.add(new EnterStatusResponseDto(waiting,waitingStatus));
         }
