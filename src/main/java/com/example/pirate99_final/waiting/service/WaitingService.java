@@ -103,7 +103,6 @@ public class WaitingService {
         return null;
     }
 
-    @Transactional
     public MyTurnResponseDto getMyTurn(Long storeId, WaitingRequestDto requestDto) {                                    // 대기 인원 중 자신의 차례 조회
         // 이용자가 자신의 차례를 조회할 때 쓰는 'myTurn'과 해당 점포 총 대기인원 수 'totalWaitingCnt' 를 선언한다.
         int myTurn = 0;
