@@ -1,10 +1,11 @@
 package com.example.pirate99_final.store.dto;
 
+import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.store.entity.StoreStatus;
 import lombok.Getter;
 
 @Getter
-public class StoreStatusResponseDto {
+public class StoreStatusResponseDto extends MsgResponseDto {
     private Long storeStatusId;         // storeStatusId
     private int  totalTableCnt;         // 총 테이블 수
     private int  availableTableCnt;       // 현재 사용 중인 테이블 수

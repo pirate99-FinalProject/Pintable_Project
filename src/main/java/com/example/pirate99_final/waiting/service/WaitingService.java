@@ -60,42 +60,47 @@ public class WaitingService {
                     );
                     // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
                     Optional<Waiting> alreadyQueue = waitingRepository.alreadyQueue(0, 1, user.getUserId(), storeStatus.getStoreStatusId());
-
-                    // 잔여 좌석이 있을 때는, waitingRepository에 쌓기
-                    if(storeStatus.getAvailableTableCnt() > 0 && storeStatus.getWaitingCnt() == 0){
+                    Optional<Waiting> alreadyEating = waitingRepository.alreadyEating(2, user.getUserId(), storeStatus.getStoreStatusId());
+                    // 대기열 등록 요청한 고객이 이미 식사 중이 아니라면 입장완료 처리
+                    if (alreadyEating.isEmpty()){
+                        // 잔여 좌석이 있을 때는, waitingRepository에 쌓기
+                        if (storeStatus.getAvailableTableCnt() > 0 && storeStatus.getWaitingCnt() == 0){
                             // 대기자 명단에 자신의 이름이 없다면
                             if (alreadyQueue.isEmpty()){
-                                // 웨이팅(입장가능) 등록
+                                // 입장완료 등록
                                 waitingRepository.save(new Waiting(user, storeStatus, 2));
                                 storeStatus.update(storeStatus.getAvailableTableCnt() - 1);
                             }else{
                                 return new MsgResponseDto(ErrorCode.ALREADY_IN_QUEUE);
                             }
-                    }else{
-                        // 종업원이 설정한 대기인원 제한설정 값 보다 현재 대기인원이 적은 경우만 대기자 등록이 가능하게끔 설정
-                        if (storeStatus.getWaitingCnt() < storeStatus.getLimitWaitingCnt()) {
-                            if (alreadyQueue.isEmpty()) {
-                                // 웨이팅(대기자) 등록
-                                waitingRepository.save(new Waiting(user, storeStatus, 0));
+                        }else{
+                            // 종업원이 설정한 대기인원 제한설정 값 보다 현재 대기인원이 적은 경우만 대기자 등록이 가능하게끔 설정
+                            if (storeStatus.getWaitingCnt() < storeStatus.getLimitWaitingCnt()) {
+                                if (alreadyQueue.isEmpty()) {
+                                    // 웨이팅(대기자) 등록
+                                    waitingRepository.save(new Waiting(user, storeStatus, 0));
+                                } else {
+                                    return new MsgResponseDto(ErrorCode.ALREADY_IN_QUEUE);
+                                }
                             } else {
-                                return new MsgResponseDto(ErrorCode.ALREADY_IN_QUEUE);
+                                return new MsgResponseDto(ErrorCode.LIMIT_QUEUE_EXCEEDED);
                             }
-                        } else {
-                            return new MsgResponseDto(ErrorCode.LIMIT_QUEUE_EXCEEDED);
-                        }
 
-                        storeStatus.update_waitingCnt(storeStatus.getWaitingCnt() + 1, storeStatus.getAvailableTableCnt());
+                            storeStatus.update_waitingCnt(storeStatus.getWaitingCnt() + 1, storeStatus.getAvailableTableCnt());
+                        }
+                    }else {
+                        return new MsgResponseDto(ErrorCode.ALREADY_EATING);
                     }
+
 
                     // 해당 점포 웨이팅 현황 수에 업데이트
                     storeStatusRepository.save(storeStatus);
                     lock.unlock();
                     return new MsgResponseDto(SuccessCode.CREATE_WAITING);
-                } catch (Exception e) {
-                  lock.unlock();
-                    return new MsgResponseDto(ErrorCode.NOT_FOUND_USER_ERROR);
+                } catch (CustomException e) {
+                    lock.unlock();
+                    return new MsgResponseDto(e.getStatusCode(), e.getMsg());
                 }
-
             }
         } catch (Exception e) {
             Thread.currentThread().interrupt();
@@ -103,7 +108,8 @@ public class WaitingService {
         return null;
     }
 
-    public MyTurnResponseDto getMyTurn(Long storeId, WaitingRequestDto requestDto) {                                    // 대기 인원 중 자신의 차례 조회
+    public MsgResponseDto getMyTurn(Long storeId, WaitingRequestDto requestDto) {                                    // 대기 인원 중 자신의 차례 조회
+
         // 이용자가 자신의 차례를 조회할 때 쓰는 'myTurn'과 해당 점포 총 대기인원 수 'totalWaitingCnt' 를 선언한다.
         int myTurn = 0;
         int totalWaitingCnt = 0;
@@ -127,8 +133,8 @@ public class WaitingService {
                     myTurn = i + 1;
                 }
             }
-        }catch (Exception e) {
-            return new MyTurnResponseDto(ErrorCode.NOT_FOUND_USER_ERROR);
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
         }
         return new MyTurnResponseDto(totalWaitingCnt, myTurn);
     }
@@ -145,7 +151,6 @@ public class WaitingService {
     public MsgResponseDto deleteWaiter(Long waitingId) {                                                  // 대기인원 중 대기취소 등의 사유로 상태값을 변경하는 작업
 
         Waiting waiting = waitingRepository.findByWaitingId(waitingId);
-//        int waitingCnt = store
         // 대기자 명단에서 상태값을 '3' (대기 취소)으로 변경함
         waiting.update(3);
 

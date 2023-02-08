@@ -28,7 +28,7 @@ public class ReviewController {
 
     // DB select one
     @GetMapping("/review/{storeId}/{reviewId}")
-    public ReviewResponseDto getReview(@PathVariable Long storeId, @PathVariable Long reviewId){return reviewService.getReview(storeId, reviewId);}
+    public MsgResponseDto getReview(@PathVariable Long storeId, @PathVariable Long reviewId){return reviewService.getReview(storeId, reviewId);}
 
     // DB delete
     @DeleteMapping("/review/{storeId}/{reviewId}")

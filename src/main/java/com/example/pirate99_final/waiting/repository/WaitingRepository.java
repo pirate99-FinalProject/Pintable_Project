@@ -23,6 +23,9 @@ public interface WaitingRepository  extends JpaRepository<Waiting, Long> {
     @Query(value = "select *from waiting where (waiting_status = :waitingStatus1 or waiting_status = :waitingStatus2) and store_status_id = :storeStatusId and user_id = :userId", nativeQuery = true)
     Optional<Waiting> alreadyQueue(int waitingStatus1, int waitingStatus2, Long userId, Long storeStatusId);
 
+    @Query(value = "select *from waiting where waiting_status = :waitingStatus1 and store_status_id = :storeStatusId and user_id = :userId", nativeQuery = true)
+    Optional<Waiting> alreadyEating(int waitingStatus1, Long userId, Long storeStatusId);
+
     List<Waiting> findAllByStoreStatusOrderByWaitingIdAsc(StoreStatus storeStatus);
 
 }
