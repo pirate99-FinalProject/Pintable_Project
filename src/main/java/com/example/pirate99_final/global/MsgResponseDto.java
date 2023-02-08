@@ -11,8 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 @Getter
 @NoArgsConstructor
 public class MsgResponseDto {
-    private int statusCode;
-    private String msg;
+    protected int statusCode;
+    protected String msg;
 
     public MsgResponseDto(SuccessCode successCode) {
         this.msg        =   successCode.getMessage();
@@ -22,15 +22,6 @@ public class MsgResponseDto {
     public MsgResponseDto(int statusCode, String msg) {
         this.msg        =   msg;
         this.statusCode =   statusCode;
-    }
-
-    public MsgResponseDto(CustomException customException) {
-        this.msg        =   customException.getMsg();
-        this.statusCode =   customException.getStatusCode();
-    }
-    public MsgResponseDto(MethodArgumentNotValidException ex) {
-        this.msg        =   ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        this.statusCode =   HttpStatus.BAD_REQUEST.value();
     }
     public MsgResponseDto(ErrorCode errorCode) {
         this.msg        =   errorCode.getMessage();

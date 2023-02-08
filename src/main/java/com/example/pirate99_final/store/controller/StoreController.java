@@ -27,7 +27,7 @@ public class StoreController {
 
     // DB select one
     @GetMapping("/storeStatus/{storeId}")
-    public StoreStatusResponseDto getStore(@PathVariable long storeId){return storeService.getStore(storeId);}
+    public MsgResponseDto getStore(@PathVariable long storeId){return storeService.getStore(storeId);}
 
     // DB delete
     @DeleteMapping("/storeStatus/{storeId}")
@@ -62,7 +62,7 @@ public class StoreController {
     }
 
     @GetMapping("/storeAdmin/{storeId}")
-    public StoreResponseDto getStoreAdminInfo(@PathVariable Long storeId) {
+    public MsgResponseDto getStoreAdminInfo(@PathVariable Long storeId) {
         return storeService.getStoreAdminInfo(storeId);
     }
 }
