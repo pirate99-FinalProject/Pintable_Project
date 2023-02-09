@@ -109,7 +109,6 @@ function signIn() {
             },
         })
             .then(function (response) {
-                console.log("RESPONSE : " + JSON.stringify(response.data));
                 alert("로그인 성공, 요청 버튼을 눌러서 이메일 인증을 해주세요!")
             })
             .catch(function (error) {
@@ -176,9 +175,7 @@ function mystatus() {
             document.querySelector('.userId1').value = '';
         })
         .catch(function (error) {
-            console.log("");
-            console.log("ERROR : " + JSON.stringify(error));
-            console.log("");
+            alert("상태 조회 오류!")
         });
 }
 
@@ -201,8 +198,6 @@ function postReview() {
             },
         })
             .then(function (response) {
-                console.log("");
-                console.log("RESPONSE : " + JSON.stringify(response.data));
                 alert("리뷰 등록 성공!")
                 document.querySelector('.postReviewUserId').value = '';
                 document.querySelector('.reviewComment').value = '';
@@ -212,9 +207,7 @@ function postReview() {
                 postReview.style.display = 'none';
             })
             .catch(function (error) {
-                console.log("");
-                console.log("ERROR : " + JSON.stringify(error));
-                console.log("");
+                alert("리뷰 등록 실패!")
             });
 }
 
@@ -233,8 +226,6 @@ function storeStatus() {
         },
     })
         .then(function (response) {
-            console.log("");
-            console.log("RESPONSE : " + JSON.stringify(response.data));
             const transferStatus = JSON.stringify(response.data);
             var status = JSON.parse(transferStatus);
             alert("내 상태 조회 완료!")
@@ -242,9 +233,7 @@ function storeStatus() {
 
         })
         .catch(function (error) {
-            console.log("");
-            console.log("ERROR : " + JSON.stringify(error));
-            console.log("");
+            alert("내 상태 조회 오류!")
         });
 }
 
@@ -278,7 +267,7 @@ function sendMail() {
                 code = JSON.stringify(response.data);                                                                   // 이메일로 전송한 코드 저장
             })
             .catch(function (error) {
-                console.log("ERROR : " + JSON.stringify(error));
+                alert("인증 전송 오류!")
             });
     }
 }
@@ -317,8 +306,6 @@ function storeReview(storeId) {
         },
     })
         .then(function (response) {
-            console.log("");
-            console.log("RESPONSE : " + JSON.stringify(response.data));
             const transeBlog = JSON.stringify(response.data);
             var blogList = JSON.parse(transeBlog);
             const blogNum = blogList.length;
@@ -347,7 +334,6 @@ function storeReview(storeId) {
             }
         })
         .catch(function (error) {
-            console.log("");
             console.log("ERROR : " + JSON.stringify(error));
         });
 }
@@ -372,16 +358,12 @@ function getStoreName() {
         },
     })
         .then(function (response) {
-            console.log("");
-            console.log("RESPONSE : " + JSON.stringify(response.data));
             const transferStoreName = JSON.stringify(response.data);
             var storeName = JSON.parse(transferStoreName);
             document.getElementById("myStoreName").innerHTML = storeName.storeName;
 
         })
         .catch(function (error) {
-            console.log("");
             console.log("ERROR : " + JSON.stringify(error));
-            console.log("");
         });
 }

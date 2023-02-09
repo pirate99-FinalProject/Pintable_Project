@@ -86,14 +86,6 @@
                         </script>
 
                         <button type="button" class="btn btn-primary" id="searchBtn" onclick=handleSearch()>Search</button>
-                        <button class="btn btn-primary" id="btn5" type="button">현위치</button>
-                        <script th:inline="javascript">
-                            let latitude = "", longitude = "";
-
-                            document.getElementById("btn5").onclick = function () {
-                                navigator.geolocation.getCurrentPosition(onSuccess, onError);
-                            }
-                        </script>
                     </form>
                     <div class="search-backdrop"></div>
                 </div>
@@ -296,7 +288,6 @@
                                     <input type="hidden" name="username" value="..." id="username"/>
                                     <script th:inline="javascript">
                                         const searchList = [[${searchList}]];
-                                        console.log(searchList);
 
                                         // 예외처리 : 검색결과 없음
                                         if (!searchList) {
