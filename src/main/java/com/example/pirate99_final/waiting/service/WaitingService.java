@@ -43,10 +43,10 @@ public class WaitingService {
 
 
     public MsgResponseDto createWaiter(Long storeId, WaitingRequestDto requestDto) {                                    // 대기자 등록 시스템
-        RLock lock = redissonClient.getLock("key 이름");
+        RLock lock = redissonClient.getLock("Waiting");
 
         try {
-            boolean isLocked = lock.tryLock(60000, 60000, TimeUnit.MILLISECONDS);
+            boolean isLocked = lock.tryLock(60000, 45000, TimeUnit.MILLISECONDS);
 
             if (isLocked) {
                 try {
