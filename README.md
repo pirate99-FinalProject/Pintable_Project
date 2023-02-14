@@ -143,13 +143,8 @@
 </details>
 
 
-<details>
-<summary> 대용량 트래픽 부하분산 </summary>
-<div markdown="1">
-   📈 대용량 트래픽 부하분산 자세히 보기 : https://www.notion.so/PIN-TABLE-641ad77ad45247c2801ae079db805389
-)
-</div>
-</details>
+## 7. API 💬
+[API명세서 바로가기 Swagger](https://pintable.co.kr/swagger-ui/index.html?urls.primaryName=store#/store-controller/createStoreUsingPOST)
 
 
 <details>
