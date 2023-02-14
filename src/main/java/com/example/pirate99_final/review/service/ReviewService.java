@@ -34,78 +34,77 @@ public class ReviewService {
 
     // Review Insert (Insert to Redis)
     public MsgResponseDto createReview(long id, ReviewRequestDto requestDto) {
-        SetOperations<String, RedisRequestDto> setOperations = redisTemplate.opsForSet();
 
-        Store store = storeRepository.findById(id).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
+        try {
+            SetOperations<String, RedisRequestDto> setOperations = redisTemplate.opsForSet();
 
-        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
-        );
+            Store store = storeRepository.findById(id).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+            );
 
-        Review review = new Review(requestDto, store, user);
-        reviewRepository.save(review);
+            User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
+            );
 
-        RedisRequestDto saveId = new RedisRequestDto(store.getStoreId());
-        setOperations.add("reviewIdx", saveId);
+            Review review = new Review(requestDto, store, user);
+            reviewRepository.save(review);
 
-        return new MsgResponseDto(CREATE_REVIEW);
+            RedisRequestDto saveId = new RedisRequestDto(store.getStoreId());
+            setOperations.add("reviewIdx", saveId);
+
+            return new MsgResponseDto(CREATE_REVIEW);
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
+        }
     }
 
 
     // Get memos from DB (all)
     public List<ReviewResponseDto> getReviews(long id) {
-        Store store = storeRepository.findById(id).orElseThrow(()
-                -> new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
 
-        // 1. Select All Memo
-        List<Review> ListReview = reviewRepository.findTop10ByStoreOrderByIdDesc(store);
+            Store store = storeRepository.findById(id).orElseThrow(()
+                    -> new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+            );
 
-        List<ReviewResponseDto> ListResponseDto = new ArrayList<>();
+            // 1. Select All Memo
+            List<Review> ListReview = reviewRepository.findTop10ByStoreOrderByIdDesc(store);
 
-        for (Review review : ListReview) {
-            ListResponseDto.add(new ReviewResponseDto(review));
-        }
-        return ListResponseDto;
+            List<ReviewResponseDto> ListResponseDto = new ArrayList<>();
+
+            for (Review review : ListReview) {
+                ListResponseDto.add(new ReviewResponseDto(review));
+            }
+            return ListResponseDto;
     }
 
     // Get store from DB (one)
-    public ReviewResponseDto getReview(long storeId, long reviewId) {
-        Review review = reviewRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_REVIEW_ERROR)
-        );
+    public MsgResponseDto getReview(long storeId, long reviewId) {
 
-        ReviewResponseDto responseDto = new ReviewResponseDto(review);
-        return responseDto;
-    }
+        try {
+            Review review = reviewRepository.findById(storeId).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_REVIEW_ERROR)
+            );
 
-    // DB update function
-    @Transactional
-    public ReviewResponseDto update(Long storeId, Long reviewid, ReviewRequestDto requestDto) {
-
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
-
-        Review review = reviewRepository.findByStoreAndId(store, reviewid).orElseThrow(                                             // find memo
-                () -> new CustomException(ErrorCode.NOT_FOUND_REVIEW_ERROR)
-        );
-
-        review.update(requestDto);
-        return new ReviewResponseDto(review);
+            ReviewResponseDto responseDto = new ReviewResponseDto(review);
+            return responseDto;
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
+        }
     }
 
 
     // DB delete function (data delete)
     public MsgResponseDto deleteReview(Long storeId, Long reviewid) {
 
-        Review review = reviewRepository.findById(storeId).orElseThrow(                                             // find memo
-                () -> new CustomException(ErrorCode.NOT_FOUND_ID_ERROR)
-        );
-        reviewRepository.deleteById(storeId);                                                          // 해당 게시물 삭제
+        try {
+            Review review = reviewRepository.findById(storeId).orElseThrow(                                             // find memo
+                    () -> new CustomException(ErrorCode.NOT_FOUND_ID_ERROR)
+            );
+            reviewRepository.deleteById(storeId);                                                          // 해당 게시물 삭제
 
-        return new MsgResponseDto(DELETE_REVIEW);
+            return new MsgResponseDto(DELETE_REVIEW);
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
+        }
     }
 }

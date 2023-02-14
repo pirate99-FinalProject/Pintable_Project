@@ -1,10 +1,11 @@
 package com.example.pirate99_final.store.dto;
 
+import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.store.entity.Store;
 import lombok.Getter;
 
 @Getter
-public class StoreResponseDto {
+public class StoreResponseDto extends MsgResponseDto {
 
     private String storeName;
 

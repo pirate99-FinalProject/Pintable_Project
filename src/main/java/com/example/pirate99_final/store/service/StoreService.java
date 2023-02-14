@@ -78,177 +78,178 @@ public class StoreService {
     }
 
     // Get store from DB (one)
-    public StoreStatusResponseDto getStore(long storeId) {
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
+    public MsgResponseDto getStore(long storeId) {
+        try {
+            Store store = storeRepository.findById(storeId).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+            );
 
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+            StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-        StoreStatusResponseDto responseDto = new StoreStatusResponseDto(storeStatus);
+            StoreStatusResponseDto responseDto = new StoreStatusResponseDto(storeStatus);
 
-        return responseDto;
+            return responseDto;
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
+        }
+
     }
 
     // DB delete function (data delete)
 
     public MsgResponseDto deleteStore(Long storeId) {
+        try {
+            Store store = storeRepository.findById(storeId).orElseThrow(                                             // find store
+                    () -> new CustomException(ErrorCode.NOT_FOUND_ID_ERROR)
+            );
 
-        Store store = storeRepository.findById(storeId).orElseThrow(                                             // find store
-                () -> new CustomException(ErrorCode.NOT_FOUND_ID_ERROR)
-        );
+            storeStatusRepository.deleteByStore(store);                                     // 상점 상태 테이블 삭제
+            storeRepository.deleteById(storeId);                                                          // 해당 상점 삭제
 
-        storeStatusRepository.deleteByStore(store);                                     // 상점 상태 테이블 삭제
-        storeRepository.deleteById(storeId);                                                          // 해당 상점 삭제
+            return new MsgResponseDto(DELETE_STORE);
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
+        }
 
-        return new MsgResponseDto(DELETE_STORE);
     }
 
      public MsgResponseDto enterStore(Long storeId) {        // need to update
         int availableCnt   =   0;                                                       // 이용 가능 좌석
-
-        // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(()->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
-
-        // 2. storeStatus check
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
-
-        // 3. counting availableCnt
-        if((storeStatus.getAvailableTableCnt() - 1) > 0){
-            availableCnt = storeStatus.getAvailableTableCnt() - 1;
-        }
-        else if(storeStatus.getAvailableTableCnt() == 0){
-            return new MsgResponseDto(SuccessCode.NOT_ENOUGH_TABLE);          // 해당 부분 수정 필요
-        }
-
-        // 4. update storeStatus
-        storeStatus.update(availableCnt);
-        storeStatusRepository.save(storeStatus);
-
-        return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
-    }
-
-    // Leave people from store
-    @Transactional
-    public MsgResponseDto leaveStore(Long storeId) {
-        int availableCnt = 0;                                                       // 이용 가능 좌석
-
-        // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
-
-        // 2. storeStatus check
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
-
-        availableCnt = storeStatus.getAvailableTableCnt() + 1;
-
-        // Leaving people check
-        storeStatus.update(availableCnt);
-
-        Waiting waiting = waitingRepository.findFirstByStoreStatusAndWaitingStatusOrderByWaitingIdAsc(storeStatus, 0);
-
-        if(waiting != null){
+        try {
             // 1. find store
-            store = storeRepository.findById(storeId).orElseThrow(() ->
+            Store store = storeRepository.findById(storeId).orElseThrow(()->
                     new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
             );
 
             // 2. storeStatus check
-            storeStatus = storeStatusRepository.findByStore(store);
+            StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-            // 3. User find
-            User user = userRepository.findByUsername(waiting.getUser().getUsername()).orElseThrow(() ->
-                    new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
+            // 3. counting availableCnt
+            if((storeStatus.getAvailableTableCnt() - 1) > 0){
+                availableCnt = storeStatus.getAvailableTableCnt() - 1;
+            }
+            else if(storeStatus.getAvailableTableCnt() == 0){
+                return new MsgResponseDto(SuccessCode.NOT_ENOUGH_TABLE);          // 해당 부분 수정 필요
+            }
+
+            // 4. update storeStatus
+            storeStatus.update(availableCnt);
+            storeStatusRepository.save(storeStatus);
+
+            return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
+        }
+    }
+
+    // Leave people from store
+    @Transactional
+    public MsgResponseDto leaveStore(Long storeId, LeaveRequestDto requestDto) {
+        int availableCnt = 0;                                                       // 이용 가능 좌석
+        try {
+            // 1. find store
+            Store store = storeRepository.findById(storeId).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
             );
 
-            Waiting waiting2 = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
-            waiting.update(2);
+            // 2. storeStatus check
+            StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-            int waitingCnt = 0;
+            // 3. User find
+            User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
+            );
+            Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
 
-            if(storeStatus.getWaitingCnt() > 0){
-                waitingCnt = storeStatus.getWaitingCnt() - 1;
+            if (waiting.getWaitingStatus() == 2) {
+                waiting.update(4);
+
+                availableCnt = storeStatus.getAvailableTableCnt() + 1;
+                storeStatus.update(availableCnt);
+            } else {
+                return new MsgResponseDto(ErrorCode.ALREADY_LEAVING);
             }
 
-            availableCnt = storeStatus.getAvailableTableCnt();
-
-            if (availableCnt > 0) {
-                availableCnt = availableCnt - 1;
-            }
-
-            storeStatus.update_waitingCnt(waitingCnt, availableCnt);
+            return new MsgResponseDto(SuccessCode.CONFIRM_LEAVE);
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
         }
-        return new MsgResponseDto(SuccessCode.CONFIRM_LEAVE);
     }
 
     @Transactional
     public MsgResponseDto confirmStore(Long storeId, ConfirmRequestDto requestDto) {
-        // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
+        try {
+            // 1. find store
+            Store store = storeRepository.findById(storeId).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+            );
 
-        // 2. storeStatus check
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+            // 2. storeStatus check
+            StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-        // 3. User find
-        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
-        );
+            // 3. User find
+            User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
+            );
 
-        Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
+            Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
 
-        if (requestDto.getWaitingStatus() == 1) {
-            waiting.update(2);
-            int waitingCnt = storeStatus.getWaitingCnt() - 1;
-            int availableCnt = storeStatus.getAvailableTableCnt();
+            if (requestDto.getWaitingStatus() == 1) {
+                waiting.update(2);
+                int waitingCnt = storeStatus.getWaitingCnt() - 1;
+                int availableCnt = storeStatus.getAvailableTableCnt();
 
-            if (availableCnt > 0) {
-                availableCnt = availableCnt - 1;
+                if (availableCnt > 0) {
+                    availableCnt = availableCnt - 1;
+                }
+
+                storeStatus.update_waitingCnt(waitingCnt, availableCnt);
+            } else if (requestDto.getWaitingStatus() == 3) {
+                waiting.update(3);
+                int waitingCnt = storeStatus.getWaitingCnt() - 1;
+                int availableCnt = storeStatus.getAvailableTableCnt();
+
+                storeStatus.update_waitingCnt(waitingCnt, availableCnt);
             }
 
-            storeStatus.update_waitingCnt(waitingCnt, availableCnt);
-        } else if (requestDto.getWaitingStatus() == 3) {
-            waiting.update(3);
-            int waitingCnt = storeStatus.getWaitingCnt() - 1;
-            int availableCnt = storeStatus.getAvailableTableCnt();
-
-            storeStatus.update_waitingCnt(waitingCnt, availableCnt);
+            return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
         }
 
-        return new MsgResponseDto(SuccessCode.CONFIRM_ENTER);
     }
 
     // call people
     @Transactional
     public MsgResponseDto callpeople(Long storeId, ConfirmRequestDto requestDto) throws MessagingException {
-        // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
+        try {
+            // 1. find store
+            Store store = storeRepository.findById(storeId).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+            );
 
-        // 2. storeStatus check
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+            // 2. storeStatus check
+            StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-        // 3. User find
-        User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
-        );
+            // 3. User find
+            User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_USER_ERROR)
+            );
 
-        Waiting waiting = waitingRepository.findByStoreStatusAndUser(storeStatus, user);
-        waiting.update(1);
+            Waiting waiting = waitingRepository.queueing(storeStatus.getStoreStatusId(), user.getUserId());
+            waiting.update(1);
 
-        String toEmail = user.getAddress();
-        String storeName = store.getStoreName();
-        String title = "Pin Table 입장안내 [" + storeName + "] 대기 호출";
-        String mailForm = "mailForm_call";
+            String toEmail = user.getAddress();
+            String storeName = store.getStoreName();
+            String title = "Pin Table 입장안내 [" + storeName + "] 대기 호출";
+            String mailForm = "mailForm_call";
 
-        MimeMessage emailForm = createEmailForm(toEmail, title, mailForm);
-        emailSender.send(emailForm);
-        return new MsgResponseDto(SuccessCode.CALL_PEOPLE);
+            MimeMessage emailForm = createEmailForm(toEmail, title, mailForm);
+            emailSender.send(emailForm);
+            return new MsgResponseDto(SuccessCode.CALL_PEOPLE);
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
+        }
     }
 
     private MimeMessage createEmailForm(String sendmail, String mailTitle, String mailForm) throws MessagingException {
@@ -275,62 +276,61 @@ public class StoreService {
     @Transactional
     public MsgResponseDto limitWaitingCnt(Long storeId, LimitWaitingCntRequestDto requestDto) throws MessagingException {
 
-        int totalWaitingCnt, limitWaitingCnt = 0;
+        int limitWaitingCnt = 0;
+        try {
+            // 1. find store
+            Store store = storeRepository.findById(storeId).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
+            );
+
+            // 2. storeStatus check
+            StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+
+            // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
+            List<Waiting> waitingList = waitingRepository.
+                    waitingList(0, 1, storeStatus.getStoreStatusId());
+
+            // 점포에서 설정한 대기 인원 제한한 값을 점포 상태에 업데이트 함
+            storeStatus.update_limitWaitingCnt(requestDto.getLimitWaitingCnt());
+
+            limitWaitingCnt = storeStatus.getLimitWaitingCnt();
+
+            int waitingCnt = storeStatus.getWaitingCnt();
+            // 대기인원 제한이 '0'인 경우 'default' 값인 무한으로 설정
+            if (limitWaitingCnt == 1000) {
+
+                return new MsgResponseDto(LIMIT_DEFAULT);
+                // 대기인원 제한이 총 대기인원 수 보다 큰 경우, 설정이 완료되었다는 메세지 반환
+            } else if (limitWaitingCnt >= storeStatus.getWaitingCnt()) {
+
+                return new MsgResponseDto(SuccessCode.LIMIT_SETTING);
+                // 대기인원 제한이 총 대기인원 수 보다 적은 경우, 제한을 초과한 현재 대기인원들에게 이메일을 보내고 대기취소 처리한다.
+            } else if (limitWaitingCnt < storeStatus.getWaitingCnt()) {
+
+                for (int i = limitWaitingCnt; i < storeStatus.getWaitingCnt(); i++) {
+
+                    Waiting waiting_person = waitingList.get(i);
+
+                    String toEmail = waiting_person.getUser().getAddress();
+                    String storeName = store.getStoreName();
+                    String title = "Pin Table [" + storeName + "] 웨이팅 취소 안내";
+                    String mailForm = "mailForm_cancle";
+
+                    // 대기취소 상태로 변경
+                    waiting_person.update(3);
+                    waitingCnt = waitingCnt - 1;
 
 
-        // 1. find store
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR)
-        );
+                    MimeMessage emailForm = createEmailForm(toEmail, title, mailForm);
+                    emailSender.send(emailForm);
 
-        // 2. storeStatus check
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
-
-        // 대기열 중 상태값이 '대기중', '입장가능'인 사람들만 카운팅하기위해 구별해서 리스트에 담음
-        List<Waiting> waitingList = waitingRepository.
-                findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0, 1);
-
-        // 점포에서 설정한 대기 인원 제한한 값을 점포 상태에 업데이트 함
-        storeStatus.update_limitWaitingCnt(requestDto.getLimitWaitingCnt());
-
-        limitWaitingCnt = storeStatus.getLimitWaitingCnt();
-
-
-        // 대기인원 제한이 '0'인 경우 'default' 값인 무한으로 설정
-        if (limitWaitingCnt == 1000) {
-
-            return new MsgResponseDto(LIMIT_DEFAULT);
-            // 대기인원 제한이 총 대기인원 수 보다 큰 경우, 설정이 완료되었다는 메세지 반환
-        } else if (limitWaitingCnt >= storeStatus.getWaitingCnt()) {
-
-            return new MsgResponseDto(SuccessCode.LIMIT_SETTING);
-            // 대기인원 제한이 총 대기인원 수 보다 적은 경우, 제한을 초과한 현재 대기인원들에게 이메일을 보내고 대기취소 처리한다.
-        } else if (limitWaitingCnt < storeStatus.getWaitingCnt()) {
-
-            for (int i = limitWaitingCnt; i < storeStatus.getWaitingCnt(); i++) {
-
-                Waiting waiting_person = waitingList.get(i);
-
-                String toEmail = waiting_person.getUser().getAddress();
-                String storeName = store.getStoreName();
-                String title = "Pin Table [" + storeName + "] 웨이팅 취소 안내";
-                String mailForm = "mailForm_cancle";
-
-                // 대기취소 상태로 변경
-                waiting_person.update(3);
-
-
-                MimeMessage emailForm = createEmailForm(toEmail, title, mailForm);
-                emailSender.send(emailForm);
-
-            return new MsgResponseDto(CONFIRM_ENTER);
-
-
+                }
+                storeStatus.update_waitingCnt(waitingCnt, storeStatus.getAvailableTableCnt());
             }
-
-            return new MsgResponseDto(ErrorCode.WRONG_LIMIT_WAITING_ERROR);
+            return null;
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
         }
-        return null;
     }
 
     public void searchCurrentMap(Model model, String latitude, String longitude, String storeName) {
@@ -565,19 +565,23 @@ public class StoreService {
     }
 
 
-    public StoreResponseDto getStoreAdminInfo(Long storeId) {
+    public MsgResponseDto getStoreAdminInfo(Long storeId) {
 
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR));
+        try {
+            Store store = storeRepository.findById(storeId).orElseThrow(() ->
+                    new CustomException(ErrorCode.NOT_FOUND_STORE_ERROR));
 
-        StoreStatus storeStatus = storeStatusRepository.findByStore(store);
+            StoreStatus storeStatus = storeStatusRepository.findByStore(store);
 
-        List<Waiting> waitingTeams = waitingRepository.findAllByStoreStatusAndWaitingStatusOrWaitingStatusOrderByWaitingIdAsc(storeStatus, 0, 1);
+            List<Waiting> waitingTeams = waitingRepository.waitingList(0, 1, storeStatus.getStoreStatusId());
 
-        int numberOfTeamsWaiting = waitingTeams.size();
+            int numberOfTeamsWaiting = waitingTeams.size();
 
-        int numberOfCustomersInUse = storeStatus.getTotalTableCnt() - storeStatus.getAvailableTableCnt();
+            int numberOfCustomersInUse = storeStatus.getTotalTableCnt() - storeStatus.getAvailableTableCnt();
 
-        return new StoreResponseDto(store, numberOfTeamsWaiting, numberOfCustomersInUse);
+            return new StoreResponseDto(store, numberOfTeamsWaiting, numberOfCustomersInUse);
+        }catch (CustomException e) {
+            return new MsgResponseDto(e.getStatusCode(), e.getMsg());
+        }
     }
 }

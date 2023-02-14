@@ -22,7 +22,7 @@ public class UserController {
     public MsgResponseDto signup(@RequestBody SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
 
-        return new MsgResponseDto(SuccessCode.SIGN_UP);
+        return userService.signup(signupRequestDto);
     }
 
     @PostMapping("/login")
@@ -30,7 +30,7 @@ public class UserController {
         //클라이언트에 반환하기 위해 response 객체
         userService.login(loginRequestDto);
 
-        return new MsgResponseDto(SuccessCode.LOG_IN);
+        return userService.login(loginRequestDto);
     }
 
     // 사용자 메일 유효성 체크 기능

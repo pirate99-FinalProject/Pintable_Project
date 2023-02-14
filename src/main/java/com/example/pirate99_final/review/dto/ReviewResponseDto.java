@@ -1,10 +1,11 @@
 package com.example.pirate99_final.review.dto;
 
+import com.example.pirate99_final.global.MsgResponseDto;
 import com.example.pirate99_final.review.entity.Review;
 import lombok.Getter;
 
 @Getter
-public class ReviewResponseDto {
+public class ReviewResponseDto extends MsgResponseDto {
     private Long reviewId;
     private String username;
     private String content;
